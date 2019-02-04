@@ -1,0 +1,26 @@
+<idea-plugin>
+    <id>org.aion4j.avm-idea-pugin</id>
+    <name>Aion4j Avm Intellij Plugin</name>
+    <vendor email="satran004@gmail.com" url="http://www.aion4j.org">Aion4j Project</vendor>
+
+    <description><![CDATA[
+    Intellij Idea plugin for development on Avm, a java based VM for Aion blockchain
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="Myplugin.Textboxes" class="org.aion4j.avm.idea.HelloAction" text="Hello" description="Says hello"/>
+        </group>
+    </actions>
+</idea-plugin>
