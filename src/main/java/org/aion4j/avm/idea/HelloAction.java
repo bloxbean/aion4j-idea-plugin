@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.NotNull;
 
 public class HelloAction extends AnAction {
+
     public HelloAction() {
         super("Hello");
     }
@@ -16,5 +17,5 @@ public class HelloAction extends AnAction {
         Project project = e.getProject();
         Messages.showMessageDialog(project, "Hello world!", "Greeting", Messages.getInformationIcon());
     }
-
+    
 }

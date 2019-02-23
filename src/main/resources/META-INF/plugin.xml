@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>org.aion4j.avm-idea-pugin</id>
+    <id>org.aion4j.aion4j-idea-pugin</id>
     <name>Aion4j Avm Intellij Plugin</name>
     <vendor email="satran004@gmail.com" url="http://www.aion4j.org">Aion4j Project</vendor>
 
@@ -15,6 +15,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <localInspection implementationClass="org.aion4j.avm.idea.JCLWhitelistInspection" enabledByDefault="true" language="JAVA"/>
     </extensions>
 
     <actions>
