@@ -1,1 +1,1 @@
-# avm-idea-plugin
+# aion4j-idea-plugin
