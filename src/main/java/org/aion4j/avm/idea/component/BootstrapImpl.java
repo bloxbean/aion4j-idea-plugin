@@ -30,13 +30,13 @@ public class BootstrapImpl implements Bootstrap, ProjectComponent {
     AvmService service = ServiceManager.getService(project, AvmService.class);
 
     debug(() -> log.debug("Project " + project.getName() + " is opened, checking if it's avm project"));
-    service.init(project);
+   // service.init(project);
 
   }
 
   @Override
   public void projectClosed() {
-    connection.disconnect();
+
   }
 
   @Override

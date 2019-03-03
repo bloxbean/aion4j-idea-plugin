@@ -15,14 +15,14 @@ public class AvmDetails {
 
             map = new HashMap<>();
 
-            MethodDescriptor addAll = new MethodDescriptor("addAll", new Class[]{Collection.class});
+           /* MethodDescriptor addAll = new MethodDescriptor("addAll", new Class[]{Collection.class});
             MethodDescriptor add = new MethodDescriptor("add", new Class[]{Object.class});
 
             map.put(java.util.List.class, new MethodDescriptor[]{addAll});
             map.put(java.util.List.class, new MethodDescriptor[]{add});
 
             MethodDescriptor method2 = new MethodDescriptor("setReadable", new Class[]{boolean.class, boolean.class});
-            map.put(File.class, new MethodDescriptor[]{method2});
+            map.put(File.class, new MethodDescriptor[]{method2});*/
 
             Class[] jclWhiteListClasses = getJCLWhitelistClasses();
 

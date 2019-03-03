@@ -1,0 +1,27 @@
+<idea-plugin>
+
+    <!--<extensions defaultExtensionNs="org.aion4j.avm.initializr">-->
+        <!--<moduleBuilderPostProcessor-->
+                <!--implementation="org.aion4j.avm.idea.initializr.MavenModuleBuilderPostProcessor"/>-->
+    <!--</extensions>-->
+
+    <!--<extensions defaultExtensionNs="com.intellij">-->
+        <!---->
+    <!--</extensions>-->
+
+    <!--<extensions defaultExtensionNs="org.jetbrains.idea.maven">-->
+        <!--<importer id="avm_maven_importer" order="last" implementation="org.aion4j.avm.idea.initializr.AvmMavenImporter"/>-->
+    <!--</extensions>-->
+
+    <!--<project-components>-->
+        <!--<component>-->
+            <!--<interface-class>-->
+                <!--org.aion4j.avm.idea.component.Bootstrap-->
+            <!--</interface-class>-->
+            <!--<implementation-class>-->
+                <!--org.aion4j.avm.idea.component.BootstrapImpl-->
+            <!--</implementation-class>-->
+        <!--</component>-->
+    <!--</project-components>-->
+
+</idea-plugin>

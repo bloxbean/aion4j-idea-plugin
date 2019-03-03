@@ -1,4 +1,4 @@
-package org.aion4j.avm.idea;
+package org.aion4j.avm.idea.inspection;
 
 import com.intellij.codeInspection.*;
 import com.intellij.openapi.components.ServiceManager;
@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.compiled.ClsClassImpl;
 import com.intellij.psi.impl.source.tree.java.PsiMethodCallExpressionImpl;
+import com.intellij.psi.search.GlobalSearchScope;
 import org.aion4j.avm.idea.service.AvmService;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -27,15 +28,20 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
 
         PsiFile psiFile = holder.getFile();
 
-        System.out.println(">>>>>>>>>>>>>>>> PsiFile>>>>>>>>>>>" + psiFile.getName());
+        AvmService service = ServiceManager.getService(psiFile.getProject(), AvmService.class);
 
-        if(psiFile.getName().endsWith("Test.java")) { //If test, ignore //TODO
-            return null;
-        }
+        if(service != null) {
+            if(!service.isInitialize()) {
+                service.init(psiFile.getProject());
+            }
+            if(service.isUnderTestSource(psiFile.getVirtualFile())) {
+                return DummyJavaVisitor.CONSTANT;
+            }
+        } else
+            return DummyJavaVisitor.CONSTANT;
 
         return new JavaElementVisitor() {
 
-            boolean avmProject = false;
             Project project;
 
             @Override
@@ -62,7 +68,7 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                 if(fqName.startsWith(USERLIB_PACKAGE_PREFIX) || fqName.startsWith(AVM_API_PACKAGE_PREFIX))
                     return;
 
-                if(!service.isClassAllowed(fqName)) {
+                if(!service.isClassAllowed(project, fqName)) {
                     holder.registerProblem(field.getOriginalElement(),
                             String.format("%s is not allowed in a Avm smart contract project", fqName), ProblemHighlightType.GENERIC_ERROR);
                 }
@@ -127,10 +133,12 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
 
                     AvmService service = ServiceManager.getService(project, AvmService.class);
 
-                    if(!service.isClassAllowed(className)) {
+                    if(!service.isClassAllowed(project, className)) {
                         holder.registerProblem(expression.getOriginalElement(),
                                 String.format("%s is not allowed in a Avm smart contract project", className), ProblemHighlightType.GENERIC_ERROR);
                     }
+
+                    PsiClassType psiClassType = PsiType.getTypeByName(className, project, GlobalSearchScope.projectScope(project));
 
 //                    if(project != null) {
 //                        PsiType psiType = PsiType.getTypeByName(className, project, GlobalSearchScope.everythingScope(project));
@@ -185,7 +193,7 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                 if(fqName.startsWith(USERLIB_PACKAGE_PREFIX) || fqName.startsWith(AVM_API_PACKAGE_PREFIX))
                     return;
 
-                if(!service.isClassAllowed(fqName)) {
+                if(!service.isClassAllowed(project, fqName)) {
                     holder.registerProblem(variable.getOriginalElement(),
                             String.format("%s is not allowed in a Avm smart contract project", fqName), ProblemHighlightType.GENERIC_ERROR);
                 }
