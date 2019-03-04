@@ -1,10 +1,10 @@
 <idea-plugin>
-    <id>org.aion4j.aion4j-idea-pugin</id>
-    <name>Aion4j Avm Intellij Plugin</name>
-    <vendor email="satran004@gmail.com" url="https://github.com/satran004/aion4j-idea-plugin/">Aion4j Idea Plugin Project</vendor>
+    <id>org.aion4j.avm</id>
+    <name>Aion4j AVM Integration</name>
+    <vendor email="satran004@gmail.com" url="https://github.com/satran004/aion4j-idea-plugin/">Aion4j Idea Project</vendor>
 
     <description><![CDATA[
-    Intellij Idea plugin for development on Avm, a java based VM for Aion blockchain
+    Intellij IDEA plugin for development on AVM, a java based VM for Aion blockchain.
     ]]></description>
 
     <depends config-file="maven.xml" optional="true">org.jetbrains.idea.maven</depends>
@@ -17,6 +17,10 @@
                 serviceImplementation="org.aion4j.avm.idea.service.AvmServiceImpl"/>
 
     </extensions>
+
+    <!--<extensions defaultExtensionNs="com.intellij">-->
+        <!--<framework.type implementation="org.aion4j.avm.idea.framework.AvmFramework"/>-->
+    <!--</extensions>-->
 
     <actions>
         <!--<group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">-->

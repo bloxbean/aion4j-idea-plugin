@@ -1,0 +1,124 @@
+package org.aion4j.avm.idea.misc;
+
+import com.intellij.openapi.diagnostic.Logger;
+
+import java.io.*;
+import java.util.Properties;
+
+public class PluginConfig {
+
+    private final static Logger log = Logger.getInstance(PluginConfig.class);
+
+    public static String CONFIG_FILE = ".aion4j-idea.conf";
+
+    public static String AVM_ARCHETYPE_VERSION = "avm.archetype.version";
+    public static String targetFolder = System.getProperty("user.home");
+
+    public static String getOrUpdateVersionIfRequired(String pluginBundledVersion) {
+        if(pluginBundledVersion == null || pluginBundledVersion.isEmpty())
+            return null;
+
+        String existingVersionStr = getPropertyValue(AVM_ARCHETYPE_VERSION);
+
+        if(existingVersionStr == null || existingVersionStr.isEmpty()) {
+            updateProperty(AVM_ARCHETYPE_VERSION, pluginBundledVersion);
+            return pluginBundledVersion;
+        } else {
+            try {
+                double existingVersion = Double.parseDouble(existingVersionStr.trim());
+                double newVersion = Double.parseDouble(pluginBundledVersion);
+
+                if (newVersion > existingVersion) {
+                    updateProperty(AVM_ARCHETYPE_VERSION, String.valueOf(newVersion));
+                    return String.valueOf(newVersion);
+                } else {
+                    System.out.println(">>> Dont update config");
+                    return String.valueOf(existingVersionStr);
+                }
+            } catch (Exception e) {
+                updateProperty(AVM_ARCHETYPE_VERSION, pluginBundledVersion);
+                throw e;
+            }
+        }
+    }
+
+    private static void updateProperty(String propertyName, String value) {
+        Properties props = readResults(targetFolder);
+
+        if(props == null)
+            props = new Properties();
+
+        props.setProperty(propertyName, value);
+
+        writeResults(targetFolder, props);
+    }
+
+    private static String getPropertyValue(String propertyName) {
+        Properties props = readResults(targetFolder);
+
+        if(props == null)
+            props = new Properties();
+
+        return props.getProperty(propertyName);
+    }
+
+    private static void writeResults(String targetFolder, Properties props) {
+        Properties prop = new Properties();
+        OutputStream output = null;
+
+        try {
+
+            output = new FileOutputStream(new File(targetFolder, CONFIG_FILE));
+
+            props.store(output, null);
+
+        } catch (Exception io) {
+            io.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static Properties readResults(String targetFolder) {
+        InputStream input = null;
+
+        if(log.isDebugEnabled()) {
+            log.debug("Plugin config is stored at folder >> " + targetFolder);
+        }
+
+        try {
+
+            File deployResultFile = new File(targetFolder, CONFIG_FILE);
+
+            if(!deployResultFile.exists())
+                return new Properties();
+
+            input = new FileInputStream(new File(targetFolder, CONFIG_FILE));
+
+            Properties properties = new Properties();
+            properties.load(input);
+
+            return properties;
+
+        } catch (Exception io) {
+            io.printStackTrace();
+            return new Properties();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+}

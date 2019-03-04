@@ -13,6 +13,10 @@
         <!--<importer id="avm_maven_importer" order="last" implementation="org.aion4j.avm.idea.initializr.AvmMavenImporter"/>-->
     <!--</extensions>-->
 
+    <extensions defaultExtensionNs="org.jetbrains.idea.maven">
+        <archetypesProvider implementation="org.aion4j.avm.idea.maven.AVMArchTypeProvider" order="first"></archetypesProvider>
+    </extensions>
+
     <!--<project-components>-->
         <!--<component>-->
             <!--<interface-class>-->
