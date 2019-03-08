@@ -1,3 +1,6 @@
+### Since 0.0.2 (7 March 2019):
+  - Avm Archetype version changed to 0.6
+  
 ### Since 0.0.1 (4 March 2019):
   
   - Non JCL whitelist api error highlight support
