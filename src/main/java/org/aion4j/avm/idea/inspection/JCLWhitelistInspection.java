@@ -7,6 +7,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.compiled.ClsClassImpl;
 import com.intellij.psi.impl.source.tree.java.PsiMethodCallExpressionImpl;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiUtil;
 import org.aion4j.avm.idea.service.AvmService;
 import org.aion4j.avm.idea.service.MethodDescriptor;
 import org.jetbrains.annotations.Nls;
@@ -73,7 +75,17 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                 if(fqName.startsWith(USERLIB_PACKAGE_PREFIX) || fqName.startsWith(AVM_API_PACKAGE_PREFIX))
                     return;
 
+                if(fqName.contains("<") && fqName.contains(">")) { //Seems like generic class
+                    String name = getClassNameFromGenericType(field);
+
+                    if(name != null && !name.isEmpty())
+                        fqName = name;
+                }
+
                 if(!service.isClassAllowed(project, fqName)) {
+                    if(log.isDebugEnabled())
+                        log.debug("Not allowed class >>>> " + fqName);
+
                     holder.registerProblem(field.getOriginalElement(),
                             String.format("%s is not allowed in a Avm smart contract project", fqName), ProblemHighlightType.GENERIC_ERROR);
                 }
@@ -179,10 +191,48 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                                 log.debug("Method params " + jvmParameters[i].getType().getCanonicalText());
                             }
 
+
+
                             if(param.equals(jvmParameters[i].getType().getCanonicalText())) {
                                 isAllowed = true;
+                            } else {
 
-                                break;
+                                String fqName = jvmParameters[i].getType().getCanonicalText();
+                                if(fqName.contains(">") && fqName.contains("<")) { //generic type
+                                    fqName = getClassNameFromGenericType(jvmParameters[i]);
+
+                                    if(fqName != null && param.equals(fqName)) {
+                                        if(log.isDebugEnabled()) {
+                                            log.debug("Match for fqName with generic : " + fqName); //exp java.util.Collection<?>
+                                        }
+                                        isAllowed = true;
+                                        continue;
+                                    }
+                                }
+
+                                //Check if it's a generic type
+                                if(jvmParameters[i].getType().getCanonicalText().length() == 1) {
+                                    String superClass = PsiUtil.resolveGenericsClassInType(jvmParameters[i].getType()).getElement().getSuperClass().getQualifiedName();
+
+                                    if(param.equals(superClass)) {
+
+                                        if(log.isDebugEnabled())
+                                            log.debug("Super class for Generic >>> " + superClass);
+
+                                        isAllowed = true;
+                                    } else {
+                                        if(jvmParameters[i].getType().isAssignableFrom(PsiType.getTypeByName(param, project, GlobalSearchScope.allScope(project)))) {
+
+                                            if(log.isDebugEnabled())
+                                                log.debug("Can be accessible >>>" + jvmParameters[i].getType());
+
+                                            isAllowed = true;
+                                        } else {
+                                            isAllowed = false;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
 
@@ -230,12 +280,30 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                 if(fqName.startsWith(USERLIB_PACKAGE_PREFIX) || fqName.startsWith(AVM_API_PACKAGE_PREFIX))
                     return;
 
+                if(fqName.contains("<") && fqName.contains(">")) { //Seems like generic class
+                    String name = getClassNameFromGenericType(variable);
+
+                    if(name != null && !name.isEmpty())
+                        fqName = name;
+                }
+
                 if(!service.isClassAllowed(project, fqName)) {
+                    if(log.isDebugEnabled())
+                        log.debug("Not allowed class >>>> " + fqName);
+
                     holder.registerProblem(variable.getOriginalElement(),
                             String.format("%s is not allowed in a Avm smart contract project", fqName), ProblemHighlightType.GENERIC_ERROR);
                 }
             }
         };
+    }
+
+    private String getClassNameFromGenericType(PsiVariable element) {
+        try {
+            return PsiUtil.resolveGenericsClassInType(element.getType()).getElement().getQualifiedName();
+        } catch (Exception e) {
+            return element.getType().getCanonicalText();
+        }
     }
 
     private boolean isCheckedType(PsiType type) {
