@@ -32,7 +32,6 @@ public class PluginConfig {
                     updateProperty(AVM_ARCHETYPE_VERSION, String.valueOf(newVersion));
                     return String.valueOf(newVersion);
                 } else {
-                    System.out.println(">>> Dont update config");
                     return String.valueOf(existingVersionStr);
                 }
             } catch (Exception e) {

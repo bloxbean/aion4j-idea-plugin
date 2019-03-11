@@ -1,3 +1,6 @@
+### Since 0.0.3-beta1
+  - Method level JCL whitelist check
+  
 ### Since 0.0.2 (7 March 2019):
   - Avm Archetype version changed to 0.6
   

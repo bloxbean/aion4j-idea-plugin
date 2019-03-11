@@ -7,11 +7,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.compiled.ClsClassImpl;
 import com.intellij.psi.impl.source.tree.java.PsiMethodCallExpressionImpl;
-import com.intellij.psi.search.GlobalSearchScope;
 import org.aion4j.avm.idea.service.AvmService;
+import org.aion4j.avm.idea.service.MethodDescriptor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool implements CustomSuppressableInspectionTool {
 
@@ -47,14 +49,17 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
             @Override
             public void visitField(PsiField field) {
 
+                //check if inspection is applicable
                 if(project == null) {
                     project = field.getProject();
                 }
 
-                AvmService service = ServiceManager.getService(project, AvmService.class);
-
-                if(!service.isAvmProject())
+                if(project == null)
                     return;
+                AvmService service = ServiceManager.getService(project, AvmService.class);
+                if(service == null || !service.isAvmProject())
+                    return;
+                //end enable inspection check
 
                 String fqName = field.getType().getCanonicalText();
 
@@ -91,25 +96,36 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
             }
 
             @Override
-            public void visitMethodCallExpression(PsiMethodCallExpression expression) {
-//                System.out.println("M:: " + expression.getMethodExpression().getQualifierExpression().toString());
-//                System.out.println("0: " + expression.getMethodExpression().getCanonicalText());
-//
-//                PsiType[] arguments = expression.getArgumentList().getExpressionTypes();
-//
-//                if(arguments !=null && arguments.length > 0) {
-//                    for(PsiType psiType: arguments) {
-//                        System.out.println("Arg: " + psiType.getCanonicalText());
-//                    }
-//                }
+            public void visitClassInitializer(PsiClassInitializer initializer) {
 
-               // JvmParameter[] parameters = ((PsiMethodCallExpressionImpl) expression).resolveMethod().getParameters();
+//                if(log.isDebugEnabled()) {
+//                    System.out.println("visit in class initializer level >>>>>> " + initializer.getName());
+//                }
+            }
+
+            @Override
+            public void visitMethodCallExpression(PsiMethodCallExpression expression) {
+
+                //check if inspection is applicable
+                if(project == null) {
+                    project = expression.getProject();
+                }
+
+                if(project == null)
+                    return;
+                AvmService service = ServiceManager.getService(project, AvmService.class);
+                if(service == null || !service.isAvmProject())
+                    return;
+                //end enable inspection check;
 
                String className = null;
+               PsiMethod psiMethod = null;
 
                 try {
 
-                    ClsClassImpl psiClassElm = ((ClsClassImpl) ((PsiMethodCallExpressionImpl) expression).resolveMethod().getParent());
+                    psiMethod = ((PsiMethodCallExpressionImpl) expression).resolveMethod();
+                    ClsClassImpl psiClassElm = ((ClsClassImpl) psiMethod.getParent());
+
                     if (psiClassElm != null) {
                         className = psiClassElm.getQualifiedName();
 
@@ -127,40 +143,57 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                 }
 
                 try {
-                    if(project == null) {
-                        project = expression.getProject();
-                    }
-
-                    AvmService service = ServiceManager.getService(project, AvmService.class);
 
                     if(!service.isClassAllowed(project, className)) {
                         holder.registerProblem(expression.getOriginalElement(),
                                 String.format("%s is not allowed in a Avm smart contract project", className), ProblemHighlightType.GENERIC_ERROR);
                     }
 
-                    PsiClassType psiClassType = PsiType.getTypeByName(className, project, GlobalSearchScope.projectScope(project));
+                    List<MethodDescriptor> methodDescriptors = service.getAllowedMethodsForClass(project, className, psiMethod.getName());
 
-//                    if(project != null) {
-//                        PsiType psiType = PsiType.getTypeByName(className, project, GlobalSearchScope.everythingScope(project));
-//                        System.out.println("*******"  + psiType);
-//
-//                    }
-//
-//                    Class clazz = Class.forName(className);
-//                    AvmDetails.MethodDescriptor[] methodDescriptors = AvmDetails.getClassLibraryWhiteList().get(clazz);
-//
-//                    if(methodDescriptors == null) {
-//                        holder.registerProblem(expression.getOriginalElement(),
-//                                String.format("%s is not allowed in a Avm smart contract project", className), ProblemHighlightType.GENERIC_ERROR);
-//                    } else {
-//
-//                    }
+                    boolean isAllowed = false;
+                    for(MethodDescriptor methodDescriptor: methodDescriptors) {
 
-//                    PsiType objectType = PsiType.getTypeByName("java.lang.Object", expression.resolveMethod().getProject(), GlobalSearchScope.everythingScope(expression.resolveMethod().getProject()));
-//
-//                    PsiType stringType = PsiType.getTypeByName("java.lang.String", expression.resolveMethod().getProject(), GlobalSearchScope.everythingScope(expression.resolveMethod().getProject()));
-//
-//                    objectType.isAssignableFrom(stringType);
+                       PsiParameter[] jvmParameters = psiMethod.getParameterList().getParameters();//getParameters();//getParameters();
+
+                       if(methodDescriptor.getParams().size() == 0 && jvmParameters.length == 0)  {
+                           isAllowed = true;
+                           break;
+                       }
+
+                       if(methodDescriptor.getParams().size() != jvmParameters.length) {
+                           continue;
+                       } else {
+
+                           if(log.isDebugEnabled()) {
+                               log.debug("Matching param size >>> " + jvmParameters.length);
+                           }
+                       }
+
+                        for(int i = 0; i < methodDescriptor.getParams().size(); i++) {
+
+                            String param = methodDescriptor.getParams().get(i);
+
+                            if(log.isDebugEnabled()) {
+                                log.debug("Actual params:  " + param);
+                                log.debug("Method params " + jvmParameters[i].getType().getCanonicalText());
+                            }
+
+                            if(param.equals(jvmParameters[i].getType().getCanonicalText())) {
+                                isAllowed = true;
+
+                                break;
+                            }
+                        }
+
+                        if(isAllowed)
+                            break;
+                    }
+
+                    if(!isAllowed) {
+                        holder.registerProblem(expression.getOriginalElement(),
+                                String.format("%s.%s is not allowed in a Avm smart contract project", className, psiMethod.getName()), ProblemHighlightType.GENERIC_ERROR);
+                    }
 
                 } catch (Exception e) {
                     //e.printStackTrace();
@@ -172,14 +205,18 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
 
             @Override
             public void visitLocalVariable(PsiLocalVariable variable) {
+
+                //check if inspection is applicable
                 if(project == null) {
                     project = variable.getProject();
                 }
 
-                AvmService service = ServiceManager.getService(project, AvmService.class);
-
-                if(!service.isAvmProject())
+                if(project == null)
                     return;
+                AvmService service = ServiceManager.getService(project, AvmService.class);
+                if(service == null || !service.isAvmProject())
+                    return;
+                //end enable inspection check
 
                 String fqName = variable.getType().getCanonicalText();
 

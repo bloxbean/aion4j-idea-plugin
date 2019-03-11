@@ -29,14 +29,14 @@
         <!--</group>-->
     </actions>
 
-    <!--<project-components>-->
-        <!--<component>-->
-            <!--<interface-class>-->
-                <!--org.aion4j.avm.idea.component.Bootstrap-->
-            <!--</interface-class>-->
-            <!--<implementation-class>-->
-                <!--org.aion4j.avm.idea.component.BootstrapImpl-->
-            <!--</implementation-class>-->
-        <!--</component>-->
-    <!--</project-components>-->
+    <project-components>
+        <component>
+            <interface-class>
+                org.aion4j.avm.idea.component.Bootstrap
+            </interface-class>
+            <implementation-class>
+                org.aion4j.avm.idea.component.BootstrapImpl
+            </implementation-class>
+        </component>
+    </project-components>
 </idea-plugin>

@@ -1,12 +1,16 @@
 package org.aion4j.avm.idea.component;
 
+import com.intellij.ProjectTopics;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.util.messages.MessageBusConnection;
 import org.aion4j.avm.idea.service.AvmService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 public class BootstrapImpl implements Bootstrap, ProjectComponent {
 
@@ -27,16 +31,45 @@ public class BootstrapImpl implements Bootstrap, ProjectComponent {
 
   @Override
   public void projectOpened() {
-    AvmService service = ServiceManager.getService(project, AvmService.class);
 
     debug(() -> log.debug("Project " + project.getName() + " is opened, checking if it's avm project"));
    // service.init(project);
 
+    String basePath = this.project.getBasePath();
+
+    project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      @Override
+      public void rootsChanged(ModuleRootEvent event) {
+
+        if(log.isDebugEnabled())
+          log.debug("Something changed in the project >>>>>>>>>");
+
+        MavenProjectsManager mvnProjectManager = MavenProjectsManager.getInstance(project);
+        if(!mvnProjectManager.isMavenizedProject()) {
+          return;
+        }
+
+        AvmService service = ServiceManager.getService(project, AvmService.class);
+
+        if(service.isInitialize() && !service.isAvmProject()) {
+
+            if(log.isDebugEnabled()) {
+              log.debug("Let's check if it has become a AVM project >>>>");
+            }
+
+            service.init(project);
+        }
+      }
+    });
   }
 
   @Override
   public void projectClosed() {
+    try {
+      connection.disconnect();
+    } catch (Exception e) {
 
+    }
   }
 
   @Override
