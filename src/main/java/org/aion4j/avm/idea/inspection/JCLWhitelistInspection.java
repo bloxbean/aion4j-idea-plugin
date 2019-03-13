@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.compiled.ClsClassImpl;
 import com.intellij.psi.impl.source.tree.java.PsiMethodCallExpressionImpl;
+import com.intellij.psi.impl.source.tree.java.PsiNewExpressionImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
 import org.aion4j.avm.idea.service.AvmService;
@@ -92,27 +93,68 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
 
             }
 
-            @Override
-            public void visitMethod(PsiMethod method) {
-
-            }
 
             @Override
             public void visitClass(PsiClass aClass) {
                 project = aClass.getProject();
             }
 
-            @Override
-            public void visitTypeElement(PsiTypeElement type) {
-
-            }
 
             @Override
             public void visitClassInitializer(PsiClassInitializer initializer) {
 
+                //System.out.println("visit in class initializer level >>>>>> " + initializer.getName());
 //                if(log.isDebugEnabled()) {
 //                    System.out.println("visit in class initializer level >>>>>> " + initializer.getName());
 //                }
+            }
+
+            @Override
+            public void visitNewExpression(PsiNewExpression expression) {
+
+                //check if inspection is applicable
+                if(project == null) {
+                    project = expression.getProject();
+                }
+
+                if(project == null)
+                    return;
+                AvmService service = ServiceManager.getService(project, AvmService.class);
+                if(service == null || !service.isAvmProject())
+                    return;
+                //end enable inspection check;
+
+                String className = null;
+                PsiMethod psiMethod = null;
+
+                try {
+
+                    psiMethod = ((PsiNewExpressionImpl) expression).resolveConstructor();
+
+//                    if(log.isDebugEnabled()) {
+//                        log.debug("New object >>>>>>>>" + psiMethod.getName());
+//                        log.debug("Parameters >>> " + psiMethod.getParameterList().getParameters());
+//                    }
+
+                    ClsClassImpl psiClassElm = ((ClsClassImpl) psiMethod.getParent());
+
+                    if (psiClassElm != null) {
+                        className = psiClassElm.getQualifiedName();
+
+                        if(log.isDebugEnabled())
+                            log.debug("Class: " + className);
+                    }
+
+                    if(className.startsWith(USERLIB_PACKAGE_PREFIX) || className.startsWith(AVM_API_PACKAGE_PREFIX))
+                        return;
+                } catch (Exception e) {
+                    if(log.isDebugEnabled()) {
+                        log.debug(e);
+                    }
+                    return;
+                }
+
+                verifyIfMethodAllowed(expression, service, className, psiMethod);
             }
 
             @Override
@@ -154,6 +196,10 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                     return;
                 }
 
+                verifyIfMethodAllowed(expression, service, className, psiMethod);
+            }
+
+            private void verifyIfMethodAllowed(PsiElement expression, AvmService service, String className, PsiMethod psiMethod) {
                 try {
 
                     if(!service.isClassAllowed(project, className)) {
@@ -161,7 +207,8 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                                 String.format("%s is not allowed in a Avm smart contract project", className), ProblemHighlightType.GENERIC_ERROR);
                     }
 
-                    List<MethodDescriptor> methodDescriptors = service.getAllowedMethodsForClass(project, className, psiMethod.getName());
+                    String methodName = psiMethod.isConstructor()? "<init>" : psiMethod.getName();
+                    List<MethodDescriptor> methodDescriptors = service.getAllowedMethodsForClass(project, className, methodName);
 
                     boolean isAllowed = false;
                     for(MethodDescriptor methodDescriptor: methodDescriptors) {
