@@ -22,13 +22,6 @@
         <!--<framework.type implementation="org.aion4j.avm.idea.framework.AvmFramework"/>-->
     <!--</extensions>-->
 
-    <actions>
-        <!--<group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">-->
-            <!--<add-to-group group-id="MainMenu" anchor="last"/>-->
-            <!--<action id="Myplugin.Textboxes" class="org.aion4j.avm.idea.HelloAction" text="Hello" description="Says hello"/>-->
-        <!--</group>-->
-    </actions>
-
     <project-components>
         <component>
             <interface-class>
@@ -38,5 +31,75 @@
                 org.aion4j.avm.idea.component.BootstrapImpl
             </implementation-class>
         </component>
+        <component>
+            <implementation-class>org.aion4j.avm.idea.service.AvmConfigStateService</implementation-class>
+        </component>
     </project-components>
+
+    <actions>
+
+        <!--<action id="org.aion4j.avm.idea.action.local.LocalDeployAction" class="org.aion4j.avm.idea.action.local.LocalDeployAction"-->
+                <!--text="Avm.LocalDeploy" description="Deploy to embedded AVM">-->
+            <!--<add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
+        <!--</action>-->
+
+        <group id="org.aion4j.avm.idea.action.AvmActionGroup" class="org.aion4j.avm.idea.action.AvmActionGroup" popup="true"
+               text="Aion Virtual Machine" description="Aion Virtual Machine" >
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+
+            <group id="Avm.local" text="Embedded" description="Embedded AVM"  popup="true">
+
+            </group>
+
+            <group id="Avm.remote" text="Remote" description="Remotr AVM"  popup="true">
+
+            </group>
+        </group>
+
+        <!--<group id="Avm.local" text="Embedded" description="Embedded AVM">-->
+            <!--<add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>-->
+        <!--</group>-->
+
+        <action id="Avm.local.deploy" class="org.aion4j.avm.idea.action.local.LocalDeployAction"
+                text="Deploy" description="Deploy to embedded AVM">
+            <add-to-group group-id="Avm.local" anchor="first"/>
+        </action>
+        <action id="Avm.remote.deploy" class="org.aion4j.avm.idea.action.remote.RemoteDeploy" text="Deploy"
+                description="Avm Remote Deploy">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl D"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remote.GetReceipt"
+                class="org.aion4j.avm.idea.action.remote.GetReceiptAction" text="Get Receipt (Recent)"
+                description="Get recent receipt">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl R"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remote.GetReceiptForTxHash"
+                class="org.aion4j.avm.idea.action.remote.GetReceiptForTxHash" text="Get Receipt"
+                description="Get Receipt for a Tx Hash">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl R"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remote.GetBalanceAction"
+                class="org.aion4j.avm.idea.action.remote.GetBalanceAction" text="Get Balance"
+                description="Get Balance  of an Account">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl B"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remotre.GetTransferAction"
+                class="org.aion4j.avm.idea.action.remote.TransferAction" text="Transfer" description="Transfer">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl T"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remote.configuration" class="org.aion4j.avm.idea.action.remote.RemoteConfiguration"
+                text="Configuration" description="RemoteConfiguration" >
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl C"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="org.aion4j.avm.idea.action.remote.CallMethodAction"
+                class="org.aion4j.avm.idea.action.remote.CallMethodAction" text="ContractMethodCall"
+                description="Contract Method call"/>
+    </actions>
 </idea-plugin>
