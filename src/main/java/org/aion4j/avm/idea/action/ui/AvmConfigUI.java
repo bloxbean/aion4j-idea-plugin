@@ -29,6 +29,7 @@ public class AvmConfigUI extends DialogWrapper {
     private JTextField contractTxnNrgPriceTf;
     private JTextField mvnProfileTf;
     private JTextField deployArgsTf;
+    private JCheckBox getReceiptWaitCB;
 
     public AvmConfigUI(Project project, String customMessage) {
 
@@ -105,6 +106,8 @@ public class AvmConfigUI extends DialogWrapper {
             setMvnProfile("remote");
 
         setDeployArgs(model.getDeployArgs());
+
+        setGetReceiptWait(model.isGetReceiptWait());
     }
 
     public void setWeb3RpcUrl(String web3RpcUrl) {
@@ -153,6 +156,10 @@ public class AvmConfigUI extends DialogWrapper {
 
     public void setDeployArgs(String deployArgs) {
         this.deployArgsTf.setText(deployArgs);
+    }
+
+    public void setGetReceiptWait(boolean wait) {
+        this.getReceiptWaitCB.setSelected(wait);
     }
 
     private void doValidateInput() {
@@ -211,7 +218,7 @@ public class AvmConfigUI extends DialogWrapper {
     public RemoteConfigModel getRemoteConfig() {
         return new RemoteConfigModel(web3RpcTf.getText(), pkTf.getText(), accountTf.getText(), passwordTf.getText(),
                 notStoreCredentialsCheckBox.isSelected(), cleanAndBuildCheckBox.isSelected(), deployNrgTf.getText(), deployNrgPriceTf.getText(),
-                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), deployArgsTf.getText());
+                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), deployArgsTf.getText(), getReceiptWaitCB.isSelected());
     }
 
 
@@ -228,6 +235,7 @@ public class AvmConfigUI extends DialogWrapper {
         private String contractTxnNrgPrice;
         private String mvnProfile;
         private String deployArgs;
+        private boolean getReceiptWait;
 
         public RemoteConfigModel() {
 
@@ -235,7 +243,7 @@ public class AvmConfigUI extends DialogWrapper {
 
         public RemoteConfigModel(String web3RpcUrl, String pk, String account, String password,
                                  boolean disableCredentialStore, boolean cleanAndBuildBeforeDeploy, String deployNrg, String deployNrgPrice,
-                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, String deployArgs) {
+                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, String deployArgs, boolean getReceiptWait) {
             this.web3RpcUrl = web3RpcUrl;
             this.pk = pk;
             this.account = account;
@@ -248,6 +256,7 @@ public class AvmConfigUI extends DialogWrapper {
             this.contractTxnNrgPrice = contractTxnNrgPrice;
             this.mvnProfile = mvnProfile;
             this.deployArgs = deployArgs;
+            this.getReceiptWait = getReceiptWait;
         }
 
         public String getWeb3RpcUrl() {
@@ -344,6 +353,14 @@ public class AvmConfigUI extends DialogWrapper {
 
         public void setDeployArgs(String deployArgs) {
             this.deployArgs = deployArgs;
+        }
+
+        public boolean isGetReceiptWait() {
+            return getReceiptWait;
+        }
+
+        public void setGetReceiptWait(boolean getReceiptWait) {
+            this.getReceiptWait = getReceiptWait;
         }
     }
 

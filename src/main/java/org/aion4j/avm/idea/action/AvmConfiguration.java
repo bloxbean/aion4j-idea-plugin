@@ -38,6 +38,7 @@ public class AvmConfiguration extends AvmRemoteBaseAction {
         configModel.setContractTxnNrg(configService.getState().contractTxnNrg);
         configModel.setContractTxnNrgPrice(configService.getState().contractTxnNrgPrice);
         configModel.setMvnProfile(configService.getState().mvnProfile);
+        configModel.setGetReceiptWait(configService.getState().getReceiptWait);
 
         configModel.setDeployArgs(configService.getState().deployArgs);
 
@@ -60,6 +61,7 @@ public class AvmConfiguration extends AvmRemoteBaseAction {
             state.contractTxnNrg = remoteConfigModel.getContractTxnNrg();
             state.contractTxnNrgPrice = remoteConfigModel.getContractTxnNrgPrice();
             state.mvnProfile = remoteConfigModel.getMvnProfile();
+            state.getReceiptWait = remoteConfigModel.isGetReceiptWait();
 
             state.deployArgs = remoteConfigModel.getDeployArgs();
 

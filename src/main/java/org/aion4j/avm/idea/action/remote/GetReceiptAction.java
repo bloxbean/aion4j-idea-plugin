@@ -49,6 +49,10 @@ public class GetReceiptAction extends AvmRemoteBaseAction {
             settingMap.put("txHash", txHash);
         }
 
+        if(state.getReceiptWait) {
+            settingMap.put("tail", "true");
+        }
+
         mavenRunnerSettings.setMavenProperties(settingMap);
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
 

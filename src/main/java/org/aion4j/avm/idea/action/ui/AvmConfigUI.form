@@ -6,8 +6,8 @@
       <xy x="14" y="55" width="805" height="493"/>
     </constraints>
     <properties>
-      <minimumSize width="663" height="320"/>
-      <preferredSize width="663" height="320"/>
+      <minimumSize width="763" height="320"/>
+      <preferredSize width="763" height="320"/>
       <requestFocusEnabled value="false"/>
     </properties>
     <border type="none"/>
@@ -168,29 +168,8 @@
               </grid>
             </children>
           </grid>
-          <grid id="baf42" layout-manager="FormLayout">
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:max(d;4px):noGrow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <colspec value="fill:d:grow"/>
-            <colspec value="left:4dlu:noGrow"/>
-            <colspec value="fill:d:grow"/>
+          <grid id="baf42" layout-manager="GridLayoutManager" row-count="10" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Remote - Details"/>
             </constraints>
@@ -199,19 +178,18 @@
             <children>
               <component id="d3487" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="2" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms defaultalign-vert="false"/>
+                  <grid row="1" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <horizontalTextPosition value="11"/>
                   <text value="Nrg (Deploy)"/>
                 </properties>
               </component>
               <component id="a64cc" class="javax.swing.JTextField" binding="deployNrgTf">
                 <constraints>
-                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
-                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties>
                   <text value=""/>
@@ -219,8 +197,7 @@
               </component>
               <component id="db7b7" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="4" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms defaultalign-vert="false"/>
+                  <grid row="2" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Nrg Price (Deploy)"/>
@@ -228,17 +205,15 @@
               </component>
               <component id="d6b9c" class="javax.swing.JTextField" binding="deployNrgPriceTf">
                 <constraints>
-                  <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
-                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
               </component>
               <component id="419d6" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms defaultalign-vert="false"/>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Nrg (Contract Transaction)"/>
@@ -246,17 +221,15 @@
               </component>
               <component id="e4371" class="javax.swing.JTextField" binding="contractTxnNrgTf" default-binding="true">
                 <constraints>
-                  <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
-                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
               </component>
               <component id="840a7" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms defaultalign-vert="false"/>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Nrg Price (Contract Transaction)"/>
@@ -264,23 +237,15 @@
               </component>
               <component id="b00c2" class="javax.swing.JTextField" binding="contractTxnNrgPriceTf" default-binding="true">
                 <constraints>
-                  <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
-                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <vspacer id="12ec5">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                  <forms defaultalign-vert="false"/>
-                </constraints>
-              </vspacer>
               <component id="b38b8" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms defaultalign-vert="false"/>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Maven Profile For Remote Deployment"/>
@@ -290,12 +255,19 @@
               </component>
               <component id="f5c48" class="javax.swing.JTextField" binding="mvnProfileTf">
                 <constraints>
-                  <grid row="12" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
-                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
+              </component>
+              <component id="2730d" class="javax.swing.JCheckBox" binding="getReceiptWaitCB">
+                <constraints>
+                  <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Get Receipt - Wait till the transaction is mined (Default timeout: 2 min)"/>
+                </properties>
               </component>
             </children>
           </grid>
