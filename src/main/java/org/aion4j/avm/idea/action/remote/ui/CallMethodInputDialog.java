@@ -1,6 +1,7 @@
 package org.aion4j.avm.idea.action.remote.ui;
 
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.text.StringUtil;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -40,6 +41,10 @@ public class CallMethodInputDialog extends DialogWrapper {
         for(InvokeParam param: params) {
             JTextField paramTf = new JTextField();
             paramTfs.add(paramTf);
+
+            if(!StringUtil.isEmptyOrSpaces(param.getDefaultValue())) {
+                paramTf.setText(param.getDefaultValue());
+            }
         }
 
         valueTf = new JTextField();

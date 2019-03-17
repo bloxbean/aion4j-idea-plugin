@@ -33,6 +33,5 @@ public class AvmConfigStateService implements PersistentStateComponent<AvmConfig
 
     public void loadState(State state) {
         this.state = state;
-        System.out.println("Save state >> " + state);
     }
 }

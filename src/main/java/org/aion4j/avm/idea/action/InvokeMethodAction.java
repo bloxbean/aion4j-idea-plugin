@@ -13,6 +13,7 @@ import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
 import org.aion4j.avm.idea.action.remote.ui.CallMethodInputDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.AvmTypeHelper;
+import org.aion4j.avm.idea.service.AvmCacheService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Base class for Call Action and Contract Txn action
@@ -52,7 +54,18 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         PsiMethod method = (PsiMethod) element;
         List<InvokeParam> parameters = getInvokeParams(method);
 
-        System.out.println(method.getName());
+        AvmCacheService avmCacheService = ServiceManager.getService(project, AvmCacheService.class);
+
+        List<String> cacheArgs = null;
+        if(avmCacheService != null) {
+            cacheArgs = avmCacheService.getArgsFromCache(method);
+
+            if(cacheArgs != null && cacheArgs.size() > 0 && parameters.size() == cacheArgs.size()) {
+                for(int i=0; i < parameters.size(); i++) {
+                    parameters.get(i).setDefaultValue(cacheArgs.get(i)); //set cache value as default value
+                }
+            }
+        }
 
         CallMethodInputDialog dialog = new CallMethodInputDialog(method.getName(), parameters);
         boolean result = dialog.showAndGet();
@@ -60,17 +73,15 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         if (!result)
             return; //User selected cancel;
 
-
         List<InvokeParam> params = dialog.getParamsWithValues();
         long value = dialog.getValue();
         String contractAddress = dialog.getContractAddress();
 
-        params.forEach(pp -> {
-            System.out.println(pp.getName() + " >> " + pp.getValue());
-        });
+        //Store to cache.
+        avmCacheService.updateArgsToCache(method, params.stream().map(p -> p.getValue()).collect(Collectors.toList()));
+        avmCacheService.loadState(avmCacheService.getState());
 
         String argsStr = AvmTypeHelper.buildMethodArgsString(params);
-        System.out.println("Args: " + argsStr);
 
         //Set goal parameters
         settingMap.put("method", method.getName());
@@ -82,8 +93,6 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
         if(!StringUtil.isEmptyOrSpaces(contractAddress))
             settingMap.put("contract", contractAddress);
-
-        System.out.println(settingMap);
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, getGoals());
