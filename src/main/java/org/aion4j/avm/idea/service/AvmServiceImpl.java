@@ -10,6 +10,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -217,7 +218,13 @@ public class AvmServiceImpl implements AvmService {
     }
 
     private void getJCLListFromProjectLibrary(Project project) {
-        String homePath = ProjectRootManager.getInstance(project).getProjectSdk().getHomePath();
+        Sdk sdk = ProjectRootManager.getInstance(project).getProjectSdk();
+
+        if(sdk == null) {
+            return;
+        }
+
+        String homePath = sdk.getHomePath();
         File pluginPath = PluginManager.getPlugin(PluginId.getId("org.aion4j.avm")).getPath();
 
 

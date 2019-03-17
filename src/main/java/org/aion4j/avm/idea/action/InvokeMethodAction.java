@@ -1,5 +1,6 @@
 package org.aion4j.avm.idea.action;
 
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.components.ServiceManager;
@@ -13,6 +14,7 @@ import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
 import org.aion4j.avm.idea.action.remote.ui.CallMethodInputDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.AvmTypeHelper;
+import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.aion4j.avm.idea.service.AvmCacheService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
@@ -31,6 +33,19 @@ import java.util.stream.Collectors;
  */
 public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
+//    @Override
+//    public void update(@NotNull AnActionEvent e) {
+//        super.update(e);
+//
+//        final PsiElement element = e.getRequiredData(CommonDataKeys.PSI_ELEMENT);
+//
+//        if (element instanceof PsiMethod) {
+//            e.getPresentation().setVisible(true);
+//        } else {
+//            e.getPresentation().setVisible(false);
+//        }
+//    }
+
     @Override
     public Icon getIcon() {
         return AvmIcons.EXECUTE_ICON;
@@ -39,11 +54,19 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
 
-        final PsiElement element = e.getRequiredData(CommonDataKeys.PSI_ELEMENT);
+        PsiElement element = null;
+
+        try {
+            element = e.getRequiredData(CommonDataKeys.PSI_ELEMENT);
+        } catch (Error ex) {
+
+        }
+
         final Project project = e.getProject();
 
-        if (!(element instanceof PsiMethod)) {
-            System.out.println("Not a method");
+        if (element == null || !(element instanceof PsiMethod)) {
+            IdeaUtil.showNotification(project, "Avm - Call Method", "Please right click on the method name",
+                    NotificationType.WARNING, null);
             return;
         }
 
