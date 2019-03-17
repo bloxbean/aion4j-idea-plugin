@@ -1,4 +1,4 @@
-package org.aion4j.avm.idea.action.remote.ui;
+package org.aion4j.avm.idea.action.local.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -6,14 +6,14 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class GetReceiptTxHashDialog extends DialogWrapper {
+public class LocalGetAccountDialog extends DialogWrapper {
     private JTextField accountTf;
     private JPanel mainPanel;
 
-    public GetReceiptTxHashDialog(Project project) {
+    public LocalGetAccountDialog(Project project) {
         super(project, false);
         init();
-        setTitle("Enter Tx Hash");
+        setTitle("Enter Account");
     }
 
     @Nullable
@@ -22,7 +22,7 @@ public class GetReceiptTxHashDialog extends DialogWrapper {
         return mainPanel;
     }
 
-    public String getTxHash() {
+    public String getAccount() {
         return accountTf.getText().trim();
     }
 }

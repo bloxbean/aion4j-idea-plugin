@@ -1,31 +1,26 @@
 package org.aion4j.avm.idea.action.local;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import org.aion4j.avm.idea.action.AvmBaseAction;
+import org.aion4j.avm.idea.misc.AvmIcons;
+import org.aion4j.avm.idea.misc.IdeaUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocalDeployAction extends AnAction {
-
-    public LocalDeployAction() {
-        super("Deploy");
-    }
+public class LocalDeployAction extends AvmBaseAction {
 
     @Override
-    public void update(@NotNull AnActionEvent e) {
-//        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-//        boolean visible = file != null && file.getName().equals("pom.xml");
-        e.getPresentation().setEnabledAndVisible(true);
+    protected boolean isRemote() {
+        return false;
     }
 
     @Override
@@ -34,21 +29,24 @@ public class LocalDeployAction extends AnAction {
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
-        MavenRunnerParameters mavenRunnerParameters = new MavenRunnerParameters();
-        mavenRunnerParameters.setPomFileName("pom.xml");
-
         List<String> goals = new ArrayList<>();
         goals.add("clean");
         goals.add("package");
         goals.add("aion4j:deploy");
-        mavenRunnerParameters.setGoals(goals);
-        mavenRunnerParameters.setWorkingDirPath(project.getBasePath());
 
-        MavenRunnerSettings mavenRunnerSettings = new MavenRunnerSettings();
-        mavenRunnerSettings.setDelegateBuildToMaven(true);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
+        mavenRunnerSettings.setSkipTests(true);
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
-            System.out.println("Deployment is successfull");
+            IdeaUtil.showNotification(project, "Deployment", "Contract deployed successfully",
+                    NotificationType.INFORMATION, null);
         });
+    }
+
+    @Override
+    public Icon getIcon() {
+        return AvmIcons.DEPLOY_ICON;
     }
 }

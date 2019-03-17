@@ -1,13 +1,15 @@
-package org.aion4j.avm.idea.action.remote;
+package org.aion4j.avm.idea.action.local;
 
 import com.intellij.openapi.project.Project;
 import org.aion4j.avm.idea.action.InvokeMethodAction;
+import org.aion4j.avm.idea.misc.AvmIcons;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CallMethodAction extends InvokeMethodAction {
+public class LocalCallAction extends InvokeMethodAction {
 
     @Override
     protected List<String> getGoals() {
@@ -19,7 +21,16 @@ public class CallMethodAction extends InvokeMethodAction {
 
     @Override
     protected void initConfigInformation(Project project, Map<String, String> settingMap) {
-        populateKernelInfo(project, settingMap);
+        //Don't do anything
     }
 
+    @Override
+    protected boolean isRemote() {
+        return false;
+    }
+
+    @Override
+    public Icon getIcon() {
+        return AvmIcons.EXECUTE_ICON;
+    }
 }

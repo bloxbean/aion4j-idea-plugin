@@ -7,19 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CallMethodAction extends InvokeMethodAction {
-
+public class ContractTxnAction extends InvokeMethodAction {
     @Override
     protected List<String> getGoals() {
         List<String> goals = new ArrayList<>();
-        goals.add("aion4j:call");
+        goals.add("aion4j:contract-txn");
 
         return goals;
     }
 
     @Override
     protected void initConfigInformation(Project project, Map<String, String> settingMap) {
-        populateKernelInfo(project, settingMap);
+        populateCredentialInfo(project, settingMap);
     }
-
 }

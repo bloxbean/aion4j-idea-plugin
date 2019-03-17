@@ -61,10 +61,6 @@
             <!--<add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>-->
         <!--</group>-->
 
-        <action id="Avm.local.deploy" class="org.aion4j.avm.idea.action.local.LocalDeployAction"
-                text="Deploy" description="Deploy to embedded AVM">
-            <add-to-group group-id="Avm.local" anchor="first"/>
-        </action>
         <action id="Avm.remote.deploy" class="org.aion4j.avm.idea.action.remote.RemoteDeploy" text="Deploy"
                 description="Avm Remote Deploy">
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl D"/>
@@ -93,13 +89,56 @@
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl T"/>
             <add-to-group group-id="Avm.remote"/>
         </action>
+
+        <action id="Avm.remote.CallMethodAction"
+                class="org.aion4j.avm.idea.action.remote.CallMethodAction" text="Call"
+                description="Contract Method call">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl I"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remote.ContractTxnAction"
+                class="org.aion4j.avm.idea.action.remote.ContractTxnAction" text="Contract Transaction"
+                description="Send Contract Transaction">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl I"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remote.unlockAccount" class="org.aion4j.avm.idea.action.remote.UnlockAccountAction"
+                text="Unlock Account" description="Unlock Account">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl U"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
         <action id="Avm.remote.configuration" class="org.aion4j.avm.idea.action.remote.RemoteConfiguration"
                 text="Configuration" description="RemoteConfiguration" >
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl C"/>
             <add-to-group group-id="Avm.remote"/>
         </action>
-        <action id="org.aion4j.avm.idea.action.remote.CallMethodAction"
-                class="org.aion4j.avm.idea.action.remote.CallMethodAction" text="ContractMethodCall"
-                description="Contract Method call"/>
+
+
+        <action id="Avm.local.deploy" class="org.aion4j.avm.idea.action.local.LocalDeployAction"
+                text="Deploy" description="Deploy to embedded AVM">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl D"/>
+            <add-to-group group-id="Avm.local" anchor="first"/>
+        </action>
+        <action id="Avm..local.LocalCallAction"
+                class="org.aion4j.avm.idea.action.local.LocalCallAction" text="Call" description="Call Method">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl I"/>
+            <add-to-group group-id="Avm.local"/>
+        </action>
+        <action id="Avm.local.GetBalance" class="org.aion4j.avm.idea.action.local.LocalGetBalanceAction"
+                text="Get Balance (Default)" description="Get Balance of default account">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl B"/>
+            <add-to-group group-id="Avm.local"/>
+        </action>
+        <action id="Avm.local.GetBalanceByAccount"
+                class="org.aion4j.avm.idea.action.local.LocalGetBalanceByAccountAction" text="Get Balance"
+                description="Get Balance of An Account">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl B"/>
+            <add-to-group group-id="Avm.local"/>
+        </action>
+        <action id="Avm.local.LocalAccountCreate" class="org.aion4j.avm.idea.action.local.LocalCreateAccountAction"
+                text="Create Account" description="Create Account With Balance">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl N"/>
+            <add-to-group group-id="Avm.local"/>
+        </action>
     </actions>
 </idea-plugin>

@@ -5,8 +5,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import org.aion4j.avm.idea.misc.IdeaUtil;
+import org.aion4j.avm.idea.action.remote.ui.TransferDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
+import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
@@ -19,43 +20,56 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GetBalanceAction extends AvmRemoteBaseAction {
+public class UnlockAccountAction extends AvmRemoteBaseAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
+
         Project project = e.getProject();
 
         Map<String, String> settingMap = new HashMap<>();
-
         AvmConfigStateService.State state = populateKernelInfoAndAccount(project, settingMap);
 
-        if(state == null || StringUtil.isEmptyOrSpaces(state.account)) {
-            IdeaUtil.showNotification(project, "Get Balance call failed", "Account can't be empty or null. Please configure an account first.",
-                    NotificationType.ERROR, IdeaUtil.AVM_REMOTE_CONFIG_ACTION);
-
+        if(state == null) {
+            IdeaUtil.showNotification(project, "Unlock Account",
+                    "Account cannot be empty for an unlock command.", NotificationType.ERROR, IdeaUtil.AVM_REMOTE_CONFIG_ACTION);
             return;
         }
 
-        settingMap.put("address", state.account);
+        if (!StringUtil.isEmptyOrSpaces(state.pk)) {
+            IdeaUtil.showNotification(project, "Unlock Account",
+                    "Account unlock is not required when private key is set", NotificationType.INFORMATION, null);
+            return;
+        }
+
+        if (StringUtil.isEmptyOrSpaces(state.account)) {
+            IdeaUtil.showNotification(project, "Unlock Account",
+                    "Account cannot be empty for an unlock command.", NotificationType.ERROR, IdeaUtil.AVM_REMOTE_CONFIG_ACTION);
+            return;
+        }
+
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
         List<String> goals = new ArrayList<>();
-        goals.add("aion4j:get-balance");
+        goals.add("aion4j:unlock");
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
         MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
 
-        mavenRunnerSettings.setMavenProperties(settingMap);
+        settingMap.put("address", state.account);
+        settingMap.put("password", state.password);
 
+        mavenRunnerSettings.setMavenProperties(settingMap);
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
-            IdeaUtil.showNotification(project, "Get Balance call", "Balance fetched successfully",
-                    NotificationType.INFORMATION, null);
+            IdeaUtil.showNotification(project, "Unlock Account",
+                    "Account was unlocked successfully", NotificationType.INFORMATION, null);
+
         });
     }
 
     @Override
     public Icon getIcon() {
-        return AvmIcons.BALANCE_ICON;
+        return AvmIcons.UNLOCK_ICON;
     }
 }

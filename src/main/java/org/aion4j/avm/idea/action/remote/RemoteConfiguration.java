@@ -5,10 +5,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import org.aion4j.avm.idea.action.remote.ui.RemoteConfigUI;
+import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
 
-public class RemoteConfiguration extends AnAction {
+import javax.swing.*;
+
+public class RemoteConfiguration extends AvmRemoteBaseAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
@@ -34,6 +37,7 @@ public class RemoteConfiguration extends AnAction {
 
         configModel.setContractTxnNrg(configService.getState().contractTxnNrg);
         configModel.setContractTxnNrgPrice(configService.getState().contractTxnNrgPrice);
+        configModel.setMvnProfile(configService.getState().mvnProfile);
 
         configDialog.setState(configModel);
 
@@ -53,6 +57,7 @@ public class RemoteConfiguration extends AnAction {
             state.deployNrgPrice = remoteConfigModel.getDeployNrgPrice();
             state.contractTxnNrg = remoteConfigModel.getContractTxnNrg();
             state.contractTxnNrgPrice = remoteConfigModel.getContractTxnNrgPrice();
+            state.mvnProfile = remoteConfigModel.getMvnProfile();
 
             if(remoteConfigModel.isDisableCredentialStore()) { //don't store credentials
                 state.pk = "";
@@ -69,5 +74,10 @@ public class RemoteConfiguration extends AnAction {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Icon getIcon() {
+        return AvmIcons.CONFIG_ICON;
     }
 }

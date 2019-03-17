@@ -27,6 +27,7 @@ public class RemoteConfigUI extends DialogWrapper {
     private JTextField deployNrgPriceTf;
     private JTextField contractTxnNrgTf;
     private JTextField contractTxnNrgPriceTf;
+    private JTextField mvnProfileTf;
 
     public RemoteConfigUI(Project project, String customMessage) {
 
@@ -96,6 +97,11 @@ public class RemoteConfigUI extends DialogWrapper {
             setContractTxnNrgPrice(model.getContractTxnNrgPrice());
         else
             setContractTxnNrgPrice(String.valueOf(NrgConstants.defaultContractTxnNrgPrice));
+
+        if(!StringUtil.isEmptyOrSpaces(model.getMvnProfile()))
+            setMvnProfile(model.getMvnProfile());
+        else
+            setMvnProfile("remote");
     }
 
     public void setWeb3RpcUrl(String web3RpcUrl) {
@@ -136,6 +142,10 @@ public class RemoteConfigUI extends DialogWrapper {
 
     public void setContractTxnNrgPrice(String contractTxnNrgPrice) {
         this.contractTxnNrgPriceTf.setText(contractTxnNrgPrice);
+    }
+
+    public void setMvnProfile(String mavenProfie) {
+        this.mvnProfileTf.setText(mavenProfie);
     }
 
     private void doValidateInput() {
@@ -194,7 +204,7 @@ public class RemoteConfigUI extends DialogWrapper {
     public RemoteConfigModel getRemoteConfig() {
         return new RemoteConfigModel(web3RpcTf.getText(), pkTf.getText(), accountTf.getText(), passwordTf.getText(),
                 notStoreCredentialsCheckBox.isSelected(), cleanAndBuildCheckBox.isSelected(), deployNrgTf.getText(), deployNrgPriceTf.getText(),
-                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText());
+                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText());
     }
 
 
@@ -209,6 +219,7 @@ public class RemoteConfigUI extends DialogWrapper {
         private String deployNrgPrice;
         private String contractTxnNrg;
         private String contractTxnNrgPrice;
+        private String mvnProfile;
 
         public RemoteConfigModel() {
 
@@ -216,7 +227,7 @@ public class RemoteConfigUI extends DialogWrapper {
 
         public RemoteConfigModel(String web3RpcUrl, String pk, String account, String password,
                                  boolean disableCredentialStore, boolean cleanAndBuildBeforeDeploy, String deployNrg, String deployNrgPrice,
-                                 String contractTxnNrg, String contractTxnNrgPrice) {
+                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile) {
             this.web3RpcUrl = web3RpcUrl;
             this.pk = pk;
             this.account = account;
@@ -227,6 +238,7 @@ public class RemoteConfigUI extends DialogWrapper {
             this.deployNrgPrice = deployNrgPrice;
             this.contractTxnNrg = contractTxnNrg;
             this.contractTxnNrgPrice = contractTxnNrgPrice;
+            this.mvnProfile = mvnProfile;
         }
 
         public String getWeb3RpcUrl() {
@@ -307,6 +319,14 @@ public class RemoteConfigUI extends DialogWrapper {
 
         public void setContractTxnNrgPrice(String contractTxnNrgPrice) {
             this.contractTxnNrgPrice = contractTxnNrgPrice;
+        }
+
+        public String getMvnProfile() {
+            return mvnProfile;
+        }
+
+        public void setMvnProfile(String mvnProfile) {
+            this.mvnProfile = mvnProfile;
         }
     }
 

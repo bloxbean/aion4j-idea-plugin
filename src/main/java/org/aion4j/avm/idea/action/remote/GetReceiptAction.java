@@ -1,81 +1,55 @@
 package org.aion4j.avm.idea.action.remote;
 
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.AvmBaseAction;
+import org.aion4j.avm.idea.misc.AvmIcons;
+import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GetReceiptAction extends AvmBaseAction {
+public class GetReceiptAction extends AvmRemoteBaseAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
 
-        AvmConfigStateService configService = ServiceManager.getService(e.getProject(), AvmConfigStateService.class);
+        Map<String, String> settingMap = new HashMap<>();
+        AvmConfigStateService.State state = populateKernelInfo(project, settingMap);
 
-        AvmConfigStateService.State state = configService.getState();
-
-        List<String> reqFields = new ArrayList<>();
-        if(StringUtil.isEmptyOrSpaces(state.web3RpcUrl)) {
-            reqFields.add("Web3 Rpc Url");
-        }
-
-        if(reqFields.size() > 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Please provide ");
-
-            reqFields.stream().forEach(fl -> sb.append(fl + "  "));
-
-            Object result = RemoteConfiguration.showAvmRemoteConfig(e.getProject(), sb.toString());
-
-            if(result != null) {
-                state = configService.getState();
-            } else {
-                return;
-            }
+        if(state == null || StringUtil.isEmptyOrSpaces(state.web3RpcUrl)) {
+            IdeaUtil.showNotification(project, "Get Receipt failed", "Please configure remote kernel first.",
+                    NotificationType.ERROR, IdeaUtil.AVM_REMOTE_CONFIG_ACTION);
+            return;
         }
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
-        MavenRunnerParameters mavenRunnerParameters = new MavenRunnerParameters();
-        mavenRunnerParameters.setPomFileName("pom.xml");
-
         List<String> goals = new ArrayList<>();
-
         goals.add("aion4j:get-receipt");
-        mavenRunnerParameters.setGoals(goals);
-        mavenRunnerParameters.setWorkingDirPath(project.getBasePath());
 
-        Map<String, Boolean> profileMap = new HashMap();
-        profileMap.put("remote", true);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
 
-        mavenRunnerParameters.setProfilesMap(profileMap);
-
-        MavenRunnerSettings mavenRunnerSettings = new MavenRunnerSettings();
-        mavenRunnerSettings.setDelegateBuildToMaven(true);
-
-        //Props
-        Map<String, String> settingMap = new HashMap<>();
-        settingMap.put("web3rpc.url", state.web3RpcUrl);
-
+        //command args
         String txHash = getTxHash(project);
         if(txHash != null) {
             settingMap.put("txHash", txHash);
         }
 
         mavenRunnerSettings.setMavenProperties(settingMap);
-
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
 
         });
@@ -83,5 +57,10 @@ public class GetReceiptAction extends AvmBaseAction {
 
     public String getTxHash(Project project) {
         return null;
+    }
+
+    @Override
+    public Icon getIcon() {
+        return AvmIcons.GETRECEIPT_ICON;
     }
 }
