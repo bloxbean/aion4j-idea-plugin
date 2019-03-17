@@ -1,4 +1,4 @@
-package org.aion4j.avm.idea.action.remote.ui;
+package org.aion4j.avm.idea.action.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -13,7 +13,7 @@ import javax.swing.event.DocumentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemoteConfigUI extends DialogWrapper {
+public class AvmConfigUI extends DialogWrapper {
     private JPanel contentPane;
     private JTextField web3RpcTf;
     private JTextField pkTf;
@@ -22,18 +22,19 @@ public class RemoteConfigUI extends DialogWrapper {
     private JCheckBox notStoreCredentialsCheckBox;
     private JCheckBox cleanAndBuildCheckBox;
     private JLabel customMessageLabel;
-    private JTabbedPane tabbedPane1;
+    private JTabbedPane tabbedPane;
     private JTextField deployNrgTf;
     private JTextField deployNrgPriceTf;
     private JTextField contractTxnNrgTf;
     private JTextField contractTxnNrgPriceTf;
     private JTextField mvnProfileTf;
+    private JTextField deployArgsTf;
 
-    public RemoteConfigUI(Project project, String customMessage) {
+    public AvmConfigUI(Project project, String customMessage) {
 
         super(project, false);
         init();
-        setTitle("Remote AVM Configuration");
+        setTitle("Aion Virtual Machine - Configuration");
 
         DocumentAdapter l = new DocumentAdapter() {
             @Override
@@ -102,6 +103,8 @@ public class RemoteConfigUI extends DialogWrapper {
             setMvnProfile(model.getMvnProfile());
         else
             setMvnProfile("remote");
+
+        setDeployArgs(model.getDeployArgs());
     }
 
     public void setWeb3RpcUrl(String web3RpcUrl) {
@@ -146,6 +149,10 @@ public class RemoteConfigUI extends DialogWrapper {
 
     public void setMvnProfile(String mavenProfie) {
         this.mvnProfileTf.setText(mavenProfie);
+    }
+
+    public void setDeployArgs(String deployArgs) {
+        this.deployArgsTf.setText(deployArgs);
     }
 
     private void doValidateInput() {
@@ -204,7 +211,7 @@ public class RemoteConfigUI extends DialogWrapper {
     public RemoteConfigModel getRemoteConfig() {
         return new RemoteConfigModel(web3RpcTf.getText(), pkTf.getText(), accountTf.getText(), passwordTf.getText(),
                 notStoreCredentialsCheckBox.isSelected(), cleanAndBuildCheckBox.isSelected(), deployNrgTf.getText(), deployNrgPriceTf.getText(),
-                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText());
+                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), deployArgsTf.getText());
     }
 
 
@@ -220,6 +227,7 @@ public class RemoteConfigUI extends DialogWrapper {
         private String contractTxnNrg;
         private String contractTxnNrgPrice;
         private String mvnProfile;
+        private String deployArgs;
 
         public RemoteConfigModel() {
 
@@ -227,7 +235,7 @@ public class RemoteConfigUI extends DialogWrapper {
 
         public RemoteConfigModel(String web3RpcUrl, String pk, String account, String password,
                                  boolean disableCredentialStore, boolean cleanAndBuildBeforeDeploy, String deployNrg, String deployNrgPrice,
-                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile) {
+                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, String deployArgs) {
             this.web3RpcUrl = web3RpcUrl;
             this.pk = pk;
             this.account = account;
@@ -239,6 +247,7 @@ public class RemoteConfigUI extends DialogWrapper {
             this.contractTxnNrg = contractTxnNrg;
             this.contractTxnNrgPrice = contractTxnNrgPrice;
             this.mvnProfile = mvnProfile;
+            this.deployArgs = deployArgs;
         }
 
         public String getWeb3RpcUrl() {
@@ -327,6 +336,14 @@ public class RemoteConfigUI extends DialogWrapper {
 
         public void setMvnProfile(String mvnProfile) {
             this.mvnProfile = mvnProfile;
+        }
+
+        public String getDeployArgs() {
+            return deployArgs;
+        }
+
+        public void setDeployArgs(String deployArgs) {
+            this.deployArgs = deployArgs;
         }
     }
 

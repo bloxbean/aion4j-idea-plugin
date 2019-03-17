@@ -4,11 +4,11 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.AvmBaseAction;
-import org.aion4j.avm.idea.action.remote.ui.RemoteConfigUI;
+import org.aion4j.avm.idea.action.AvmConfiguration;
+import org.aion4j.avm.idea.action.ui.AvmConfigUI;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,14 +42,14 @@ public abstract class AvmRemoteBaseAction extends AvmBaseAction {
             reqFields.add("Private Key / Account & Password");
         }
 
-        RemoteConfigUI.RemoteConfigModel configDialogResponse = null;
+        AvmConfigUI.RemoteConfigModel configDialogResponse = null;
         if(reqFields.size() > 0) {
             StringBuilder sb = new StringBuilder();
             sb.append("Please provide ");
 
             reqFields.stream().forEach(fl -> sb.append(fl + "  "));
 
-            configDialogResponse = RemoteConfiguration.showAvmRemoteConfig(project, sb.toString());
+            configDialogResponse = AvmConfiguration.showAvmRemoteConfig(project, sb.toString());
 
             if(configDialogResponse != null) {
                 state = configService.getState();
@@ -88,10 +88,10 @@ public abstract class AvmRemoteBaseAction extends AvmBaseAction {
         AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
         AvmConfigStateService.State state = configService.getState();
 
-        RemoteConfigUI.RemoteConfigModel configDialogResponse = null;
+        AvmConfigUI.RemoteConfigModel configDialogResponse = null;
 
         if(StringUtil.isEmptyOrSpaces(state.web3RpcUrl)) {
-            configDialogResponse = RemoteConfiguration.showAvmRemoteConfig(project, "Please configure Web3 Rpc Url.");
+            configDialogResponse = AvmConfiguration.showAvmRemoteConfig(project, "Please configure Web3 Rpc Url.");
 
             if(configDialogResponse != null) {
                 state = configService.getState();
@@ -112,10 +112,10 @@ public abstract class AvmRemoteBaseAction extends AvmBaseAction {
         AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
         AvmConfigStateService.State state = configService.getState();
 
-        RemoteConfigUI.RemoteConfigModel configDialogResponse = null;
+        AvmConfigUI.RemoteConfigModel configDialogResponse = null;
 
         if(StringUtil.isEmptyOrSpaces(state.web3RpcUrl) || StringUtil.isEmptyOrSpaces(state.account)) {
-            configDialogResponse = RemoteConfiguration.showAvmRemoteConfig(project, "Please configure Web3 Rpc Url and account.");
+            configDialogResponse = AvmConfiguration.showAvmRemoteConfig(project, "Please configure Web3 Rpc Url and account.");
 
             if(configDialogResponse != null) {
                 state = configService.getState();

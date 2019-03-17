@@ -59,6 +59,11 @@
 
             </group>
         </group>
+        <action id="Avm.remote.configuration" class="org.aion4j.avm.idea.action.AvmConfiguration"
+                text="Configuration" description="RemoteConfiguration" >
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl C"/>
+            <add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>
+        </action>
 
         <!--<group id="Avm.local" text="Embedded" description="Embedded AVM">-->
             <!--<add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>-->
@@ -108,11 +113,6 @@
         <action id="Avm.remote.unlockAccount" class="org.aion4j.avm.idea.action.remote.UnlockAccountAction"
                 text="Unlock Account" description="Unlock Account">
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl U"/>
-            <add-to-group group-id="Avm.remote"/>
-        </action>
-        <action id="Avm.remote.configuration" class="org.aion4j.avm.idea.action.remote.RemoteConfiguration"
-                text="Configuration" description="RemoteConfiguration" >
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl C"/>
             <add-to-group group-id="Avm.remote"/>
         </action>
 

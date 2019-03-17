@@ -19,7 +19,7 @@ public class AvmConfigStateService implements PersistentStateComponent<AvmConfig
         public String contractTxnNrg;
         public String contractTxnNrgPrice;
         public String mvnProfile;
-
+        public String deployArgs;
     }
 
     State state;

@@ -1,29 +1,29 @@
-package org.aion4j.avm.idea.action.remote;
+package org.aion4j.avm.idea.action;
 
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.aion4j.avm.idea.action.remote.ui.RemoteConfigUI;
+import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
+import org.aion4j.avm.idea.action.ui.AvmConfigUI;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class RemoteConfiguration extends AvmRemoteBaseAction {
+public class AvmConfiguration extends AvmRemoteBaseAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         showAvmRemoteConfig(e.getProject(), null);
     }
 
-    public static RemoteConfigUI.RemoteConfigModel showAvmRemoteConfig(@NotNull Project project, String customMessage) {
+    public static AvmConfigUI.RemoteConfigModel showAvmRemoteConfig(@NotNull Project project, String customMessage) {
         AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
 
-        RemoteConfigUI configDialog = new RemoteConfigUI(project, customMessage);
+        AvmConfigUI configDialog = new AvmConfigUI(project, customMessage);
 
-        RemoteConfigUI.RemoteConfigModel configModel = new RemoteConfigUI.RemoteConfigModel();
+        AvmConfigUI.RemoteConfigModel configModel = new AvmConfigUI.RemoteConfigModel();
 
         configModel.setWeb3RpcUrl(configService.getState().web3RpcUrl);
         configModel.setPk(configService.getState().pk);
@@ -39,15 +39,17 @@ public class RemoteConfiguration extends AvmRemoteBaseAction {
         configModel.setContractTxnNrgPrice(configService.getState().contractTxnNrgPrice);
         configModel.setMvnProfile(configService.getState().mvnProfile);
 
+        configModel.setDeployArgs(configService.getState().deployArgs);
+
         configDialog.setState(configModel);
 
         //Show the dialog
         boolean result = configDialog.showAndGet();
         if(result) {
             // user pressed ok. Store value to state
-            RemoteConfigUI.RemoteConfigModel remoteConfigModel = configDialog.getRemoteConfig();
+            AvmConfigUI.RemoteConfigModel remoteConfigModel = configDialog.getRemoteConfig();
 
-            AvmConfigStateService.State state = new AvmConfigStateService.State();
+            AvmConfigStateService.State state = configService.getState();//new AvmConfigStateService.State();
             state.web3RpcUrl = remoteConfigModel.getWeb3RpcUrl();
             state.disableCredentialStore = remoteConfigModel.isDisableCredentialStore();
             state.cleanAndBuildBeforeDeploy = remoteConfigModel.isCleanAndBuildBeforeDeploy();
@@ -58,6 +60,8 @@ public class RemoteConfiguration extends AvmRemoteBaseAction {
             state.contractTxnNrg = remoteConfigModel.getContractTxnNrg();
             state.contractTxnNrgPrice = remoteConfigModel.getContractTxnNrgPrice();
             state.mvnProfile = remoteConfigModel.getMvnProfile();
+
+            state.deployArgs = remoteConfigModel.getDeployArgs();
 
             if(remoteConfigModel.isDisableCredentialStore()) { //don't store credentials
                 state.pk = "";
