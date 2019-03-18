@@ -13,14 +13,14 @@ public class AvmConfigStateService implements PersistentStateComponent<AvmConfig
         public String pk;
         public String password;
         public boolean disableCredentialStore;
-        public boolean cleanAndBuildBeforeDeploy;
+        public boolean cleanAndBuildBeforeDeploy = true;
         public String deployNrg;
         public String deployNrgPrice;
         public String contractTxnNrg;
         public String contractTxnNrgPrice;
         public String mvnProfile;
         public String deployArgs;
-        public boolean getReceiptWait;
+        public boolean getReceiptWait = true;
     }
 
     State state;

@@ -3,6 +3,7 @@ package org.aion4j.avm.idea.action.remote;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,10 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
         }
 
         goals.add("aion4j:deploy");
+
+        if(!StringUtil.isEmptyOrSpaces(state.deployArgs)) {
+            settingMap.put("args", state.deployArgs);
+        }
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
 

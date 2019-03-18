@@ -72,11 +72,18 @@ public class AvmTypeHelper {
         StringBuilder sb = new StringBuilder();
         for(InvokeParam param: paramList) {
             sb.append(param.getAvmType());
+            if(param.isArray())
+                sb.append("[]");
             sb.append(" ");
-            sb.append(param.getValue());
+            if("-T".equals(param.getAvmType()) && !param.isArray()) {
+                sb.append("'");
+                sb.append(param.getValue());
+                sb.append("'");
+            } else {
+                sb.append(param.getValue());
+            }
             sb.append(" ");
         }
-
         return sb.toString().trim();
     }
 }
