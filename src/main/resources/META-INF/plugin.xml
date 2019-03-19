@@ -1,17 +1,21 @@
 <idea-plugin>
     <id>org.aion4j.avm</id>
     <name>Aion4j AVM Integration</name>
-    <vendor email="satran004@gmail.com" url="https://github.com/satran004/aion4j-idea-plugin/">Aion4j Idea Project</vendor>
+    <vendor email="satran004@gmail.com" url="https://github.com/satran004/aion4j-idea-plugin/">Aion4j Idea Project
+    </vendor>
 
     <description><![CDATA[
     Intellij IDEA plugin for development on AVM, a java based VM for Aion blockchain.
     ]]></description>
 
+    <idea-version since-build="183"/>
+
     <depends config-file="maven.xml" optional="true">org.jetbrains.idea.maven</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <localInspection implementationClass="org.aion4j.avm.idea.inspection.JCLWhitelistInspection" enabledByDefault="true" language="JAVA"/>
+        <localInspection implementationClass="org.aion4j.avm.idea.inspection.JCLWhitelistInspection"
+                         enabledByDefault="true" language="JAVA"/>
         <projectService
                 serviceInterface="org.aion4j.avm.idea.service.AvmService"
                 serviceImplementation="org.aion4j.avm.idea.service.AvmServiceImpl"/>
@@ -19,7 +23,7 @@
     </extensions>
 
     <!--<extensions defaultExtensionNs="com.intellij">-->
-        <!--<framework.type implementation="org.aion4j.avm.idea.framework.AvmFramework"/>-->
+    <!--<framework.type implementation="org.aion4j.avm.idea.framework.AvmFramework"/>-->
     <!--</extensions>-->
 
     <project-components>
@@ -41,33 +45,25 @@
 
     <actions>
 
-        <!--<action id="org.aion4j.avm.idea.action.local.LocalDeployAction" class="org.aion4j.avm.idea.action.local.LocalDeployAction"-->
-                <!--text="Avm.LocalDeploy" description="Deploy to embedded AVM">-->
-            <!--<add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
-        <!--</action>-->
-
-        <group id="org.aion4j.avm.idea.action.AvmActionGroup" class="org.aion4j.avm.idea.action.AvmActionGroup" popup="true"
-               text="Aion Virtual Machine" description="Aion Virtual Machine" >
+        <group id="org.aion4j.avm.idea.action.AvmActionGroup" class="org.aion4j.avm.idea.action.AvmActionGroup"
+               popup="true"
+               text="Aion Virtual Machine" description="Aion Virtual Machine">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
 
-            <group id="Avm.local" text="Embedded" description="Embedded AVM"  popup="true">
+            <group id="Avm.local" text="Embedded" description="Embedded AVM" popup="true">
 
             </group>
 
-            <group id="Avm.remote" text="Remote" description="Remotr AVM"  popup="true">
+            <group id="Avm.remote" text="Remote" description="Remotr AVM" popup="true">
 
             </group>
         </group>
         <action id="Avm.remote.configuration" class="org.aion4j.avm.idea.action.AvmConfiguration"
-                text="Configuration" description="RemoteConfiguration" >
+                text="Configuration" description="RemoteConfiguration">
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl C"/>
             <add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>
         </action>
-
-        <!--<group id="Avm.local" text="Embedded" description="Embedded AVM">-->
-            <!--<add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>-->
-        <!--</group>-->
 
         <action id="Avm.remote.deploy" class="org.aion4j.avm.idea.action.remote.RemoteDeploy" text="Deploy"
                 description="Avm Remote Deploy">
@@ -144,4 +140,5 @@
             <add-to-group group-id="Avm.local"/>
         </action>
     </actions>
+
 </idea-plugin>
