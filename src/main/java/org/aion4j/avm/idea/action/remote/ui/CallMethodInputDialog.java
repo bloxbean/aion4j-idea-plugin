@@ -87,7 +87,8 @@ public class CallMethodInputDialog extends DialogWrapper {
 
         CellConstraints cc = new CellConstraints();
 
-        panel.add(createSeparator("Method Parameters"),  cc.xyw(1,  1, 9));
+        if(params.size() != 0)
+            panel.add(createSeparator("Method Parameters"),  cc.xyw(1,  1, 9));
 
         int row = 3;
         Font font = panel.getFont();
