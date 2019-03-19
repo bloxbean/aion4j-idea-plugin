@@ -1,3 +1,6 @@
+### Since 0.1.0
+  - Integration with aion4j:maven commands
+  - Constructor level JCL whitelist check
 ### Since 0.0.3-beta1
   - Method level JCL whitelist check
   
