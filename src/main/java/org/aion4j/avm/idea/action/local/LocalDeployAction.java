@@ -53,6 +53,13 @@ public class LocalDeployAction extends AvmBaseAction {
 
         MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
         mavenRunnerSettings.setSkipTests(true);
+
+        if(state != null) { //set avm properties
+            settingMap.put("preserveDebuggability", String.valueOf(state.preserveDebugMode));
+            settingMap.put("enableVerboseConcurrentExecutor", String.valueOf(state.verboseConcurrentExecutor));
+            settingMap.put("enableVerboseContractErrors", String.valueOf(state.verboseContractError));
+        }
+
         mavenRunnerSettings.setMavenProperties(settingMap);
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {

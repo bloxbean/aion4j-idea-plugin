@@ -42,6 +42,10 @@ public class AvmConfiguration extends AvmRemoteBaseAction {
 
         configModel.setDeployArgs(configService.getState().deployArgs);
 
+        configModel.setPreserveDebugMode(configService.getState().preserveDebugMode);
+        configModel.setVerboseContractError(configService.getState().verboseContractError);
+        configModel.setVerboseConcurrentExecutor(configService.getState().verboseConcurrentExecutor);
+
         configDialog.setState(configModel);
 
         //Show the dialog
@@ -64,6 +68,10 @@ public class AvmConfiguration extends AvmRemoteBaseAction {
             state.getReceiptWait = remoteConfigModel.isGetReceiptWait();
 
             state.deployArgs = remoteConfigModel.getDeployArgs();
+
+            state.preserveDebugMode = remoteConfigModel.isPreserveDebugMode();
+            state.verboseContractError = remoteConfigModel.isVerboseContractError();
+            state.verboseConcurrentExecutor = remoteConfigModel.isVerboseConcurrentExecutor();
 
             if(remoteConfigModel.isDisableCredentialStore()) { //don't store credentials
                 state.pk = "";

@@ -21,6 +21,11 @@ public class AvmConfigStateService implements PersistentStateComponent<AvmConfig
         public String mvnProfile;
         public String deployArgs;
         public boolean getReceiptWait = true;
+
+        //local avm props
+        public boolean preserveDebugMode;
+        public boolean verboseContractError;
+        public boolean verboseConcurrentExecutor;
     }
 
     State state;

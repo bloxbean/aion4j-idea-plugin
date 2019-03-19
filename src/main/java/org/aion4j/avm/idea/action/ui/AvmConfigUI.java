@@ -30,6 +30,9 @@ public class AvmConfigUI extends DialogWrapper {
     private JTextField mvnProfileTf;
     private JTextField deployArgsTf;
     private JCheckBox getReceiptWaitCB;
+    private JCheckBox preserveDebugModeCheckBox;
+    private JCheckBox verboseContractErrorCheckBox;
+    private JCheckBox verboseConcurrentExecutorCheckBox;
 
     public AvmConfigUI(Project project, String customMessage) {
 
@@ -108,6 +111,11 @@ public class AvmConfigUI extends DialogWrapper {
         setDeployArgs(model.getDeployArgs());
 
         setGetReceiptWait(model.isGetReceiptWait());
+
+        //set Avm params
+        setPreserveDebugMode(model.isPreserveDebugMode());
+        setVerboseContractError(model.isVerboseContractError());
+        setVerboseConcurrentExecutor(model.isVerboseConcurrentExecutor());
     }
 
     public void setWeb3RpcUrl(String web3RpcUrl) {
@@ -160,6 +168,18 @@ public class AvmConfigUI extends DialogWrapper {
 
     public void setGetReceiptWait(boolean wait) {
         this.getReceiptWaitCB.setSelected(wait);
+    }
+
+    public void setPreserveDebugMode(boolean flag) {
+        this.preserveDebugModeCheckBox.setSelected(flag);
+    }
+
+    public void setVerboseContractError(boolean flag) {
+        this.verboseContractErrorCheckBox.setSelected(flag);
+    }
+
+    public void setVerboseConcurrentExecutor(boolean flag) {
+        this.verboseConcurrentExecutorCheckBox.setSelected(flag);
     }
 
     private void doValidateInput() {
@@ -218,7 +238,8 @@ public class AvmConfigUI extends DialogWrapper {
     public RemoteConfigModel getRemoteConfig() {
         return new RemoteConfigModel(web3RpcTf.getText(), pkTf.getText(), accountTf.getText(), passwordTf.getText(),
                 notStoreCredentialsCheckBox.isSelected(), cleanAndBuildCheckBox.isSelected(), deployNrgTf.getText(), deployNrgPriceTf.getText(),
-                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), deployArgsTf.getText(), getReceiptWaitCB.isSelected());
+                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), deployArgsTf.getText(), getReceiptWaitCB.isSelected(),
+                preserveDebugModeCheckBox.isSelected(), verboseContractErrorCheckBox.isSelected(), verboseConcurrentExecutorCheckBox.isSelected());
     }
 
 
@@ -237,13 +258,19 @@ public class AvmConfigUI extends DialogWrapper {
         private String deployArgs;
         private boolean getReceiptWait;
 
+        //local avm properties
+        private boolean preserveDebugMode;
+        private boolean verboseContractError;
+        private boolean verboseConcurrentExecutor;
+
         public RemoteConfigModel() {
 
         }
 
         public RemoteConfigModel(String web3RpcUrl, String pk, String account, String password,
                                  boolean disableCredentialStore, boolean cleanAndBuildBeforeDeploy, String deployNrg, String deployNrgPrice,
-                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, String deployArgs, boolean getReceiptWait) {
+                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, String deployArgs, boolean getReceiptWait,
+                                 boolean preserveDebugMode, boolean verboseContractError, boolean verboseConcurrentExecutor) {
             this.web3RpcUrl = web3RpcUrl;
             this.pk = pk;
             this.account = account;
@@ -257,6 +284,10 @@ public class AvmConfigUI extends DialogWrapper {
             this.mvnProfile = mvnProfile;
             this.deployArgs = deployArgs;
             this.getReceiptWait = getReceiptWait;
+
+            this.preserveDebugMode = preserveDebugMode;
+            this.verboseContractError = verboseContractError;
+            this.verboseConcurrentExecutor = verboseConcurrentExecutor;
         }
 
         public String getWeb3RpcUrl() {
@@ -361,6 +392,31 @@ public class AvmConfigUI extends DialogWrapper {
 
         public void setGetReceiptWait(boolean getReceiptWait) {
             this.getReceiptWait = getReceiptWait;
+        }
+
+        public void setPreserveDebugMode(boolean preserveDebugMode) {
+            this.preserveDebugMode = preserveDebugMode;
+        }
+
+        public boolean isPreserveDebugMode() {
+            return preserveDebugMode;
+        }
+
+        public void setVerboseContractError(boolean verboseContractError) {
+            this.verboseContractError = verboseContractError;
+        }
+
+        public boolean isVerboseContractError() {
+            return verboseContractError;
+        }
+
+        public void setVerboseConcurrentExecutor(boolean verboseConcurrentExecutor) {
+            this.verboseConcurrentExecutor = verboseConcurrentExecutor;
+        }
+
+        public boolean isVerboseConcurrentExecutor() {
+            return verboseConcurrentExecutor;
+
         }
     }
 
