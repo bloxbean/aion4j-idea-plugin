@@ -13,7 +13,6 @@ import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +23,9 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
         Project project = e.getProject();
 
         //Maven settins map
-        Map<String, String> settingMap = new HashMap<>();
-        AvmConfigStateService.State state = populateCredentialInfo(project, settingMap);
+        //Map<String, String> settingMap = new HashMap<>();
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
+        AvmConfigStateService.State state = getConfigState(project);
 
         if(state == null)//Null means, don't proceed
             return;
@@ -41,14 +41,12 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
         goals.add("aion4j:deploy");
 
         if(!StringUtil.isEmptyOrSpaces(state.deployArgs)) {
-            settingMap.put("args", state.deployArgs);
+            mavenRunnerSettings.getMavenProperties().put("args", state.deployArgs);
         }
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
 
-        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
         mavenRunnerSettings.setSkipTests(true);
-        mavenRunnerSettings.setMavenProperties(settingMap);
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             System.out.println("Deployment is successfull");
@@ -58,6 +56,11 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
     @Override
     public Icon getIcon() {
         return AvmIcons.DEPLOY_ICON;
+    }
+
+    @Override
+    protected void configureAVMProperties(Project project, Map<String, String> properties) {
+        populateCredentialInfo(project, properties);
     }
 
 }

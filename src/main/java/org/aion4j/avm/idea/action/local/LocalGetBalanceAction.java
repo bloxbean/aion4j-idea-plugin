@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LocalGetBalanceAction extends AvmBaseAction {
+public class LocalGetBalanceAction extends AvmLocalBaseAction {
 
     @Override
     protected boolean isRemote() {
@@ -31,17 +31,13 @@ public class LocalGetBalanceAction extends AvmBaseAction {
 
         Project project = e.getProject();
 
-        Map<String, String> settingMap = new HashMap<>();
-
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
         List<String> goals = new ArrayList<>();
         goals.add("aion4j:get-balance");
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
-        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
-
-        mavenRunnerSettings.setMavenProperties(settingMap);
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             IdeaUtil.showNotification(project, "Get Balance call", "Balance fetched successfully",

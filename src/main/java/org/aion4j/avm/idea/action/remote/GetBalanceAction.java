@@ -25,9 +25,9 @@ public class GetBalanceAction extends AvmRemoteBaseAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
 
-        Map<String, String> settingMap = new HashMap<>();
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
 
-        AvmConfigStateService.State state = populateKernelInfoAndAccount(project, settingMap);
+        AvmConfigStateService.State state = getConfigState(project);
 
         if(state == null || StringUtil.isEmptyOrSpaces(state.account)) {
             IdeaUtil.showNotification(project, "Get Balance call failed", "Account can't be empty or null. Please configure an account first.",
@@ -36,17 +36,13 @@ public class GetBalanceAction extends AvmRemoteBaseAction {
             return;
         }
 
-        settingMap.put("address", state.account);
+        mavenRunnerSettings.getMavenProperties().put("address", state.account);
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
-
         List<String> goals = new ArrayList<>();
         goals.add("aion4j:get-balance");
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
-        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
-
-        mavenRunnerSettings.setMavenProperties(settingMap);
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             IdeaUtil.showNotification(project, "Get Balance call", "Balance fetched successfully",
@@ -57,5 +53,10 @@ public class GetBalanceAction extends AvmRemoteBaseAction {
     @Override
     public Icon getIcon() {
         return AvmIcons.BALANCE_ICON;
+    }
+
+    @Override
+    protected void configureAVMProperties(Project project, Map<String, String> properties) {
+        populateKernelInfoAndAccount(project, properties);
     }
 }

@@ -18,8 +18,7 @@ public class CallMethodAction extends InvokeMethodAction {
     }
 
     @Override
-    protected void initConfigInformation(Project project, Map<String, String> settingMap) {
+    protected void configureAVMProperties(Project project, Map<String, String> settingMap) {
         populateKernelInfo(project, settingMap);
     }
-
 }

@@ -27,10 +27,7 @@ public abstract class AvmRemoteBaseAction extends AvmBaseAction {
      */
     protected AvmConfigStateService.State populateCredentialInfo(Project project, Map<String, String> settingMap) {
 
-        AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
-
-        AvmConfigStateService.State state = configService.getState();
-
+        AvmConfigStateService.State state = getConfigState(project);
 
         List<String> reqFields = new ArrayList<>();
         if(StringUtil.isEmptyOrSpaces(state.web3RpcUrl)) {
@@ -52,7 +49,7 @@ public abstract class AvmRemoteBaseAction extends AvmBaseAction {
             configDialogResponse = AvmConfiguration.showAvmRemoteConfig(project, sb.toString());
 
             if(configDialogResponse != null) {
-                state = configService.getState();
+                state = getConfigState(project);//configService.getState();
             } else {
                 return null;
             }

@@ -70,9 +70,12 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
             return;
         }
 
+        MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, getGoals());
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
         //set kernel info
-        Map<String, String> settingMap = new HashMap<>();
-        initConfigInformation(project, settingMap);
+        //Map<String, String> settingMap = new HashMap<>();
+        //initConfigInformation(project, settingMap);
 
         PsiMethod method = (PsiMethod) element;
         List<InvokeParam> parameters = getInvokeParams(method);
@@ -106,6 +109,7 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
         String argsStr = AvmTypeHelper.buildMethodArgsString(params);
 
+        Map<String, String> settingMap = mavenRunnerSettings.getMavenProperties();
         //Set goal parameters
         settingMap.put("method", method.getName());
         if(argsStr != null)
@@ -117,11 +121,9 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         if(!StringUtil.isEmptyOrSpaces(contractAddress))
             settingMap.put("contract", contractAddress);
 
-        MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, getGoals());
-        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
 
-        mavenRunnerSettings.setMavenProperties(settingMap);
+
+       // mavenRunnerSettings.setMavenProperties(settingMap);
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
 
         });
@@ -153,6 +155,4 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
     }
 
     protected abstract List<String> getGoals();
-    protected abstract void initConfigInformation(Project project, Map<String, String> settingMap);
-
 }

@@ -26,6 +26,9 @@ public class AvmConfigStateService implements PersistentStateComponent<AvmConfig
         public boolean preserveDebugMode;
         public boolean verboseContractError;
         public boolean verboseConcurrentExecutor;
+        public String avmStoragePath;
+        public String localDefaultAccount;
+        public boolean shouldAskCallerAccountEverytime;
     }
 
     State state;

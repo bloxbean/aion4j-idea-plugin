@@ -17,7 +17,8 @@ public class ContractTxnAction extends InvokeMethodAction {
     }
 
     @Override
-    protected void initConfigInformation(Project project, Map<String, String> settingMap) {
-        populateCredentialInfo(project, settingMap);
+    protected void configureAVMProperties(Project project, Map<String, String> properties) {
+        populateCredentialInfo(project, properties);
     }
+
 }

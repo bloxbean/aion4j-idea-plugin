@@ -12,7 +12,6 @@ import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +31,13 @@ public abstract class AvmBaseAction extends AnAction {
         if(getIcon() != null) {
             e.getPresentation().setIcon(getIcon());
         }
+    }
+
+    protected AvmConfigStateService.State getConfigState(@NotNull Project project) {
+        AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
+        AvmConfigStateService.State state = configService.getState();
+
+        return state;
     }
 
     protected MavenRunnerParameters getMavenRunnerParameters(Project project, List<String> goals) {
@@ -63,9 +69,16 @@ public abstract class AvmBaseAction extends AnAction {
 
     }
 
-    protected MavenRunnerSettings getMavenRunnerSettings() {
+    protected MavenRunnerSettings getMavenRunnerSettings(Project project) {
         MavenRunnerSettings mavenRunnerSettings = new MavenRunnerSettings();
         mavenRunnerSettings.setDelegateBuildToMaven(true);
+
+        Map<String, String> map = mavenRunnerSettings.getMavenProperties();
+        if(map == null) {
+            mavenRunnerSettings.setMavenProperties(new HashMap<>());
+        }
+
+        configureAVMProperties(project, mavenRunnerSettings.getMavenProperties());
 
         return mavenRunnerSettings;
     }
@@ -75,4 +88,5 @@ public abstract class AvmBaseAction extends AnAction {
     }
 
     protected abstract boolean isRemote();
+    protected abstract void configureAVMProperties(Project project, Map<String, String> properties);
 }

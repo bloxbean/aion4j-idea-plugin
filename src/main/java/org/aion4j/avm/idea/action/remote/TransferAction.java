@@ -23,8 +23,7 @@ public class TransferAction extends AvmRemoteBaseAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
 
-        Map<String, String> settingMap = new HashMap<>();
-        populateKernelInfo(project, settingMap);
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
 
         TransferDialog dialog = new TransferDialog(project);
 
@@ -37,8 +36,8 @@ public class TransferAction extends AvmRemoteBaseAction {
             goals.add("aion4j:transfer");
 
             MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
-            MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
 
+            Map<String, String> settingMap = mavenRunnerSettings.getMavenProperties();
             if (!StringUtil.isEmptyOrSpaces(dialog.getPrivateKey())) {
                 settingMap.put("pk", dialog.getPrivateKey());
             } else {
@@ -52,7 +51,6 @@ public class TransferAction extends AvmRemoteBaseAction {
             settingMap.put("gas", dialog.getNrg());
             settingMap.put("gasPrice", dialog.getNrgPrice());
 
-            mavenRunnerSettings.setMavenProperties(settingMap);
 
             mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
 
@@ -63,5 +61,10 @@ public class TransferAction extends AvmRemoteBaseAction {
     @Override
     public Icon getIcon() {
         return AvmIcons.TRANSFER_ICON;
+    }
+
+    @Override
+    protected void configureAVMProperties(Project project, Map<String, String> properties) {
+        populateKernelInfo(project, properties);
     }
 }

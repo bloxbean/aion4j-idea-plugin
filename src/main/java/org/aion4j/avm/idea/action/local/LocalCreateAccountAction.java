@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LocalCreateAccountAction extends AvmBaseAction {
+public class LocalCreateAccountAction extends AvmLocalBaseAction {
 
     @Override
     protected boolean isRemote() {
@@ -49,19 +49,16 @@ public class LocalCreateAccountAction extends AvmBaseAction {
             return;
         }
 
-        Map<String, String> settingMap = new HashMap<>();
-        settingMap.put("address", account);
-        settingMap.put("balance", String.valueOf(balance));
-
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
         List<String> goals = new ArrayList<>();
         goals.add("aion4j:create-account");
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
-        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
 
-        mavenRunnerSettings.setMavenProperties(settingMap);
+        mavenRunnerSettings.getMavenProperties().put("address", account);
+        mavenRunnerSettings.getMavenProperties().put("balance", String.valueOf(balance));
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             IdeaUtil.showNotification(project, "Account creation", "Account created successfully",

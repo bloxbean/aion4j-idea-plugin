@@ -3,15 +3,15 @@ package org.aion4j.avm.idea.action;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
 import org.aion4j.avm.idea.action.ui.AvmConfigUI;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Map;
 
-public class AvmConfiguration extends AvmRemoteBaseAction {
+public class AvmConfiguration extends AvmBaseAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
@@ -45,6 +45,9 @@ public class AvmConfiguration extends AvmRemoteBaseAction {
         configModel.setPreserveDebugMode(configService.getState().preserveDebugMode);
         configModel.setVerboseContractError(configService.getState().verboseContractError);
         configModel.setVerboseConcurrentExecutor(configService.getState().verboseConcurrentExecutor);
+        configModel.setAvmStoragePath(configService.getState().avmStoragePath);
+        configModel.setLocalDefaultAccount(configService.getState().localDefaultAccount);
+        configModel.setShouldAskCallerAccountEverytime(configService.getState().shouldAskCallerAccountEverytime);
 
         configDialog.setState(configModel);
 
@@ -73,6 +76,10 @@ public class AvmConfiguration extends AvmRemoteBaseAction {
             state.verboseContractError = remoteConfigModel.isVerboseContractError();
             state.verboseConcurrentExecutor = remoteConfigModel.isVerboseConcurrentExecutor();
 
+            state.avmStoragePath = remoteConfigModel.getAvmStoragePath();
+            state.localDefaultAccount = remoteConfigModel.getLocalDefaultAccount();
+            state.shouldAskCallerAccountEverytime = remoteConfigModel.shouldAskCallerAccountEverytime();
+
             if(remoteConfigModel.isDisableCredentialStore()) { //don't store credentials
                 state.pk = "";
                 state.password = "";
@@ -93,5 +100,15 @@ public class AvmConfiguration extends AvmRemoteBaseAction {
     @Override
     public Icon getIcon() {
         return AvmIcons.CONFIG_ICON;
+    }
+
+    @Override
+    protected boolean isRemote() { //Ignore .. doesn't matter for this impl
+        return false;
+    }
+
+    @Override
+    protected void configureAVMProperties(Project project, Map<String, String> properties) { //Ignore..doesn't matter
+
     }
 }

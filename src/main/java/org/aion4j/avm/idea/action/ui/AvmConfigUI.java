@@ -10,6 +10,11 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +38,11 @@ public class AvmConfigUI extends DialogWrapper {
     private JCheckBox preserveDebugModeCheckBox;
     private JCheckBox verboseContractErrorCheckBox;
     private JCheckBox verboseConcurrentExecutorCheckBox;
+    private JTextField storagePathTf;
+    private JButton fileChooserButton;
+    private JButton storagePathResetButton;
+    private JTextField localDefaultAccountTf;
+    private JCheckBox askCallerAccountCB;
 
     public AvmConfigUI(Project project, String customMessage) {
 
@@ -59,8 +69,61 @@ public class AvmConfigUI extends DialogWrapper {
             customMessageLabel.setText(customMessage);
         }
 
+        //For embedded AVM storage path
+        initStoragePathFileChooser();
+
         doValidateInput();
 
+    }
+
+    public void initStoragePathFileChooser() {
+        storagePathTf.setEditable(false);
+
+        disableNewFolderButton(fileChooserButton);
+        fileChooserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+                jfc.setDialogTitle("Choose a directory for AVM's disk storage: ");
+                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+                int returnValue = jfc.showSaveDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    if (jfc.getSelectedFile().isDirectory()) {
+                        String path = jfc.getSelectedFile().getAbsolutePath();
+
+                        if(!StringUtil.isEmptyOrSpaces(path)) {
+                            path = path + File.separator + "avm_storage";
+                        }
+                        storagePathTf.setText(path);
+                    }
+                }
+            }
+        });
+
+        storagePathResetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                storagePathTf.setText("");
+            }
+        });
+    }
+
+    //Needed to disable New Folder button
+    public static void disableNewFolderButton(Container c) {
+        int len = c.getComponentCount();
+        for (int i = 0; i < len; i++) {
+            Component comp = c.getComponent(i);
+            if (comp instanceof JButton) {
+                JButton b = (JButton) comp;
+                Icon icon = b.getIcon();
+                if (icon != null
+                        && icon == UIManager.getIcon("FileChooser.newFolderIcon"))
+                    b.setEnabled(false);
+            } else if (comp instanceof Container) {
+                disableNewFolderButton((Container) comp);
+            }
+        }
     }
 
     @Nullable
@@ -116,6 +179,18 @@ public class AvmConfigUI extends DialogWrapper {
         setPreserveDebugMode(model.isPreserveDebugMode());
         setVerboseContractError(model.isVerboseContractError());
         setVerboseConcurrentExecutor(model.isVerboseConcurrentExecutor());
+
+        if(!StringUtil.isEmptyOrSpaces(model.getAvmStoragePath()))
+            setAvmStoragePath(model.getAvmStoragePath());
+//        else
+//            setAvmStoragePath(model.getAvmStoragePath());
+
+        if(!StringUtil.isEmptyOrSpaces(model.getLocalDefaultAccount()))
+            setLocalDefaultAccountTf(model.getLocalDefaultAccount());
+
+        setAskCallerAccountEverytime(model.shouldAskCallerAccountEverytime());
+
+
     }
 
     public void setWeb3RpcUrl(String web3RpcUrl) {
@@ -182,6 +257,18 @@ public class AvmConfigUI extends DialogWrapper {
         this.verboseConcurrentExecutorCheckBox.setSelected(flag);
     }
 
+    public void setAvmStoragePath(String storagePath) {
+        this.storagePathTf.setText(storagePath);
+    }
+
+    public void setLocalDefaultAccountTf(String localDefaultAccountTf) {
+        this.localDefaultAccountTf.setText(localDefaultAccountTf);
+    }
+
+    public void setAskCallerAccountEverytime(boolean flag) {
+        this.askCallerAccountCB.setSelected(flag);
+    }
+
     private void doValidateInput() {
 
         List<String> errors = new ArrayList();
@@ -239,7 +326,8 @@ public class AvmConfigUI extends DialogWrapper {
         return new RemoteConfigModel(web3RpcTf.getText(), pkTf.getText(), accountTf.getText(), passwordTf.getText(),
                 notStoreCredentialsCheckBox.isSelected(), cleanAndBuildCheckBox.isSelected(), deployNrgTf.getText(), deployNrgPriceTf.getText(),
                 contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), deployArgsTf.getText(), getReceiptWaitCB.isSelected(),
-                preserveDebugModeCheckBox.isSelected(), verboseContractErrorCheckBox.isSelected(), verboseConcurrentExecutorCheckBox.isSelected());
+                preserveDebugModeCheckBox.isSelected(), verboseContractErrorCheckBox.isSelected(), verboseConcurrentExecutorCheckBox.isSelected(),
+                storagePathTf.getText(), localDefaultAccountTf.getText(), askCallerAccountCB.isSelected());
     }
 
 
@@ -262,6 +350,9 @@ public class AvmConfigUI extends DialogWrapper {
         private boolean preserveDebugMode;
         private boolean verboseContractError;
         private boolean verboseConcurrentExecutor;
+        private String avmStoragePath;
+        private String localDefaultAccount;
+        private boolean shouldAskCallerAccountEverytime;
 
         public RemoteConfigModel() {
 
@@ -270,7 +361,8 @@ public class AvmConfigUI extends DialogWrapper {
         public RemoteConfigModel(String web3RpcUrl, String pk, String account, String password,
                                  boolean disableCredentialStore, boolean cleanAndBuildBeforeDeploy, String deployNrg, String deployNrgPrice,
                                  String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, String deployArgs, boolean getReceiptWait,
-                                 boolean preserveDebugMode, boolean verboseContractError, boolean verboseConcurrentExecutor) {
+                                 boolean preserveDebugMode, boolean verboseContractError, boolean verboseConcurrentExecutor, String avmStoragePath,
+                                 String localDefaultAccount, boolean shouldAskCallerAccountEverytime) {
             this.web3RpcUrl = web3RpcUrl;
             this.pk = pk;
             this.account = account;
@@ -288,6 +380,9 @@ public class AvmConfigUI extends DialogWrapper {
             this.preserveDebugMode = preserveDebugMode;
             this.verboseContractError = verboseContractError;
             this.verboseConcurrentExecutor = verboseConcurrentExecutor;
+            this.avmStoragePath = avmStoragePath;
+            this.localDefaultAccount = localDefaultAccount;
+            this.shouldAskCallerAccountEverytime = shouldAskCallerAccountEverytime;
         }
 
         public String getWeb3RpcUrl() {
@@ -416,7 +511,30 @@ public class AvmConfigUI extends DialogWrapper {
 
         public boolean isVerboseConcurrentExecutor() {
             return verboseConcurrentExecutor;
+        }
 
+        public String getAvmStoragePath() {
+            return avmStoragePath;
+        }
+
+        public void setAvmStoragePath(String avmStoragePath) {
+            this.avmStoragePath = avmStoragePath;
+        }
+
+        public String getLocalDefaultAccount() {
+            return localDefaultAccount;
+        }
+
+        public void setLocalDefaultAccount(String localDefaultAccount) {
+            this.localDefaultAccount = localDefaultAccount;
+        }
+
+        public boolean shouldAskCallerAccountEverytime() {
+            return shouldAskCallerAccountEverytime;
+        }
+
+        public void setShouldAskCallerAccountEverytime(boolean shouldAskCallerAccountEverytime) {
+            this.shouldAskCallerAccountEverytime = shouldAskCallerAccountEverytime;
         }
     }
 

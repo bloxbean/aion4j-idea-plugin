@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import org.aion4j.avm.idea.action.AvmBaseAction;
+import org.aion4j.avm.idea.action.local.ui.LocalGetAccountDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
@@ -16,11 +16,10 @@ import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LocalDeployAction extends AvmBaseAction {
+public class LocalDeployAction extends AvmLocalBaseAction {
 
     @Override
     protected boolean isRemote() {
@@ -33,39 +32,57 @@ public class LocalDeployAction extends AvmBaseAction {
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
+        List<String> goals = new ArrayList<>();
+        goals.add("clean");
+        goals.add("package");
+        goals.add("aion4j:deploy");
+
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
+        mavenRunnerSettings.setSkipTests(true);
+
+        mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
+            IdeaUtil.showNotification(project, "Deployment", "Contract deployed successfully",
+                    NotificationType.INFORMATION, null);
+        });
+    }
+
+    @Override
+    protected void configureAVMProperties(@NotNull Project project, @NotNull Map<String, String> settingMap) {
+        super.configureAVMProperties(project, settingMap);
+
         AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
 
         AvmConfigStateService.State state = null;
         if(configService != null)
             state = configService.getState();
 
-        List<String> goals = new ArrayList<>();
-        goals.add("clean");
-        goals.add("package");
-        goals.add("aion4j:deploy");
-
-        Map<String, String> settingMap = new HashMap<>();
-        if(state != null && !StringUtil.isEmptyOrSpaces(state.deployArgs)) {
+        if(!StringUtil.isEmptyOrSpaces(state.deployArgs))
             settingMap.put("args", state.deployArgs);
+
+        if(state.shouldAskCallerAccountEverytime) {
+            String inputAccount = getInputDeployerAccount(project);
+
+            if(!StringUtil.isEmptyOrSpaces(inputAccount)) {
+                settingMap.put("address", inputAccount.trim());
+            }
+        } else {
+            if (!StringUtil.isEmptyOrSpaces(state.localDefaultAccount)) {
+                settingMap.put("address", state.localDefaultAccount);
+            }
+        }
+    }
+
+    private String getInputDeployerAccount(Project project) {
+        LocalGetAccountDialog dialog = new LocalGetAccountDialog(project);
+        boolean result = dialog.showAndGet();
+
+        if(!result) {
+            return null;
         }
 
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
-
-        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings();
-        mavenRunnerSettings.setSkipTests(true);
-
-        if(state != null) { //set avm properties
-            settingMap.put("preserveDebuggability", String.valueOf(state.preserveDebugMode));
-            settingMap.put("enableVerboseConcurrentExecutor", String.valueOf(state.verboseConcurrentExecutor));
-            settingMap.put("enableVerboseContractErrors", String.valueOf(state.verboseContractError));
-        }
-
-        mavenRunnerSettings.setMavenProperties(settingMap);
-
-        mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
-            IdeaUtil.showNotification(project, "Deployment", "Contract deployed successfully",
-                    NotificationType.INFORMATION, null);
-        });
+        return dialog.getAccount();
     }
 
     @Override

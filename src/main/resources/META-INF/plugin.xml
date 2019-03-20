@@ -82,18 +82,6 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl R"/>
             <add-to-group group-id="Avm.remote"/>
         </action>
-        <action id="Avm.remote.GetBalanceAction"
-                class="org.aion4j.avm.idea.action.remote.GetBalanceAction" text="Get Balance"
-                description="Get Balance  of an Account">
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl B"/>
-            <add-to-group group-id="Avm.remote"/>
-        </action>
-        <action id="Avm.remotre.GetTransferAction"
-                class="org.aion4j.avm.idea.action.remote.TransferAction" text="Transfer" description="Transfer">
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl T"/>
-            <add-to-group group-id="Avm.remote"/>
-        </action>
-
         <action id="Avm.remote.CallMethodAction"
                 class="org.aion4j.avm.idea.action.remote.CallMethodAction" text="Call"
                 description="Contract Method call">
@@ -104,6 +92,23 @@
                 class="org.aion4j.avm.idea.action.remote.ContractTxnAction" text="Contract Transaction"
                 description="Send Contract Transaction">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl I"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remote.GetBalanceAction"
+                class="org.aion4j.avm.idea.action.remote.GetBalanceAction" text="Get Balance (Default)"
+                description="Get Balance  of an Account">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl B"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remote.GetBalanceByAccountAction"
+                class="org.aion4j.avm.idea.action.remote.GetBalanceByAccountAction" text="Get Balance"
+                description="Get Balance  of an Account">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl B"/>
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+        <action id="Avm.remotre.GetTransferAction"
+                class="org.aion4j.avm.idea.action.remote.TransferAction" text="Transfer" description="Transfer">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl T"/>
             <add-to-group group-id="Avm.remote"/>
         </action>
         <action id="Avm.remote.unlockAccount" class="org.aion4j.avm.idea.action.remote.UnlockAccountAction"
