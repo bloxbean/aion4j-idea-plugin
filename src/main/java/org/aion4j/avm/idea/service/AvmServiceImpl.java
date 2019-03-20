@@ -7,6 +7,7 @@ import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
@@ -14,6 +15,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.model.MavenPlugin;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -239,6 +241,7 @@ public class AvmServiceImpl implements AvmService {
         cmds.add(homePath + File.separator + "bin/java");
         cmds.add("-cp");
         cmds.add("lib" + File.separatorChar + "*");
+        cmds.add("-Dfile.encoding=UTF8");
         cmds.add("AvmDetailsGetter");
 
         GeneralCommandLine generalCommandLine = new GeneralCommandLine(cmds);
@@ -263,11 +266,18 @@ public class AvmServiceImpl implements AvmService {
 
                     String jsonStr = sb.toString();
 
-                    whitelistHolder.init(project, jsonStr);
+                    try {
+                        whitelistHolder.init(project, jsonStr);
+                    } catch (Exception e) {
+                        log.error("Error parsing JCLWhitelist json string >>> " + jsonStr, e);
+                        throw e;
+                    }
                 }
             });
         } catch (ExecutionException e) {
             e.printStackTrace();
+            log.error(e);
+            IdeaUtil.showNotification(project, "JCL Whitelist cache", "Error getting JCL whitelist data for AVM", NotificationType.ERROR, null);
         }
 
         whitelistHolder.loadFromCache(project);
