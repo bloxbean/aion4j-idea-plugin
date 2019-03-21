@@ -14,6 +14,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.jetbrains.annotations.NotNull;
@@ -243,10 +244,15 @@ public class AvmServiceImpl implements AvmService {
         cmds.add("lib" + File.separatorChar + "*");
         cmds.add("-Dfile.encoding=UTF8");
         cmds.add("AvmDetailsGetter");
+        cmds.add(JCLWhitelistHolder.getSourceFilePath(project));
 
         GeneralCommandLine generalCommandLine = new GeneralCommandLine(cmds);
         generalCommandLine.setCharset(Charset.forName("UTF-8"));
         generalCommandLine.setWorkDirectory(pluginPath);
+
+        if(log.isDebugEnabled()) {
+            log.debug("Trying to execute " + generalCommandLine.getCommandLineString());
+        }
 
         ProcessHandler processHandler = null;
         try {
@@ -255,27 +261,22 @@ public class AvmServiceImpl implements AvmService {
             processHandler.startNotify();
             processHandler.addProcessListener(new ProcessAdapter() {
 
-                StringBuffer sb = new StringBuffer();
                 @Override
                 public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
-                    sb.append(event.getText());
+
                 }
 
                 @Override
                 public void processTerminated(@NotNull ProcessEvent event) {
-
-                    String jsonStr = sb.toString();
-
                     try {
-                        whitelistHolder.init(project, jsonStr);
+                        whitelistHolder.init(project);
                     } catch (Exception e) {
-                        log.error("Error parsing JCLWhitelist json string >>> " + jsonStr, e);
+                        log.error("Error parsing JCLWhitelist json string >>> ", e);
                         throw e;
                     }
                 }
             });
         } catch (ExecutionException e) {
-            e.printStackTrace();
             log.error(e);
             IdeaUtil.showNotification(project, "JCL Whitelist cache", "Error getting JCL whitelist data for AVM", NotificationType.ERROR, null);
         }
