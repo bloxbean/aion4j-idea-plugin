@@ -87,7 +87,7 @@ public class AvmConfigUI extends DialogWrapper {
                 jfc.setDialogTitle("Choose a directory for AVM's disk storage: ");
                 jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-                int returnValue = jfc.showSaveDialog(null);
+                int returnValue = jfc.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     if (jfc.getSelectedFile().isDirectory()) {
                         String path = jfc.getSelectedFile().getAbsolutePath();

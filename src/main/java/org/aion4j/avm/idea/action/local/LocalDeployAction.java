@@ -31,16 +31,29 @@ public class LocalDeployAction extends AvmLocalBaseAction {
         Project project = e.getProject();
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
+        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
+        mavenRunnerSettings.setSkipTests(true);
 
         List<String> goals = new ArrayList<>();
         goals.add("clean");
         goals.add("package");
+
+        //Only try to auto create  account when storage path is default (target folder) and custom account is select. Just to avoid error
+        AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
+        if(configService != null) {
+            AvmConfigStateService.State state = configService.getState();
+            if(state != null && StringUtil.isEmptyOrSpaces(state.avmStoragePath)) {
+                if(state.shouldAskCallerAccountEverytime || !StringUtil.isEmptyOrSpaces(state.localDefaultAccount)) { //Custom account .. so lets create a give some balance.
+                    goals.add("aion4j:create-account");
+                    mavenRunnerSettings.getMavenProperties().put("balance", "100000000000000");
+                }
+            }
+        }
+
         goals.add("aion4j:deploy");
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
 
-        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
-        mavenRunnerSettings.setSkipTests(true);
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             IdeaUtil.showNotification(project, "Deployment", "Contract deployed successfully",
