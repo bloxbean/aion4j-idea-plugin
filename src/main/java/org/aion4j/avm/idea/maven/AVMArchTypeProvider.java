@@ -12,7 +12,7 @@ import java.util.List;
 public class AVMArchTypeProvider implements MavenArchetypesProvider {
     private final static Logger log = Logger.getInstance(AVMArchTypeProvider.class);
 
-    private final String AVM_ARCHTYPE_VERSION = "0.6";
+    private final String AVM_ARCHTYPE_VERSION = "0.7";
 
     @Override
     public Collection<MavenArchetype> getArchetypes() {

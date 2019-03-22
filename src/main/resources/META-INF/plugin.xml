@@ -59,6 +59,11 @@
 
             </group>
         </group>
+        <action id="Avm.project.Initialize" class="org.aion4j.avm.idea.action.InitializationAction" text="Run Initialize"
+                description="Initialize AVM Project">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl S"/>
+            <add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>
+        </action>
         <action id="Avm.remote.configuration" class="org.aion4j.avm.idea.action.AvmConfiguration"
                 text="Configuration" description="RemoteConfiguration">
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl C"/>
@@ -67,7 +72,7 @@
 
         <action id="Avm.remote.deploy" class="org.aion4j.avm.idea.action.remote.RemoteDeploy" text="Deploy"
                 description="Avm Remote Deploy">
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl D"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl D"/>
             <add-to-group group-id="Avm.remote"/>
         </action>
         <action id="Avm.remote.GetReceipt"
@@ -120,7 +125,7 @@
 
         <action id="Avm.local.deploy" class="org.aion4j.avm.idea.action.local.LocalDeployAction"
                 text="Deploy" description="Deploy to embedded AVM">
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl D"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl D"/>
             <add-to-group group-id="Avm.local" anchor="first"/>
         </action>
         <action id="Avm..local.LocalCallAction"

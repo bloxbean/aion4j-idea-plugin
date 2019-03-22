@@ -1,16 +1,28 @@
 package org.aion4j.avm.idea.component;
 
 import com.intellij.ProjectTopics;
+import com.intellij.notification.NotificationType;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.ModuleListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.messages.MessageBusConnection;
+import org.aion4j.avm.idea.action.InitializationAction;
+import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.aion4j.avm.idea.service.AvmService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
+
+import java.io.File;
 
 public class BootstrapImpl implements Bootstrap, ProjectComponent {
 
@@ -37,7 +49,10 @@ public class BootstrapImpl implements Bootstrap, ProjectComponent {
 
     String basePath = this.project.getBasePath();
 
-    project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    if(connection == null)
+      connection = project.getMessageBus().connect();
+
+    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
 
@@ -58,6 +73,20 @@ public class BootstrapImpl implements Bootstrap, ProjectComponent {
             }
 
             service.init(project);
+
+            if(service.isAvmProject()) { //hey I am avm project. Let's check if everything initialized properly or not
+              String aion4jVersion = mvnProjectManager.getRootProjects().get(0).getProperties().getProperty("aion4j.plugin.version");
+
+              if(!"x.x.x".equals(aion4jVersion)) {
+                String basePath = project.getBasePath();
+                File libFolder = new File(basePath + File.separator + "lib");
+
+                if(!libFolder.exists()) {
+                  IdeaUtil.showNotification(project, "Avm project Initialization", "Click below to setup the project",
+                          NotificationType.INFORMATION, "Avm.project.Initialize");
+                }
+              }
+            }
         }
       }
     });
