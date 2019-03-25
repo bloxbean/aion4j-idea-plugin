@@ -17,6 +17,10 @@ public class InitializationAction extends AnAction { //This is called initially 
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
+        initializeProject(e);
+    }
+
+    public static void initializeProject(@NotNull AnActionEvent e) {
         Project project = e.getProject();
 
         if(project == null)

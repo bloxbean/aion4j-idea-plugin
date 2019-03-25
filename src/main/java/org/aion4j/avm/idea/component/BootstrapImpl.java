@@ -1,20 +1,16 @@
 package org.aion4j.avm.idea.component;
 
 import com.intellij.ProjectTopics;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.ModuleListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.util.messages.MessageBusConnection;
 import org.aion4j.avm.idea.action.InitializationAction;
 import org.aion4j.avm.idea.misc.IdeaUtil;
@@ -82,8 +78,14 @@ public class BootstrapImpl implements Bootstrap, ProjectComponent {
                 File libFolder = new File(basePath + File.separator + "lib");
 
                 if(!libFolder.exists()) {
-                  IdeaUtil.showNotification(project, "Avm project Initialization", "Click below to setup the project",
-                          NotificationType.INFORMATION, "Avm.project.Initialize");
+                  IdeaUtil.showNotificationWithAction(project, "Avm project Initialization", "Click below to setup the project",
+                          NotificationType.INFORMATION, new NotificationAction("Run Initialize") {
+                            @Override
+                            public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
+                              notification.expire();
+                              InitializationAction.initializeProject(e);
+                            }
+                          });
                 }
               }
             }
