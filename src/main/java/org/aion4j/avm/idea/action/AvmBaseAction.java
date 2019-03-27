@@ -60,7 +60,7 @@ public abstract class AvmBaseAction extends AnAction {
                 profileMap.put(avmConfigStateService.getState().mvnProfile, true);
             }
         } else {
-            profileMap.put("default", true);
+           // profileMap.put("default", true);
         }
 
         mavenRunnerParameters.setProfilesMap(profileMap);
