@@ -10,7 +10,7 @@
 
     <idea-version since-build="183"/>
 
-    <depends config-file="maven.xml" optional="true">org.jetbrains.idea.maven</depends>
+    <depends config-file="maven.xml" optional="false">org.jetbrains.idea.maven</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->

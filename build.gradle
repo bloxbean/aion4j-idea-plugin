@@ -52,6 +52,8 @@ intellij {
         username System.getProperty('ij_plugin_portal_login')
         password System.getProperty('ij_plugin_portal_password')
     }
+
+    updateSinceUntilBuild false
 }
 patchPluginXml {
     changeNotes changeLogAsHtml()
