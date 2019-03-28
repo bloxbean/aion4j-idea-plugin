@@ -1,3 +1,5 @@
+### Since 0.1.1
+  - Bug fix
 ### Since 0.1.0
   - Integration with aion4j:maven commands
   - Both remote and embedded AVM support
@@ -9,6 +11,5 @@
   - Avm Archetype version changed to 0.6
   
 ### Since 0.0.1 (4 March 2019):
-  
   - Non JCL whitelist api error highlight support
   - Avm Archetype integration (0.5)
