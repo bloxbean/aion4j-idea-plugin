@@ -1,6 +1,5 @@
-### Since 0.1.1
+### Since 0.1.2
   - Bug fix
-### Since 0.1.0
   - Integration with aion4j:maven commands
   - Both remote and embedded AVM support
   - Constructor level JCL whitelist check
