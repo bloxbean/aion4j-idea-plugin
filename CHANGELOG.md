@@ -1,3 +1,5 @@
+### Since 0.1.3
+  - Avm Archetype version changed to 0.11
 ### Since 0.1.2
   - Bug fix
   - Integration with aion4j:maven commands
