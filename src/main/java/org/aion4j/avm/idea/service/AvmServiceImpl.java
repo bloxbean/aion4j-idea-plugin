@@ -17,6 +17,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.aion4j.avm.idea.misc.IdeaUtil;
+import org.apache.commons.lang3.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.model.MavenPlugin;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -220,6 +221,10 @@ public class AvmServiceImpl implements AvmService {
         return false;
     }
 
+    public void resetJCLClassInitialization() {
+        this.isJCLClassInitializationDone = false;
+    }
+
     private void getJCLListFromProjectLibrary(Project project) {
         Sdk sdk = ProjectRootManager.getInstance(project).getProjectSdk();
 
@@ -241,7 +246,8 @@ public class AvmServiceImpl implements AvmService {
         ArrayList<String> cmds = new ArrayList<>();
         cmds.add(homePath + File.separator + "bin/java");
         cmds.add("-cp");
-        cmds.add("lib" + File.separatorChar + "*");
+       // cmds.add("lib" + File.separatorChar + "*");
+        cmds.add(buildClasspathForAvmDetails(project));
         cmds.add("-Dfile.encoding=UTF8");
         cmds.add("AvmDetailsGetter");
         cmds.add(JCLWhitelistHolder.getSourceFilePath(project));
@@ -263,7 +269,6 @@ public class AvmServiceImpl implements AvmService {
 
                 @Override
                 public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
-
                 }
 
                 @Override
@@ -284,6 +289,42 @@ public class AvmServiceImpl implements AvmService {
         whitelistHolder.loadFromCache(project);
 
         isJCLClassInitializationDone = true;
+    }
+
+    private String buildClasspathForAvmDetails(Project project) {
+        //check if there is a lib folder in project. Ignore, if avmLib in maven project has anyother value for now.
+        String basePath = project.getBasePath();
+        File libAvmJar = new File(basePath + File.separatorChar + "lib" + File.separatorChar + "avm.jar");
+
+        String avmJarPath = null;
+        if(libAvmJar.exists()) {
+            if(log.isDebugEnabled())
+                log.debug("Lib avm.jar exists in project.. Use project's avm.jar");
+
+            avmJarPath = libAvmJar.getAbsolutePath();
+        } else {
+            if(log.isDebugEnabled())
+                log.debug("Use default avm.jar from plugin.......");
+
+            avmJarPath = "lib" + File.separatorChar + "avm.jar";
+        }
+
+        char cpSeparator = ':';
+
+        if(SystemUtils.IS_OS_WINDOWS)
+            cpSeparator = ';';
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(".");
+        sb.append(cpSeparator);
+        sb.append(avmJarPath);
+        sb.append(cpSeparator);
+        sb.append("lib" + File.separatorChar + "minimal-json-0.9.5.jar");
+
+        if(log.isDebugEnabled())
+            log.debug("AVM classpath for AVMDetails " + sb.toString());
+
+        return sb.toString();
     }
 
     private String copyFile(String fileName, String destFolder) {

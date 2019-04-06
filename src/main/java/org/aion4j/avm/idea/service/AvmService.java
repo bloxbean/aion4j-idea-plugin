@@ -20,4 +20,6 @@ public interface AvmService {
     public List<MethodDescriptor> getAllowedMethodsForClass(Project project, String clazz, String methodName);
 
     public boolean isUnderTestSource(VirtualFile file);
+
+    public void resetJCLClassInitialization();
 }

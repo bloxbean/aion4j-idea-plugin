@@ -21,7 +21,7 @@ public abstract class AvmBaseAction extends AnAction {
     @Override
     public void update(@NotNull AnActionEvent e) {
 
-        AvmService avmService = ServiceManager.getService(AvmService.class);
+        AvmService avmService = ServiceManager.getService(e.getProject(), AvmService.class);
 
         if(avmService != null && avmService.isAvmProject()) {
             e.getPresentation().setEnabledAndVisible(true);

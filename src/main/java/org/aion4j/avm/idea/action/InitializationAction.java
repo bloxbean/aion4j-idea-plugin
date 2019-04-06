@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import org.aion4j.avm.idea.service.AvmService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
@@ -47,6 +48,12 @@ public class InitializationAction extends AnAction { //This is called initially 
         mavenRunnerSettings.setDelegateBuildToMaven(true);
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
+            //reset JCLWhitelist..
+            AvmService avmService = ServiceManager.getService(e.getProject(), AvmService.class);
+
+            if(avmService != null) {
+                avmService.resetJCLClassInitialization();
+            }
 
         });
     }
