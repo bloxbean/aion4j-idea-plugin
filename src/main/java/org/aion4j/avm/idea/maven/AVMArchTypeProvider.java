@@ -17,7 +17,7 @@ public class AVMArchTypeProvider implements MavenArchetypesProvider {
     private final static Logger log = Logger.getInstance(AVMArchTypeProvider.class);
 
     private final static String LATEST_RELEASE_VERSION_URL = "https://bloxbean.github.io/aion4j-release/avm-archetype";
-    private final String AVM_ARCHTYPE_VERSION = "0.11";
+    private final String AVM_ARCHTYPE_VERSION = "0.12";
 
     @Override
     public Collection<MavenArchetype> getArchetypes() {
