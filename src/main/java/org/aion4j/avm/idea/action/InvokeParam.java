@@ -5,14 +5,16 @@ public class InvokeParam {
     private String type;
     private String avmType;
     private boolean isArray;
+    private boolean is2DArray;
     private String defaultValue;
     private String value;
 
-    public InvokeParam(String name, String type, String avmType, boolean isArray, String defaultValue) {
+    public InvokeParam(String name, String type, String avmType, boolean isArray, boolean is2DArray, String defaultValue) {
         this.name = name;
         this.type = type;
         this.avmType = avmType;
         this.isArray = isArray;
+        this.is2DArray = is2DArray;
         this.defaultValue = defaultValue;
     }
 
@@ -26,6 +28,10 @@ public class InvokeParam {
 
     public boolean isArray() {
         return isArray;
+    }
+
+    public boolean is2DArray() {
+        return is2DArray;
     }
 
     public String getDefaultValue() {

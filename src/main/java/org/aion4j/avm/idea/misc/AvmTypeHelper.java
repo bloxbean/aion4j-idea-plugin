@@ -10,7 +10,7 @@ public class AvmTypeHelper {
 
         String avmType = null;
         switch (type) {
-            case "org.aion.avm.api.Address":
+            case "avm.Address":
                 avmType = "-A";
                 break;
 
@@ -74,8 +74,10 @@ public class AvmTypeHelper {
             sb.append(param.getAvmType());
             if(param.isArray())
                 sb.append("[]");
+            else if(param.is2DArray())
+                sb.append("[][]");
             sb.append(" ");
-            if("-T".equals(param.getAvmType()) && !param.isArray()) {
+            if("-T".equals(param.getAvmType()) && !param.isArray() && !param.is2DArray()) {
                 sb.append("'");
                 sb.append(param.getValue());
                 sb.append("'");

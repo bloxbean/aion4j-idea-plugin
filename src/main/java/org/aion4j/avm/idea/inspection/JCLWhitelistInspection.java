@@ -25,7 +25,7 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
     private final static String AION4j_MAVEN_PLUGIN = "aion4j-maven-plugin";
 
     private final static String USERLIB_PACKAGE_PREFIX = "org.aion.avm.userlib";
-    private final static String AVM_API_PACKAGE_PREFIX = "org.aion.avm.api";
+    private final static String AVM_API_PACKAGE_PREFIX = "avm";
 
     @NotNull
     @Override

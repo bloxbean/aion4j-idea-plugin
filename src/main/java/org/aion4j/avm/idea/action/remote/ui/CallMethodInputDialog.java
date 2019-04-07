@@ -97,6 +97,8 @@ public class CallMethodInputDialog extends DialogWrapper {
             String paramType = params.get(i).getType();
             if(params.get(i).isArray())
                 paramType += "[]";
+            else if(params.get(i).is2DArray())
+                paramType += "[][]";
 
             row += 2;
             JLabel paramLabel = new JLabel(params.get(i).getName());

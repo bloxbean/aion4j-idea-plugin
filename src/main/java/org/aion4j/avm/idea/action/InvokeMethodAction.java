@@ -141,14 +141,19 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
             String type = param.getType().getCanonicalText();
 
             boolean isArray = false;
-            if (type.endsWith("[]")) {
+            boolean is2DArray = false;
+
+            if(type.endsWith("[][]")) {
+                is2DArray = true;
+                type = type.substring(0, type.length() - 4);
+            }else if (type.endsWith("[]")) {
                 isArray = true;
                 type = type.substring(0, type.length() - 2);
             }
 
             String avmType = AvmTypeHelper.getAvmType(type);
 
-            InvokeParam invokeParam = new InvokeParam(param.getName(), type, avmType, isArray, "");
+            InvokeParam invokeParam = new InvokeParam(param.getName(), type, avmType, isArray, is2DArray,"");
             parameters.add(invokeParam);
         }
         return parameters;

@@ -1,5 +1,6 @@
 ### Since 0.1.4
   - Fix: JCLWhitelist is taken from avm.jar if available in project's lib folder
+  - 2D array support in method args
 ### Since 0.1.3
   - Avm Archetype version changed to 0.11
 ### Since 0.1.2
