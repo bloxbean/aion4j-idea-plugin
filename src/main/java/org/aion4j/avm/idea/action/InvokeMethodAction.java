@@ -13,7 +13,7 @@ import com.intellij.psi.PsiParameterList;
 import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
 import org.aion4j.avm.idea.action.remote.ui.CallMethodInputDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
-import org.aion4j.avm.idea.misc.AvmTypeHelper;
+import org.aion4j.avm.idea.misc.AvmMethodArgsHelper;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.aion4j.avm.idea.service.AvmCacheService;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,6 @@ import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -107,7 +106,7 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         avmCacheService.updateArgsToCache(method, params.stream().map(p -> p.getValue()).collect(Collectors.toList()));
         avmCacheService.loadState(avmCacheService.getState());
 
-        String argsStr = AvmTypeHelper.buildMethodArgsString(params);
+        String argsStr = AvmMethodArgsHelper.buildMethodArgsString(params);
 
         Map<String, String> settingMap = mavenRunnerSettings.getMavenProperties();
         //Set goal parameters
@@ -151,7 +150,7 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
                 type = type.substring(0, type.length() - 2);
             }
 
-            String avmType = AvmTypeHelper.getAvmType(type);
+            String avmType = AvmMethodArgsHelper.getAvmType(type);
 
             InvokeParam invokeParam = new InvokeParam(param.getName(), type, avmType, isArray, is2DArray,"");
             parameters.add(invokeParam);

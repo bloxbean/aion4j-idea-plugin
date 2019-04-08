@@ -4,7 +4,7 @@ import org.aion4j.avm.idea.action.InvokeParam;
 
 import java.util.List;
 
-public class AvmTypeHelper {
+public class AvmMethodArgsHelper {
 
     public static String getAvmType(String type) {
 

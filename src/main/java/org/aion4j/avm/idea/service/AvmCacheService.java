@@ -4,11 +4,8 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
-import org.aion4j.avm.idea.action.InvokeParam;
-import org.aion4j.avm.idea.misc.AvmTypeHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
