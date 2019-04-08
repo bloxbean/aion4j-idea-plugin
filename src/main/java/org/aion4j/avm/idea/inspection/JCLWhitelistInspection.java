@@ -10,6 +10,7 @@ import com.intellij.psi.impl.source.tree.java.PsiMethodCallExpressionImpl;
 import com.intellij.psi.impl.source.tree.java.PsiNewExpressionImpl;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiUtil;
+import org.aion4j.avm.idea.inspection.types.AvmTypes;
 import org.aion4j.avm.idea.service.AvmService;
 import org.aion4j.avm.idea.service.MethodDescriptor;
 import org.jetbrains.annotations.Nls;
@@ -26,6 +27,7 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
 
     private final static String USERLIB_PACKAGE_PREFIX = "org.aion.avm.userlib";
     private final static String AVM_API_PACKAGE_PREFIX = "avm";
+    private final static String CALLABLE_ANNOTATION = "org.aion.avm.tooling.abi.Callable";
 
     @NotNull
     @Override
@@ -340,6 +342,43 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
 
                     holder.registerProblem(variable.getOriginalElement(),
                             String.format("%s is not allowed in a Avm smart contract project", fqName), ProblemHighlightType.GENERIC_ERROR);
+                }
+            }
+
+            @Override
+            public void visitMethod(PsiMethod method) {
+                try {
+                    PsiAnnotation callableAnnotation = method.getAnnotation(CALLABLE_ANNOTATION);
+
+                    if (callableAnnotation == null) {
+                        return;
+                    } else {
+                        //check if public
+                        if(!method.getModifierList().hasModifierProperty("public")) {
+                            holder.registerProblem(method.getModifierList().getOriginalElement(),
+                                    "A @Callable method should be public", ProblemHighlightType.GENERIC_ERROR);
+                        }
+
+                        PsiParameter[] jvmParameters = method.getParameterList().getParameters();
+                        for (PsiParameter param : jvmParameters) {
+                            String type = param.getType().getCanonicalText();
+
+                            if (!AvmTypes.isAllowedType(type)) {
+                                holder.registerProblem(param.getOriginalElement(),
+                                        String.format("%s is not an allowed parameter type in AVM smart contract method", type), ProblemHighlightType.GENERIC_ERROR);
+                            }
+                        }
+
+                        //Return type
+                        String returnType = method.getReturnType().getCanonicalText();
+                        if (!"void".equals(returnType) && !AvmTypes.isAllowedType(returnType)) {
+                            holder.registerProblem(method.getReturnTypeElement(),
+                                    String.format("%s is not an allowed return type in AVM smart contract method", returnType), ProblemHighlightType.GENERIC_ERROR);
+                        }
+                    }
+                } catch (Exception e) {
+                    if(log.isDebugEnabled())
+                        log.debug(e);
                 }
             }
         };
