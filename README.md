@@ -5,7 +5,9 @@ Intellij IDEA plugin which supports smart contract development on Aion Virtual M
 ## Features :
 
 * AVM Project (Avm Maven Archetype support)
+* Jar Optimizer
 * JCL whitelist api check
+* ABI type check for parameter and return types
 * Integration with Embedded AVM
      * Deploy
      * Method Call
