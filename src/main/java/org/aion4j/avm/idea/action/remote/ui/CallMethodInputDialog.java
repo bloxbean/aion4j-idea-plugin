@@ -114,7 +114,7 @@ public class CallMethodInputDialog extends DialogWrapper {
         panel.add(createSeparator("Contract Details"),  cc.xyw(1,  row, 7));
 
         row += 2;
-        panel.add(new JLabel("Value"), cc.xy (1,  row  ));
+        panel.add(new JLabel("Value (nAmp)"), cc.xy (1,  row  ));
         panel.add(valueTf, cc.xyw(3,  row , 5));
 
         row += 2;
