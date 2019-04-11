@@ -36,7 +36,7 @@ public class InitializationAction extends AnAction { //This is called initially 
         if(!mvnwFile.exists())
             goals.add("io.takari:maven:0.7.4:wrapper");
 
-        goals.add("aion4j:init");
+        goals.add("initialize");
 
         MavenRunnerParameters mavenRunnerParameters = new MavenRunnerParameters();
         mavenRunnerParameters.setPomFileName("pom.xml");
