@@ -4,6 +4,7 @@
   - New rules added to code inspection 
        - ABI type check for parameters and return types
        - Method modifier check for @Callable method
+  - Support for avmtestnet-2019-04-10 release     
 ### Since 0.1.3
   - Avm Archetype version changed to 0.11
 ### Since 0.1.2
