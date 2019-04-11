@@ -1,4 +1,4 @@
-### Since 0.1.4
+### Since 0.2.0
   - Fix: JCLWhitelist is taken from avm.jar if available in project's lib folder
   - 2D array support in method args
   - New rules added to code inspection 
