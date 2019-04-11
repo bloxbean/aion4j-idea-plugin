@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>org.aion4j.avm</id>
     <name>Aion4j AVM Integration</name>
-    <vendor email="satran004@gmail.com" url="https://github.com/satran004/aion4j-idea-plugin/">Aion4j Idea Project
+    <vendor email="info@bloxbean.com" url="https://github.com/bloxbean/aion4j-idea-plugin/">Aion4j Idea Project
     </vendor>
 
     <description><![CDATA[
