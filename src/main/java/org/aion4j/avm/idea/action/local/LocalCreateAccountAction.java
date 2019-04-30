@@ -5,9 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import org.aion4j.avm.idea.action.AvmBaseAction;
 import org.aion4j.avm.idea.action.local.ui.LocalCreateAccountDialog;
-import org.aion4j.avm.idea.action.local.ui.LocalGetAccountDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +15,7 @@ import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LocalCreateAccountAction extends AvmLocalBaseAction {
 
@@ -54,7 +50,7 @@ public class LocalCreateAccountAction extends AvmLocalBaseAction {
         List<String> goals = new ArrayList<>();
         goals.add("aion4j:create-account");
 
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
         MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
 
         mavenRunnerSettings.getMavenProperties().put("address", account);

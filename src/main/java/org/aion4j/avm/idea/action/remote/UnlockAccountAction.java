@@ -52,7 +52,7 @@ public class UnlockAccountAction extends AvmRemoteBaseAction {
         List<String> goals = new ArrayList<>();
         goals.add("aion4j:unlock");
 
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
 
 
         Map<String, String> settingMap = mavenRunnerSettings.getMavenProperties();

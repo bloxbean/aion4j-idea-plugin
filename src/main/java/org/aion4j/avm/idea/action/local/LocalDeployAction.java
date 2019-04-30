@@ -2,9 +2,11 @@ package org.aion4j.avm.idea.action.local;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiFile;
 import org.aion4j.avm.idea.action.local.ui.LocalGetAccountDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.IdeaUtil;
@@ -20,6 +22,16 @@ import java.util.List;
 import java.util.Map;
 
 public class LocalDeployAction extends AvmLocalBaseAction {
+
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        super.update(e);
+
+        PsiFile file =  e.getDataContext().getData(CommonDataKeys.PSI_FILE);
+        if(file != null && !"pom.xml".equals(file.getName())) {
+            e.getPresentation().setEnabled(false);
+        }
+    }
 
     @Override
     protected boolean isRemote() {
@@ -52,7 +64,7 @@ public class LocalDeployAction extends AvmLocalBaseAction {
 
         goals.add("aion4j:deploy");
 
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
 
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {

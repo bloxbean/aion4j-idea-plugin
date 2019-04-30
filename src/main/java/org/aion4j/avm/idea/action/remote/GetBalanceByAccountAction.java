@@ -50,7 +50,7 @@ public class GetBalanceByAccountAction extends AvmRemoteBaseAction {
         List<String> goals = new ArrayList<>();
         goals.add("aion4j:get-balance");
 
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             IdeaUtil.showNotification(project, "Get Balance call", "Balance fetched successfully",

@@ -63,10 +63,27 @@ public class AvmServiceImpl implements AvmService {
         List<MavenProject> rootProjects = mvnProjectManager.getRootProjects();
         if(rootProjects != null && rootProjects.size() > 0) {
             MavenPlugin mavenPlugin = rootProjects.get(0).findPlugin("org.aion4j", AION4j_MAVEN_PLUGIN);
+
             if(mavenPlugin == null) {
                 debug(() -> log.debug(">>>>>> Not a avm project"));;
                 //attachProjectListener(mvnProjectManager);
-                return;
+                //check sub modules..
+
+                List<MavenProject> subProjects = mvnProjectManager.getProjects();
+                if(subProjects != null && subProjects.size() > 0) {
+                    for (MavenProject subProject : subProjects) {
+                        MavenPlugin subMavenPlugin = subProject.findPlugin("org.aion4j", AION4j_MAVEN_PLUGIN);
+                        if(subMavenPlugin != null) {
+                            isAvmProject = true;
+                            break;
+                        }
+                    }
+
+                    if(!isAvmProject)
+                        return;
+                } else {
+                    return;
+                }
             } else {
                 debug(() -> log.debug(">>>>>> It's a avm project"));
                 isAvmProject = true;

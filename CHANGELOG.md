@@ -1,3 +1,6 @@
+### Since 0.2.1
+  - Multi module maven project support
+  - Automatically get receipt during deployment
 ### Since 0.2.0
   - Fix: JCLWhitelist is taken from avm.jar if available in project's lib folder
   - 2D array support in method args

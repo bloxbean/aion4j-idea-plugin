@@ -6,10 +6,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.*;
 import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
 import org.aion4j.avm.idea.action.remote.ui.CallMethodInputDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
@@ -32,18 +29,17 @@ import java.util.stream.Collectors;
  */
 public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
-//    @Override
-//    public void update(@NotNull AnActionEvent e) {
-//        super.update(e);
-//
-//        final PsiElement element = e.getRequiredData(CommonDataKeys.PSI_ELEMENT);
-//
-//        if (element instanceof PsiMethod) {
-//            e.getPresentation().setVisible(true);
-//        } else {
-//            e.getPresentation().setVisible(false);
-//        }
-//    }
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        super.update(e);
+
+        PsiFile file =  e.getDataContext().getData(CommonDataKeys.PSI_FILE);
+        if(file != null && file instanceof PsiJavaFile) {
+            e.getPresentation().setEnabled(true);
+        } else {
+            e.getPresentation().setEnabled(false);
+        }
+    }
 
     @Override
     public Icon getIcon() {
@@ -70,7 +66,7 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         }
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, getGoals());
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, getGoals());
         MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
         //set kernel info
         //Map<String, String> settingMap = new HashMap<>();

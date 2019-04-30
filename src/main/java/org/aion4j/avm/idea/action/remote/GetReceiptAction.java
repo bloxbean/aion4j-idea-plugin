@@ -38,7 +38,7 @@ public class GetReceiptAction extends AvmRemoteBaseAction {
         List<String> goals = new ArrayList<>();
         goals.add("aion4j:get-receipt");
 
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
 
         //command args
         String txHash = getTxHash(project);

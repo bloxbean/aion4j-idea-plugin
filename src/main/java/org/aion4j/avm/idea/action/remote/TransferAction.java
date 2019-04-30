@@ -35,7 +35,7 @@ public class TransferAction extends AvmRemoteBaseAction {
             List<String> goals = new ArrayList<>();
             goals.add("aion4j:transfer");
 
-            MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+            MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
 
             Map<String, String> settingMap = mavenRunnerSettings.getMavenProperties();
             if (!StringUtil.isEmptyOrSpaces(dialog.getPrivateKey())) {

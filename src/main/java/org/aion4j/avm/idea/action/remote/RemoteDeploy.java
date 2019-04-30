@@ -1,9 +1,11 @@
 package org.aion4j.avm.idea.action.remote;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiFile;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +19,16 @@ import java.util.List;
 import java.util.Map;
 
 public class RemoteDeploy extends AvmRemoteBaseAction {
+
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        super.update(e);
+
+        PsiFile file =  e.getDataContext().getData(CommonDataKeys.PSI_FILE);
+        if(file != null && !"pom.xml".equals(file.getName())) {
+            e.getPresentation().setEnabled(false);
+        }
+    }
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
@@ -44,12 +56,16 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
             mavenRunnerSettings.getMavenProperties().put("args", state.deployArgs);
         }
 
-        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(project, goals);
+        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
 
         mavenRunnerSettings.setSkipTests(true);
 
+        if(state.getReceiptWait) {
+            mavenRunnerSettings.getMavenProperties().put("wait", "true");
+        }
+
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
-            System.out.println("Deployment is successfull");
+            //System.out.println("Deployment is successfull");
         });
     }
 
