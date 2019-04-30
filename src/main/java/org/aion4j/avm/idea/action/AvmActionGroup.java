@@ -25,8 +25,14 @@ public class AvmActionGroup extends DefaultActionGroup {
             return;
 
         AvmService avmService = ServiceManager.getService(project, AvmService.class);
+
+        if(avmService != null && mavenContext && !avmService.isInitialize()) { //check if avmService is initialized or not
+            avmService.init(project);
+        }
+
         if(avmService == null || !avmService.isAvmProject()) {
             event.getPresentation().setEnabledAndVisible(false);
+
             return;
         }
 
