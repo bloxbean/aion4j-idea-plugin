@@ -96,7 +96,7 @@ public class AvmCacheService implements PersistentStateComponent<AvmCacheService
             return Collections.EMPTY_MAP;
 
         return getState().deployArgs.entrySet().stream()
-                .filter(entry -> entry.getKey().endsWith("args"))
+                .filter(entry -> entry.getKey().endsWith("args") && !StringUtil.isEmptyOrSpaces(entry.getValue()))
                 .collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
     }
 

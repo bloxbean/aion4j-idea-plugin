@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.ui.DeployArgsUI;
 import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.aion4j.avm.idea.service.AvmCacheService;
@@ -40,7 +41,8 @@ public class DeployArgsHelper {
                     resultArgs.putAll(avmCacheService.getAllDeployArgsWithModuleName());
                 } else {
                     String deployArgs = avmCacheService.getDeployArgs(moduleName);
-                    resultArgs.put("args", deployArgs != null ? deployArgs : "");
+                    if(!StringUtil.isEmptyOrSpaces(deployArgs))
+                        resultArgs.put("args", deployArgs);
                 }
             } else {
                 DeployArgsUI dialog = new DeployArgsUI(project, moduleName);
@@ -61,7 +63,8 @@ public class DeployArgsHelper {
                     avmCacheService.setShouldNotAskDeployArgs(moduleName, dialog.isDontAskSelected());
 
                     deployArgs = avmCacheService.getDeployArgs(moduleName);
-                    resultArgs.put("args", deployArgs != null ? deployArgs : "");
+                    if(!StringUtil.isEmptyOrSpaces(deployArgs))
+                        resultArgs.put("args", deployArgs);
 
                 }
             }
