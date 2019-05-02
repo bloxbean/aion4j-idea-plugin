@@ -28,6 +28,7 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
     private final static String USERLIB_PACKAGE_PREFIX = "org.aion.avm.userlib";
     private final static String AVM_API_PACKAGE_PREFIX = "avm";
     private final static String CALLABLE_ANNOTATION = "org.aion.avm.tooling.abi.Callable";
+    private final static String FALLBACK_ANNOTATION = "org.aion.avm.tooling.abi.Fallback";
 
     @NotNull
     @Override
@@ -350,13 +351,16 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                 try {
                     PsiAnnotation callableAnnotation = method.getAnnotation(CALLABLE_ANNOTATION);
 
-                    if (callableAnnotation == null) {
-                        return;
-                    } else {
+                    if (callableAnnotation != null)  {
                         //check if public
                         if(!method.getModifierList().hasModifierProperty("public")) {
                             holder.registerProblem(method.getModifierList().getOriginalElement(),
                                     "A @Callable method should be public", ProblemHighlightType.GENERIC_ERROR);
+                        }
+
+                        if(!method.getModifierList().hasModifierProperty("static")) {
+                            holder.registerProblem(method.getModifierList().getOriginalElement(),
+                                    "A @Callable method should be static", ProblemHighlightType.GENERIC_ERROR);
                         }
 
                         PsiParameter[] jvmParameters = method.getParameterList().getParameters();
@@ -376,6 +380,28 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                                     String.format("%s is not an allowed return type in AVM smart contract method", returnType), ProblemHighlightType.GENERIC_ERROR);
                         }
                     }
+
+                    PsiAnnotation fallbackAnnotation = method.getAnnotation(FALLBACK_ANNOTATION);
+                    if(fallbackAnnotation != null) {
+                        if(!method.getModifierList().hasModifierProperty("static")) {
+                            holder.registerProblem(method.getModifierList().getOriginalElement(),
+                                    "@Fallback method should be static", ProblemHighlightType.GENERIC_ERROR);
+                        }
+
+                        PsiParameter[] jvmParameters = method.getParameterList().getParameters();
+                        if(jvmParameters != null && jvmParameters.length > 0) {
+                            holder.registerProblem(method.getParameterList().getOriginalElement(),
+                                    "@Fallback method cannot take arguments", ProblemHighlightType.GENERIC_ERROR);
+                        }
+
+                        //Return type
+                        String returnType = method.getReturnType().getCanonicalText();
+                        if (!"void".equals(returnType)) {
+                            holder.registerProblem(method.getReturnTypeElement(),
+                                    "@Fallback method return type should be void", ProblemHighlightType.GENERIC_ERROR);
+                        }
+                    }
+
                 } catch (Exception e) {
                     if(log.isDebugEnabled())
                         log.debug(e);
