@@ -6,6 +6,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
+import org.aion4j.avm.idea.action.DeployArgsHelper;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
@@ -50,11 +51,12 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
             goals.add("package");
         }
 
-        goals.add("aion4j:deploy");
+        //set deploy args
+        Map<String, String> deployArgs = DeployArgsHelper.getAndSaveDeploymentArgs(e, project, true);
+        if(deployArgs != null)
+            mavenRunnerSettings.getMavenProperties().putAll(deployArgs);
 
-        if(!StringUtil.isEmptyOrSpaces(state.deployArgs)) {
-            mavenRunnerSettings.getMavenProperties().put("args", state.deployArgs);
-        }
+        goals.add("aion4j:deploy");
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
 

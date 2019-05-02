@@ -19,7 +19,7 @@ public class AvmConfigStateService implements PersistentStateComponent<AvmConfig
         public String contractTxnNrg;
         public String contractTxnNrgPrice;
         public String mvnProfile;
-        public String deployArgs;
+        //public String deployArgs;
         public boolean getReceiptWait = true;
 
         //local avm props

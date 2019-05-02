@@ -33,7 +33,6 @@ public class AvmConfigUI extends DialogWrapper {
     private JTextField contractTxnNrgTf;
     private JTextField contractTxnNrgPriceTf;
     private JTextField mvnProfileTf;
-    private JTextField deployArgsTf;
     private JCheckBox getReceiptWaitCB;
     private JCheckBox preserveDebugModeCheckBox;
     private JCheckBox verboseContractErrorCheckBox;
@@ -171,8 +170,6 @@ public class AvmConfigUI extends DialogWrapper {
         else
             setMvnProfile("remote");
 
-        setDeployArgs(model.getDeployArgs());
-
         setGetReceiptWait(model.isGetReceiptWait());
 
         //set Avm params
@@ -235,10 +232,6 @@ public class AvmConfigUI extends DialogWrapper {
 
     public void setMvnProfile(String mavenProfie) {
         this.mvnProfileTf.setText(mavenProfie);
-    }
-
-    public void setDeployArgs(String deployArgs) {
-        this.deployArgsTf.setText(deployArgs);
     }
 
     public void setGetReceiptWait(boolean wait) {
@@ -325,7 +318,7 @@ public class AvmConfigUI extends DialogWrapper {
     public RemoteConfigModel getRemoteConfig() {
         return new RemoteConfigModel(web3RpcTf.getText(), pkTf.getText(), accountTf.getText(), passwordTf.getText(),
                 notStoreCredentialsCheckBox.isSelected(), cleanAndBuildCheckBox.isSelected(), deployNrgTf.getText(), deployNrgPriceTf.getText(),
-                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), deployArgsTf.getText(), getReceiptWaitCB.isSelected(),
+                contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), getReceiptWaitCB.isSelected(),
                 preserveDebugModeCheckBox.isSelected(), verboseContractErrorCheckBox.isSelected(), verboseConcurrentExecutorCheckBox.isSelected(),
                 storagePathTf.getText(), localDefaultAccountTf.getText(), askCallerAccountCB.isSelected());
     }
@@ -343,7 +336,6 @@ public class AvmConfigUI extends DialogWrapper {
         private String contractTxnNrg;
         private String contractTxnNrgPrice;
         private String mvnProfile;
-        private String deployArgs;
         private boolean getReceiptWait;
 
         //local avm properties
@@ -360,7 +352,7 @@ public class AvmConfigUI extends DialogWrapper {
 
         public RemoteConfigModel(String web3RpcUrl, String pk, String account, String password,
                                  boolean disableCredentialStore, boolean cleanAndBuildBeforeDeploy, String deployNrg, String deployNrgPrice,
-                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, String deployArgs, boolean getReceiptWait,
+                                 String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, boolean getReceiptWait,
                                  boolean preserveDebugMode, boolean verboseContractError, boolean verboseConcurrentExecutor, String avmStoragePath,
                                  String localDefaultAccount, boolean shouldAskCallerAccountEverytime) {
             this.web3RpcUrl = web3RpcUrl;
@@ -374,7 +366,6 @@ public class AvmConfigUI extends DialogWrapper {
             this.contractTxnNrg = contractTxnNrg;
             this.contractTxnNrgPrice = contractTxnNrgPrice;
             this.mvnProfile = mvnProfile;
-            this.deployArgs = deployArgs;
             this.getReceiptWait = getReceiptWait;
 
             this.preserveDebugMode = preserveDebugMode;
@@ -471,14 +462,6 @@ public class AvmConfigUI extends DialogWrapper {
 
         public void setMvnProfile(String mvnProfile) {
             this.mvnProfile = mvnProfile;
-        }
-
-        public String getDeployArgs() {
-            return deployArgs;
-        }
-
-        public void setDeployArgs(String deployArgs) {
-            this.deployArgs = deployArgs;
         }
 
         public boolean isGetReceiptWait() {

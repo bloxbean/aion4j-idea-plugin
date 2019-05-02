@@ -40,8 +40,6 @@ public class AvmConfiguration extends AvmBaseAction {
         configModel.setMvnProfile(configService.getState().mvnProfile);
         configModel.setGetReceiptWait(configService.getState().getReceiptWait);
 
-        configModel.setDeployArgs(configService.getState().deployArgs);
-
         configModel.setPreserveDebugMode(configService.getState().preserveDebugMode);
         configModel.setVerboseContractError(configService.getState().verboseContractError);
         configModel.setVerboseConcurrentExecutor(configService.getState().verboseConcurrentExecutor);
@@ -69,8 +67,6 @@ public class AvmConfiguration extends AvmBaseAction {
             state.contractTxnNrgPrice = remoteConfigModel.getContractTxnNrgPrice();
             state.mvnProfile = remoteConfigModel.getMvnProfile();
             state.getReceiptWait = remoteConfigModel.isGetReceiptWait();
-
-            state.deployArgs = remoteConfigModel.getDeployArgs();
 
             state.preserveDebugMode = remoteConfigModel.isPreserveDebugMode();
             state.verboseContractError = remoteConfigModel.isVerboseContractError();

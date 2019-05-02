@@ -55,13 +55,19 @@
 
             </group>
 
-            <group id="Avm.remote" text="Remote" description="Remotr AVM" popup="true">
+            <group id="Avm.remote" text="Remote" description="Remote AVM" popup="true">
 
             </group>
         </group>
+
         <action id="Avm.project.Initialize" class="org.aion4j.avm.idea.action.InitializationAction" text="Run Initialize"
                 description="Initialize AVM Project">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="S"/>
+            <add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>
+        </action>
+        <action id="Avm.deployArgs" class="org.aion4j.avm.idea.action.DeployArgsConfigAction"
+                text="Configure Deploy Args" description="Configure deployment arguments">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl D" second-keystroke="C"/>
             <add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>
         </action>
         <action id="Avm.remote.configuration" class="org.aion4j.avm.idea.action.AvmConfiguration"

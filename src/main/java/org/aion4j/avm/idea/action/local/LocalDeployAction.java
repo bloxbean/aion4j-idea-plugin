@@ -7,14 +7,17 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
+import org.aion4j.avm.idea.action.DeployArgsHelper;
 import org.aion4j.avm.idea.action.local.ui.LocalGetAccountDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.IdeaUtil;
+import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
+import org.jetbrains.idea.maven.project.MavenProject;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -55,12 +58,17 @@ public class LocalDeployAction extends AvmLocalBaseAction {
         if(configService != null) {
             AvmConfigStateService.State state = configService.getState();
             if(state != null && StringUtil.isEmptyOrSpaces(state.avmStoragePath)) {
-                if(state.shouldAskCallerAccountEverytime || !StringUtil.isEmptyOrSpaces(state.localDefaultAccount)) { //Custom account .. so lets create a give some balance.
+                if(state.shouldAskCallerAccountEverytime || !StringUtil.isEmptyOrSpaces(state.localDefaultAccount)) { //Custom account .. so lets create and give some balance.
                     goals.add("aion4j:create-account");
                     mavenRunnerSettings.getMavenProperties().put("balance", "100000000000000");
                 }
             }
         }
+
+        //set deploy args
+        Map<String, String> deployArgs = DeployArgsHelper.getAndSaveDeploymentArgs(e, project, true);
+        if(deployArgs != null)
+            mavenRunnerSettings.getMavenProperties().putAll(deployArgs);
 
         goals.add("aion4j:deploy");
 
@@ -72,7 +80,6 @@ public class LocalDeployAction extends AvmLocalBaseAction {
                     NotificationType.INFORMATION, null);
         });
     }
-
     @Override
     protected void configureAVMProperties(@NotNull Project project, @NotNull Map<String, String> settingMap) {
         super.configureAVMProperties(project, settingMap);
@@ -82,9 +89,6 @@ public class LocalDeployAction extends AvmLocalBaseAction {
         AvmConfigStateService.State state = null;
         if(configService != null)
             state = configService.getState();
-
-        if(!StringUtil.isEmptyOrSpaces(state.deployArgs))
-            settingMap.put("args", state.deployArgs);
 
         if(state.shouldAskCallerAccountEverytime) {
             String inputAccount = getInputDeployerAccount(project);
