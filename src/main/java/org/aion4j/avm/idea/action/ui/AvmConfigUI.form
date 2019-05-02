@@ -265,7 +265,7 @@
                   <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Get Receipt - Wait till the transaction is mined (Default timeout: 2 min)"/>
+                  <text value="Get Receipt / After Deploy - Wait till the transaction is mined (Default timeout: 2 min)"/>
                 </properties>
               </component>
               <component id="bfee4" class="javax.swing.JLabel">
@@ -485,64 +485,6 @@
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
-              </component>
-            </children>
-          </grid>
-          <grid id="b54bb" layout-manager="FormLayout">
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:max(d;4px):noGrow"/>
-            <rowspec value="top:3dlu:noGrow"/>
-            <rowspec value="center:d:grow"/>
-            <colspec value="fill:d:grow"/>
-            <colspec value="left:4dlu:noGrow"/>
-            <colspec value="fill:d:grow"/>
-            <constraints>
-              <tabbedpane title="Common"/>
-            </constraints>
-            <properties>
-              <enabled value="false"/>
-              <visible value="true"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <component id="49cd6" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <text value="  "/>
-                </properties>
-              </component>
-              <component id="85eb9" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <text value=" "/>
-                </properties>
-              </component>
-              <component id="4dfbf" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <text value="  "/>
-                </properties>
-              </component>
-              <component id="4f73c" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <text value="These properties are applicable for both remote and embedded mode"/>
-                </properties>
               </component>
             </children>
           </grid>
