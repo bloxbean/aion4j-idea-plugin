@@ -5,6 +5,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
 import org.aion4j.avm.idea.action.remote.NrgConstants;
+import org.aion4j.avm.idea.maven.AVMArcheTypeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +43,9 @@ public class AvmConfigUI extends DialogWrapper {
     private JButton storagePathResetButton;
     private JTextField localDefaultAccountTf;
     private JCheckBox askCallerAccountCB;
+    private JCheckBox disableJarOptimizationCB;
+    private JButton fetchButton;
+    private JLabel fetchStatusLabel;
 
     public AvmConfigUI(Project project, String customMessage) {
 
@@ -72,6 +76,8 @@ public class AvmConfigUI extends DialogWrapper {
         initStoragePathFileChooser();
 
         doValidateInput();
+
+        commonTab();
 
     }
 
@@ -123,6 +129,21 @@ public class AvmConfigUI extends DialogWrapper {
                 disableNewFolderButton((Container) comp);
             }
         }
+    }
+
+    private void commonTab() {
+        fetchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    fetchStatusLabel.setText("Fetching...");
+                    AVMArcheTypeUtil.updateArcheTypeCache();
+                    fetchStatusLabel.setText("Avm archetypes updated.");
+                } catch (Exception ex) {
+                    fetchStatusLabel.setText("Fetch failed.");
+                }
+            }
+        });
     }
 
     @Nullable
@@ -187,6 +208,7 @@ public class AvmConfigUI extends DialogWrapper {
 
         setAskCallerAccountEverytime(model.shouldAskCallerAccountEverytime());
 
+        setDisableJarOptimization(model.isDisableJarOptimization());
 
     }
 
@@ -262,6 +284,10 @@ public class AvmConfigUI extends DialogWrapper {
         this.askCallerAccountCB.setSelected(flag);
     }
 
+    public void setDisableJarOptimization(boolean flag) {
+        this.disableJarOptimizationCB.setSelected(flag);
+    }
+
     private void doValidateInput() {
 
         List<String> errors = new ArrayList();
@@ -320,7 +346,7 @@ public class AvmConfigUI extends DialogWrapper {
                 notStoreCredentialsCheckBox.isSelected(), cleanAndBuildCheckBox.isSelected(), deployNrgTf.getText(), deployNrgPriceTf.getText(),
                 contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), getReceiptWaitCB.isSelected(),
                 preserveDebugModeCheckBox.isSelected(), verboseContractErrorCheckBox.isSelected(), verboseConcurrentExecutorCheckBox.isSelected(),
-                storagePathTf.getText(), localDefaultAccountTf.getText(), askCallerAccountCB.isSelected());
+                storagePathTf.getText(), localDefaultAccountTf.getText(), askCallerAccountCB.isSelected(), disableJarOptimizationCB.isSelected());
     }
 
 
@@ -346,6 +372,8 @@ public class AvmConfigUI extends DialogWrapper {
         private String localDefaultAccount;
         private boolean shouldAskCallerAccountEverytime;
 
+        private boolean disableJarOptimization;
+
         public RemoteConfigModel() {
 
         }
@@ -354,7 +382,7 @@ public class AvmConfigUI extends DialogWrapper {
                                  boolean disableCredentialStore, boolean cleanAndBuildBeforeDeploy, String deployNrg, String deployNrgPrice,
                                  String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, boolean getReceiptWait,
                                  boolean preserveDebugMode, boolean verboseContractError, boolean verboseConcurrentExecutor, String avmStoragePath,
-                                 String localDefaultAccount, boolean shouldAskCallerAccountEverytime) {
+                                 String localDefaultAccount, boolean shouldAskCallerAccountEverytime, boolean disableJarOptimization) {
             this.web3RpcUrl = web3RpcUrl;
             this.pk = pk;
             this.account = account;
@@ -374,6 +402,8 @@ public class AvmConfigUI extends DialogWrapper {
             this.avmStoragePath = avmStoragePath;
             this.localDefaultAccount = localDefaultAccount;
             this.shouldAskCallerAccountEverytime = shouldAskCallerAccountEverytime;
+
+            this.disableJarOptimization = disableJarOptimization;
         }
 
         public String getWeb3RpcUrl() {
@@ -518,6 +548,14 @@ public class AvmConfigUI extends DialogWrapper {
 
         public void setShouldAskCallerAccountEverytime(boolean shouldAskCallerAccountEverytime) {
             this.shouldAskCallerAccountEverytime = shouldAskCallerAccountEverytime;
+        }
+
+        public boolean isDisableJarOptimization() {
+            return disableJarOptimization;
+        }
+
+        public void setDisableJarOptimization(boolean disableJarOptimization) {
+            this.disableJarOptimization = disableJarOptimization;
         }
     }
 

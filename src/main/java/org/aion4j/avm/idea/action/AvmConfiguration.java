@@ -47,6 +47,8 @@ public class AvmConfiguration extends AvmBaseAction {
         configModel.setLocalDefaultAccount(configService.getState().localDefaultAccount);
         configModel.setShouldAskCallerAccountEverytime(configService.getState().shouldAskCallerAccountEverytime);
 
+        configModel.setDisableJarOptimization(configService.getState().disableJarOptimization);
+
         configDialog.setState(configModel);
 
         //Show the dialog
@@ -75,6 +77,8 @@ public class AvmConfiguration extends AvmBaseAction {
             state.avmStoragePath = remoteConfigModel.getAvmStoragePath();
             state.localDefaultAccount = remoteConfigModel.getLocalDefaultAccount();
             state.shouldAskCallerAccountEverytime = remoteConfigModel.shouldAskCallerAccountEverytime();
+
+            state.disableJarOptimization = remoteConfigModel.isDisableJarOptimization();
 
             if(remoteConfigModel.isDisableCredentialStore()) { //don't store credentials
                 state.pk = "";

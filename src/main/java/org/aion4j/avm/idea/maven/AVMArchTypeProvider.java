@@ -22,9 +22,6 @@ public class AVMArchTypeProvider implements MavenArchetypesProvider {
     private final static String LATEST_RELEASE_VERSION_URL = "https://bloxbean.github.io/aion4j-release/avm-archetype";
     private final String AVM_ARCHTYPE_VERSION = "0.17";
 
-    //List of archetypes
-    private final static String ARCHETYPES_URL = "https://bloxbean.github.io/aion4j-release/archetypes";
-
     @Override
     public Collection<MavenArchetype> getArchetypes() {
 
@@ -92,30 +89,16 @@ public class AVMArchTypeProvider implements MavenArchetypesProvider {
             long lastUpdatedTime = applicationCacheService.getArchetypeLastUpdateTime();
             long delay = System.currentTimeMillis() - lastUpdatedTime;
 
-            if(delay > 86400000) { //1 day
+            if(delay > 1296000000) { //15 days
 
                 if(lastUpdatedTime == 0) { //first time so fetch it
-                    Properties props = loadArchetypesFromUrl();
-                    if (props != null) {
-
-                        if (applicationCacheService != null) {
-                            Map<String, String> propMap = new HashMap(props);
-                            applicationCacheService.updateArchetypes(propMap);
-                        }
-                    }
+                    AVMArcheTypeUtil.updateArcheTypeCache();
                 } else {
                     ApplicationManager.getApplication().invokeLater(
                             new Runnable() {
                                 @Override
                                 public void run() {
-                                    Properties props = loadArchetypesFromUrl();
-                                    if (props != null) {
-
-                                        if (applicationCacheService != null) {
-                                            Map<String, String> propMap = new HashMap(props);
-                                            applicationCacheService.updateArchetypes(propMap);
-                                        }
-                                    }
+                                    AVMArcheTypeUtil.updateArcheTypeCache();
                                 }
                             },
                             ModalityState.any()
@@ -124,67 +107,18 @@ public class AVMArchTypeProvider implements MavenArchetypesProvider {
 
             }
 
+            applicationCacheService = ServiceManager.getService(AvmApplicationCacheService.class);
+            if(applicationCacheService == null)
+                return Collections.EMPTY_LIST;
+
             Map<String, String> archeTypes = applicationCacheService.getAllArchetypes();
 
             if(archeTypes != null && archeTypes.size() != 0) {
-                return getMavenArchetypesFromMap(archeTypes);
-            }
-        }
-
-        return Collections.EMPTY_LIST;
+                return AVMArcheTypeUtil.getMavenArchetypesFromMap(archeTypes);
+            } else
+                return Collections.EMPTY_LIST;
+        } else
+            return Collections.EMPTY_LIST;
     }
 
-    @NotNull
-    private List<MavenArchetype> getMavenArchetypesFromMap(Map<String, String> archeTypes) {
-        List<MavenArchetype> archeTypeList = new ArrayList<>();
-        for (Map.Entry<String,String> entry : archeTypes.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            if(key == null) continue;
-
-            try {
-                StringTokenizer st = new StringTokenizer(key, ",");
-
-                if (st.countTokens() != 3)
-                    continue;
-
-                String gid = st.nextToken();
-                String aid = st.nextToken();
-                String version = st.nextToken();
-
-                MavenArchetype archetype = new MavenArchetype(gid, aid, version, null, value);
-                archeTypeList.add(archetype);
-            } catch (Exception e){
-
-            }
-        }
-        return archeTypeList;
-    }
-
-    private Properties loadArchetypesFromUrl() {
-
-        Reader reader = null;
-        try {
-            URL url = new URL(ARCHETYPES_URL);
-            InputStream in = url.openStream();
-            reader = new InputStreamReader(in, "UTF-8"); // for example
-
-            Properties prop = new Properties();
-            prop.load(reader);
-
-            return prop;
-
-        } catch (Exception e) {
-            return null;
-        } finally {
-            if(reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-
-                }
-            }
-        }
-    }
 }

@@ -62,8 +62,14 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
 
         mavenRunnerSettings.setSkipTests(true);
 
+        //Start get-receipt after deploy
         if(state.getReceiptWait) {
             mavenRunnerSettings.getMavenProperties().put("wait", "true");
+        }
+
+        //Needed for build / packaging. disable optimization. only required during error/exception scenarios
+        if(state.disableJarOptimization) {
+            mavenRunnerSettings.getMavenProperties().put("disableJarOptimization", "true");
         }
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {

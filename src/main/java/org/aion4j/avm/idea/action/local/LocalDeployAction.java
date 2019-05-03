@@ -101,6 +101,11 @@ public class LocalDeployAction extends AvmLocalBaseAction {
                 settingMap.put("address", state.localDefaultAccount);
             }
         }
+
+        //Needed for build / packaging. disable optimization. only required during error/exception scenarios
+        if(state.disableJarOptimization) {
+            settingMap.put("disableJarOptimization", "true");
+        }
     }
 
     private String getInputDeployerAccount(Project project) {

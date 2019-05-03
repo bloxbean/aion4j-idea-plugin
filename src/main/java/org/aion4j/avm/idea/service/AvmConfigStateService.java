@@ -29,6 +29,9 @@ public class AvmConfigStateService implements PersistentStateComponent<AvmConfig
         public String avmStoragePath;
         public String localDefaultAccount;
         public boolean shouldAskCallerAccountEverytime;
+
+        //common
+        public boolean disableJarOptimization;
     }
 
     State state;
