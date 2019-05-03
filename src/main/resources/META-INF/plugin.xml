@@ -20,6 +20,7 @@
                 serviceInterface="org.aion4j.avm.idea.service.AvmService"
                 serviceImplementation="org.aion4j.avm.idea.service.AvmServiceImpl"/>
 
+        <applicationService serviceImplementation="org.aion4j.avm.idea.service.AvmApplicationCacheService"/>
     </extensions>
 
     <!--<extensions defaultExtensionNs="com.intellij">-->
