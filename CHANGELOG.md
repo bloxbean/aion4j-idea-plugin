@@ -1,6 +1,7 @@
 ### Since 0.3.0
   - Multi module maven project support
   - Automatically get receipt during deployment
+  - New code inspection rules
   - AVM 1.0
 ### Since 0.2.0
   - Fix: JCLWhitelist is taken from avm.jar if available in project's lib folder
