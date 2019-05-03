@@ -303,7 +303,11 @@ public class AvmServiceImpl implements AvmService {
             IdeaUtil.showNotification(project, "JCL Whitelist cache", "Error getting JCL whitelist data for AVM", NotificationType.ERROR, null);
         }
 
-        whitelistHolder.loadFromCache(project);
+        try {
+            whitelistHolder.loadFromCache(project);
+        } catch (Exception e) {
+
+        }
 
         isJCLClassInitializationDone = true;
     }

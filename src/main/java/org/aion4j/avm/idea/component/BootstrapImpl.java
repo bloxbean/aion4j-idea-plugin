@@ -11,14 +11,19 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import org.aion4j.avm.idea.action.InitializationAction;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.aion4j.avm.idea.service.AvmService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 import java.io.File;
+import java.util.Set;
 
 public class BootstrapImpl implements Bootstrap, ProjectComponent {
 
@@ -84,6 +89,8 @@ public class BootstrapImpl implements Bootstrap, ProjectComponent {
                             public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
                               notification.expire();
                               InitializationAction.initializeProject(e);
+
+                              refreshNewMultiModuleProject(); //if required
                             }
                           });
                 }
@@ -120,6 +127,32 @@ public class BootstrapImpl implements Bootstrap, ProjectComponent {
   private void debug(Runnable doWhenDebug) {
     if (log.isDebugEnabled()) {
       doWhenDebug.run();
+    }
+  }
+
+  private void refreshNewMultiModuleProject() {
+    try {
+      MavenProjectsManager mvnProjectManager = MavenProjectsManager.getInstance(project);
+
+      if (mvnProjectManager.getProjects().size() == 1) {
+        MavenProject mvnProject = mvnProjectManager.getProjects().get(0);
+
+        if (mvnProject.isAggregator() && mvnProject.getModulePaths().size() > 0) {
+
+          Set<String> modulePaths = mvnProject.getModulePaths();
+          for (String path : modulePaths) {
+            new File(path).setLastModified(System.currentTimeMillis());
+            VirtualFile vf = LocalFileSystem.getInstance().findFileByIoFile(new File(path));
+            ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(vf).getModuleFile().refresh(false, true);
+          }
+
+//
+//          IdeaUtil.showNotification(project, "Project loading",
+//                  "Please close and re-open the project if the project doesn't load properly", NotificationType.INFORMATION, null);
+        }
+      }
+    } catch (Exception ex) {
+
     }
   }
 

@@ -4,10 +4,12 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.aion4j.avm.idea.exception.JCLWhiteListLoadException;
+import org.aion4j.avm.idea.misc.IdeaUtil;
 
 import java.io.*;
 import java.util.*;
@@ -52,15 +54,27 @@ public class JCLWhitelistHolder {
     }
 
     public static String getCacheFolder(Project project) {
-        VirtualFile ideaDir = project.getProjectFile().getParent();
+        VirtualFile projectFile = project.getProjectFile();
+
+        if(projectFile == null) {
+            IdeaUtil.showNotification(project, "Project loading",
+                        "Something wrong while loading the project. Please close and re-open the project.", NotificationType.WARNING, null);
+            return null;
+        }
+
+        VirtualFile ideaDir = projectFile.getParent();
         return ideaDir.getCanonicalPath();
     }
 
     public static String getSourceFilePath(Project project) {
-        return getCacheFolder(project) + File.separator + SOURCE_FILE;
+        String cacheFolder = getCacheFolder(project);
+        return cacheFolder + File.separator + SOURCE_FILE;
     }
 
     private void parseAndLoad(Project project, Map<String, Map<String, List<MethodDescriptor>>> map) {
+
+        if(getCacheFolder(project) == null) //Project is not yet initialized properly
+            return;
 
         JsonObject object = null;
         try (FileReader reader = new FileReader(new File(getSourceFilePath(project)))) {
