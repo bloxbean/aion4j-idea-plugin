@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.remote.ui.TransferDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
+import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
@@ -66,5 +67,13 @@ public class TransferAction extends AvmRemoteBaseAction {
     @Override
     protected void configureAVMProperties(Project project, Map<String, String> properties) {
         populateKernelInfo(project, properties);
+
+        AvmConfigStateService.State state = getConfigState(project);
+        if(state != null) {
+            //Start get-receipt after transfer
+            if (state.getReceiptWait) {
+                properties.put("wait", "true");
+            }
+        }
     }
 }

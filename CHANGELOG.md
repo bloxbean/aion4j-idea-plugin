@@ -1,3 +1,6 @@
+### Since 0.3.1
+  - AVM 1.1
+  - Automatically fetch receipt after contract transaction and transfer
 ### Since 0.3.0
   - Multi module maven project support
   - Automatically get receipt during deployment
