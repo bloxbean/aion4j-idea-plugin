@@ -95,26 +95,7 @@ public class AvmServiceImpl implements AvmService {
             return;
         }
 
-        List<MavenProject> mavenProjects = MavenProjectsManager.getInstance(project).getProjects();
-
-        if(mavenProjects != null && mavenProjects.size() > 0) {
-            this.testFolders = new ArrayList<>();
-            this.sourceFolders = new ArrayList<>();
-            for (MavenProject mvnProject : mavenProjects) {
-                List<String> testSources = mvnProject.getTestSources();
-                List<String> sources = mvnProject.getSources();
-
-                if(testSources != null && testSources.size() > 0) {
-                    this.testFolders.addAll(testSources);
-                }
-
-                if(sources != null && sources.size() > 0) {
-                    this.sourceFolders.addAll(sources);
-                }
-            }
-        } else {
-            return;
-        }
+        updateSourceAndTestFolders(project);
 
         if(log.isDebugEnabled()) {
             debug(() -> log.debug(">>>>>> Test source folders: " + testFolders));
@@ -148,6 +129,31 @@ public class AvmServiceImpl implements AvmService {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+    }
+
+    public boolean updateSourceAndTestFolders(Project project) {
+        List<MavenProject> mavenProjects = MavenProjectsManager.getInstance(project).getProjects();
+
+        if(mavenProjects != null && mavenProjects.size() > 0) {
+            this.testFolders = new ArrayList<>();
+            this.sourceFolders = new ArrayList<>();
+            for (MavenProject mvnProject : mavenProjects) {
+                List<String> testSources = mvnProject.getTestSources();
+                List<String> sources = mvnProject.getSources();
+
+                if(testSources != null && testSources.size() > 0) {
+                    this.testFolders.addAll(testSources);
+                }
+
+                if(sources != null && sources.size() > 0) {
+                    this.sourceFolders.addAll(sources);
+                }
+            }
+
+        } else {
+            return false;
+        }
+        return false;
     }
 
 //    private void attachProjectListener(MavenProjectsManager projectsManager) {

@@ -8,6 +8,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.ModuleListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
@@ -96,6 +97,24 @@ public class BootstrapImpl implements Bootstrap, ProjectComponent {
                 }
               }
             }
+        }
+      }
+    });
+
+    connection.subscribe(ProjectTopics.MODULES, new ModuleListener() {
+      @Override
+      public void moduleAdded(@NotNull Project project, @NotNull com.intellij.openapi.module.Module module) {
+
+//        System.out.println("Module added >> " + module.getName());
+        MavenProjectsManager mvnProjectManager = MavenProjectsManager.getInstance(project);
+        if(mvnProjectManager == null || !mvnProjectManager.isMavenizedProject()) {
+          return;
+        }
+//
+//        System.out.println("maven module>> " + module.getName());
+        AvmService service = ServiceManager.getService(project, AvmService.class);
+        if(service != null) {
+          service.updateSourceAndTestFolders(project);
         }
       }
     });

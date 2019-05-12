@@ -9,6 +9,8 @@ public interface AvmService {
 
     public void init(Project project);
 
+    public boolean updateSourceAndTestFolders(Project project);
+
     public boolean isInitialize();
 
     public void setIsAvmProject(boolean flag);
