@@ -249,6 +249,10 @@ public class AvmServiceImpl implements AvmService {
             return;
         }
 
+        if(whitelistHolder.getCacheFolder(project) == null) { //It seems like project is not initialized properly. Let's delay the cache writing
+            return;
+        }
+
         String homePath = sdk.getHomePath();
         File pluginPath = PluginManager.getPlugin(PluginId.getId("org.aion4j.avm")).getPath();
 
@@ -267,7 +271,7 @@ public class AvmServiceImpl implements AvmService {
         cmds.add(buildClasspathForAvmDetails(project));
         cmds.add("-Dfile.encoding=UTF8");
         cmds.add("AvmDetailsGetter");
-        cmds.add(JCLWhitelistHolder.getSourceFilePath(project));
+        cmds.add(whitelistHolder.getSourceFilePath(project));
 
         GeneralCommandLine generalCommandLine = new GeneralCommandLine(cmds);
         generalCommandLine.setCharset(Charset.forName("UTF-8"));

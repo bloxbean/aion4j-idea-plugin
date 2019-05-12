@@ -23,6 +23,8 @@ public class JCLWhitelistHolder {
     private Map<String, Map<String, List<MethodDescriptor>>> jclWhitelist;
     private Map<String, Map<String, List<MethodDescriptor>>> jclWhitelistCache;
 
+    private boolean projectLoadFailedWarningShown = false; //If project loading failed warning already shown
+
     public JCLWhitelistHolder() {
         jclWhitelist = new HashMap<>();
         jclWhitelistCache = new HashMap<>();
@@ -53,12 +55,16 @@ public class JCLWhitelistHolder {
 
     }
 
-    public static String getCacheFolder(Project project) {
+    public String getCacheFolder(Project project) {
         VirtualFile projectFile = project.getProjectFile();
 
         if(projectFile == null) {
-            IdeaUtil.showNotification(project, "Project loading",
+            if(!projectLoadFailedWarningShown) {
+                IdeaUtil.showNotification(project, "Project loading",
                         "Something wrong while loading the project. Please close and re-open the project.", NotificationType.WARNING, null);
+            }
+
+            this.projectLoadFailedWarningShown = true;
             return null;
         }
 
@@ -66,7 +72,7 @@ public class JCLWhitelistHolder {
         return ideaDir.getCanonicalPath();
     }
 
-    public static String getSourceFilePath(Project project) {
+    public String getSourceFilePath(Project project) {
         String cacheFolder = getCacheFolder(project);
         return cacheFolder + File.separator + SOURCE_FILE;
     }
