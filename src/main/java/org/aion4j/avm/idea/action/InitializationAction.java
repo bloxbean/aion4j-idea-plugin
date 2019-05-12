@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import org.aion4j.avm.idea.service.AvmService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.execution.MavenRunner;
@@ -46,6 +47,18 @@ public class InitializationAction extends AnAction { //This is called initially 
 
         MavenRunnerSettings mavenRunnerSettings = new MavenRunnerSettings();
         mavenRunnerSettings.setDelegateBuildToMaven(true);
+
+        //Check if lib folder is there and ask user if overwrite or not. It just checks lib folder under project root.
+        File avmJar = new File(project.getBasePath() + File.separator + "lib" + File.separator + "avm.jar");
+        if(avmJar.exists()) { //Prompt to overwrite
+            int ret = Messages.showOkCancelDialog(project, "Do you want to overwrite existing avm jar files ?",
+                    "Avm Initializer", Messages.getQuestionIcon());
+
+            if(ret != Messages.OK) {
+                return;
+            }
+            mavenRunnerSettings.getMavenProperties().put("forceCopy", "true");
+        }
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             //reset JCLWhitelist..
