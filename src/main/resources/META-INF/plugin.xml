@@ -76,7 +76,6 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="C"/>
             <add-to-group group-id="org.aion4j.avm.idea.action.AvmActionGroup"/>
         </action>
-
         <action id="Avm.remote.deploy" class="org.aion4j.avm.idea.action.remote.RemoteDeploy" text="Deploy"
                 description="Avm Remote Deploy">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl X" second-keystroke="D"/>
@@ -123,12 +122,16 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl X" second-keystroke="T"/>
             <add-to-group group-id="Avm.remote"/>
         </action>
-        <action id="Avm.remote.unlockAccount" class="org.aion4j.avm.idea.action.remote.UnlockAccountAction"
+        <!--<action id="Avm.remote.unlockAccount" class="org.aion4j.avm.idea.action.remote.UnlockAccountAction"
                 text="Unlock Account" description="Unlock Account">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl X" second-keystroke="U"/>
             <add-to-group group-id="Avm.remote"/>
+        </action> -->
+        <action id="Avm.remote.AccountCreate" class="org.aion4j.avm.idea.action.remote.CreateAccountAction"
+                text="Create Account" description="Create Account">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl X" second-keystroke="A"/>
+            <add-to-group group-id="Avm.remote"/>
         </action>
-
 
         <action id="Avm.local.deploy" class="org.aion4j.avm.idea.action.local.LocalDeployAction"
                 text="Deploy" description="Deploy to embedded AVM">

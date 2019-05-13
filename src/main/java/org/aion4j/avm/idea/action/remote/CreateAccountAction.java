@@ -20,14 +20,13 @@
  * SOFTWARE.
  */
 
-package org.aion4j.avm.idea.action.local;
+package org.aion4j.avm.idea.action.remote;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import org.aion4j.avm.idea.action.local.ui.LocalCreateAccountDialog;
+import org.aion4j.avm.idea.action.AvmBaseAction;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.jetbrains.annotations.NotNull;
@@ -38,32 +37,29 @@ import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Satya
  */
-public class LocalCreateAccountAction extends AvmLocalBaseAction {
+
+public class CreateAccountAction extends AvmBaseAction {
 
     @Override
     protected boolean isRemote() {
-        return false;
+        return true;
+    }
+
+    @Override
+    protected void configureAVMProperties(Project project, Map<String, String> properties) {
+
     }
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
 
         Project project = e.getProject();
-
-        LocalCreateAccountDialog dialog = new LocalCreateAccountDialog(project);
-        boolean result = dialog.showAndGet();
-
-        if(!result) {
-            return;
-        }
-
-        String account = dialog.getAccount();
-        long balance = dialog.getBalance();
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
@@ -73,11 +69,7 @@ public class LocalCreateAccountAction extends AvmLocalBaseAction {
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
         MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
 
-        if(!StringUtil.isEmpty(account))
-            mavenRunnerSettings.getMavenProperties().put("address", account);
-
-        mavenRunnerSettings.getMavenProperties().put("balance", String.valueOf(balance));
-
+        //TODO
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             IdeaUtil.showNotification(project, "Account creation", "Account created successfully",
                     NotificationType.INFORMATION, null);
