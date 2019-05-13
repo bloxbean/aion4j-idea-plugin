@@ -3,11 +3,11 @@
   <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="true" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="14" y="55" width="910" height="493"/>
+      <xy x="14" y="55" width="920" height="493"/>
     </constraints>
     <properties>
-      <minimumSize width="910" height="370"/>
-      <preferredSize width="910" height="370"/>
+      <minimumSize width="920" height="370"/>
+      <preferredSize width="920" height="370"/>
       <requestFocusEnabled value="false"/>
     </properties>
     <border type="none"/>
@@ -39,7 +39,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="e8786" layout-manager="GridLayoutManager" row-count="10" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="e8786" layout-manager="GridLayoutManager" row-count="8" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -57,40 +57,23 @@
                   </component>
                   <component id="5b926" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="Account"/>
+                      <text value="Account (Default)"/>
                     </properties>
                   </component>
                   <component id="4b553" class="javax.swing.JTextField" binding="accountTf">
                     <constraints>
-                      <grid row="5" column="1" row-span="3" col-span="3" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
+                      <grid row="4" column="1" row-span="3" col-span="3" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="699b9" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <font style="1"/>
-                      <text value="OR"/>
-                    </properties>
-                  </component>
-                  <component id="65de6" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Password"/>
-                    </properties>
-                  </component>
                   <component id="d0055" class="javax.swing.JCheckBox" binding="notStoreCredentialsCheckBox">
                     <constraints>
-                      <grid row="9" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="7" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="Always ask credentials"/>
@@ -102,14 +85,6 @@
                     </constraints>
                     <properties>
                       <text value=""/>
-                    </properties>
-                  </component>
-                  <component id="96b79" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Web3 Rpc Url"/>
                     </properties>
                   </component>
                   <component id="b439d" class="javax.swing.JTextField" binding="web3RpcTf">
@@ -131,14 +106,6 @@
                       <text value=" "/>
                     </properties>
                   </component>
-                  <component id="ec6f3" class="javax.swing.JPasswordField" binding="passwordTf">
-                    <constraints>
-                      <grid row="8" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties/>
-                  </component>
                   <component id="15672" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -157,10 +124,18 @@
                   </component>
                   <component id="a9eb6" class="javax.swing.JCheckBox" binding="cleanAndBuildCheckBox">
                     <constraints>
-                      <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="Always compile before deploying"/>
+                    </properties>
+                  </component>
+                  <component id="96b79" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Web3 Rpc Url"/>
                     </properties>
                   </component>
                 </children>

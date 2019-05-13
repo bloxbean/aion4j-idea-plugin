@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019 BloxBean Project
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package org.aion4j.avm.idea.action.remote.ui;
 
 import com.intellij.openapi.project.Project;
@@ -10,18 +32,23 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Satya
+ */
 public class TransferDialog extends DialogWrapper {
     private JTextField toAccountTf;
     private JPanel mainPanel;
-    private JTextField fromAccountTf;
-    private JTextField passwordTf;
     private JTextField privateKeyTf;
     private JTextField nrgTf;
     private JTextField nrgPriceTf;
     private JTextField valueTf;
+    private JTextField valueAionTf;
 
     public TransferDialog(Project project) {
         super(project, false);
@@ -36,20 +63,30 @@ public class TransferDialog extends DialogWrapper {
         };
 
         toAccountTf.getDocument().addDocumentListener(l);
-        fromAccountTf.getDocument().addDocumentListener(l);
 
         nrgTf.setText(String.valueOf(NrgConstants.defaultTransferNrg));
         nrgPriceTf.setText(String.valueOf(NrgConstants.defaultTransferNrgPrice));
         valueTf.setText("0");
+        valueAionTf.setText("0");
+        valueTf.setEditable(false);
+
+        valueAionTf.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                try {
+                    double valueAion = Double.parseDouble(valueAionTf.getText());
+                    double valueNAmp = valueAion * Math.pow(10, 18);
+
+                    valueTf.setText(String.format("%.0f", valueNAmp));
+                } catch(NumberFormatException ex) {
+
+                }
+            }
+        });
     }
 
     private void doValidateInput() {
         List<String> errors = new ArrayList();
-
-        if(!StringUtil.isEmptyOrSpaces(fromAccountTf.getText()) && (!fromAccountTf.getText().startsWith("0xa0")
-                && !fromAccountTf.getText().startsWith("a0"))) {
-            errors.add("fromAccount");
-        }
 
         if(!StringUtil.isEmptyOrSpaces(toAccountTf.getText()) && (!toAccountTf.getText().startsWith("0xa0")
                 && !toAccountTf.getText().startsWith("a0"))) {
@@ -69,10 +106,16 @@ public class TransferDialog extends DialogWrapper {
         }
 
         try {
-            Long.parseLong(valueTf.getText());
+            Double.parseDouble(valueAionTf.getText());
         } catch(NumberFormatException e) {
             errors.add("Amount");
         }
+
+//        try {
+//            Long.parseLong(valueTf.getText());
+//        } catch(NumberFormatException e) {
+//            errors.add("Amount");
+//        }
 
         if (errors.isEmpty()) {
             setErrorText(null);
@@ -95,16 +138,8 @@ public class TransferDialog extends DialogWrapper {
         return toAccountTf.getText().trim();
     }
 
-    public String getPassword() {
-        return passwordTf.getText().trim();
-    }
-
     public String getPrivateKey() {
         return privateKeyTf.getText().trim();
-    }
-
-    public String getFromAccount() {
-        return fromAccountTf.getText().trim();
     }
 
     public String getNrg() {
