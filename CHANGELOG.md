@@ -1,3 +1,8 @@
+### Since 0.3.2
+  - AVM 1.2
+  - Client side account generation
+  - Kernel managed account support removed
+  - Bug fixes
 ### Since 0.3.1
   - AVM 1.1
   - Automatically fetch receipt after contract transaction and transfer
