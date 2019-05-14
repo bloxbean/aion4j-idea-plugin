@@ -19,7 +19,7 @@ import java.util.*;
 public class AVMArchTypeProvider implements MavenArchetypesProvider {
     private final static Logger log = Logger.getInstance(AVMArchTypeProvider.class);
 
-    private final String AVM_ARCHTYPE_VERSION = "0.19";
+    private final String AVM_ARCHTYPE_VERSION = "0.20";
 
     @Override
     public Collection<MavenArchetype> getArchetypes() {
