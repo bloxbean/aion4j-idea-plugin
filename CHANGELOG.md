@@ -1,5 +1,5 @@
-### Since 0.3.3
-  - AVM 1.2
+### Since 0.3.4
+  - AVM 1.3
   - Client side account generation
   - Kernel managed account support removed
   - Avm archetype version changed to 0.20
