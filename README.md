@@ -24,4 +24,4 @@ Intellij IDEA plugin which supports smart contract development on Aion Virtual M
 
 ## Documents
 
-* Aion4j Intellij IDEA Plugin documents can be found at Aion Doc page (https://docs.aion.network/docs/intellij-plugin)
+* Aion4j IntelliJ IDEA Plugin documents can be found at Aion Doc page (https://docs.aion.network/docs/intellij-plugin)
