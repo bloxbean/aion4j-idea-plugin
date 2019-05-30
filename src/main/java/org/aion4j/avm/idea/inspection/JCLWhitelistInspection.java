@@ -29,6 +29,7 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
     private final static String AVM_API_PACKAGE_PREFIX = "avm";
     private final static String CALLABLE_ANNOTATION = "org.aion.avm.tooling.abi.Callable";
     private final static String FALLBACK_ANNOTATION = "org.aion.avm.tooling.abi.Fallback";
+    private final static String INITIALIZABLE_ANNOTATION = "org.aion.avm.tooling.abi.Initializable";
 
     @NotNull
     @Override
@@ -72,6 +73,9 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
                 if(log.isDebugEnabled())
                     log.debug("FQNAME : " + fqName);
 
+                //Abi type check for @Initializable field
+                performAbiTypeCheckOnInitializableField(field);
+
                 if(!isCheckedType(field.getType()))  { //TODO primitive type check. Do properly
                     return;
                 }
@@ -96,6 +100,31 @@ public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool 
 
             }
 
+            private void performAbiTypeCheckOnInitializableField(PsiField field) {
+                //Check Abi type check for field with Initializable annotation
+                PsiAnnotation initializableAnnotation = field.getAnnotation(INITIALIZABLE_ANNOTATION);
+
+                if (initializableAnnotation != null)  {
+
+                    try {
+                        String type = field.getType().getCanonicalText();
+
+                        if (!AvmTypes.isAllowedType(type)) {
+                            holder.registerProblem(field.getTypeElement().getOriginalElement(),
+                                    String.format("%s is not an allowed Field type with @Initializable annotation in AVM smart contract", type), ProblemHighlightType.GENERIC_ERROR);
+                        }
+
+                        if (!field.getModifierList().hasModifierProperty("static")) {
+                            holder.registerProblem(field.getModifierList().getOriginalElement(),
+                                    "A @Initializable field should be static", ProblemHighlightType.GENERIC_ERROR);
+                        }
+                    } catch (Exception e) {
+                        if(log.isDebugEnabled())
+                            log.debug("Error checking abiTypecheck for @Initializable field", e);
+                    }
+                }
+                //Abi check ends for @Initializable field
+            }
 
             @Override
             public void visitClass(PsiClass aClass) {
