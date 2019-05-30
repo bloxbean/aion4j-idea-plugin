@@ -1,3 +1,6 @@
+### Since 0.3.5
+  - AVM 1.3.1
+  - Abi Type check added for @Initializable
 ### Since 0.3.4
   - AVM 1.3
   - Client side account generation
