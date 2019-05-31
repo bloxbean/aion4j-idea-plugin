@@ -21,7 +21,7 @@ plugins {
 }
 
 group 'org.aion4j'
-version '0.3.5-beta'
+version '0.3.5'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
