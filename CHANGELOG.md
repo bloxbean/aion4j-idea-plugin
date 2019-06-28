@@ -1,3 +1,5 @@
+### Since 0.4.0-beta1
+  - Contract Template support preview release
 ### Since 0.3.5
   - AVM 1.3.1
   - Abi Type check added for @Initializable

@@ -23,5 +23,7 @@ public interface AvmService {
 
     public boolean isUnderTestSource(VirtualFile file);
 
+    public boolean isUnderSourceFolder(VirtualFile file);
+
     public void resetJCLClassInitialization();
 }

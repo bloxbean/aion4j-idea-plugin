@@ -161,4 +161,16 @@
         </action>
     </actions>
 
+    <!-- Contract templates -->
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="org.aion4j.avm.idea.template.service.ContractTypeRepositoryService"/>
+    </extensions>
+    <actions>
+        <group id="org.aion4j.avm.idea.template.AvmNewFileGroup" class="org.aion4j.avm.idea.template.AvmNewFileGroup"
+               popup="true"
+               text="Avm Contract Templates" description="AVM">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </group>
+    </actions>
+
 </idea-plugin>

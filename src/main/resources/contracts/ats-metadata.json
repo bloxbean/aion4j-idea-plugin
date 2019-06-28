@@ -1,0 +1,44 @@
+{
+  "id": "ats_token",
+  "name": "ATS Token",
+  "params": [
+    {
+    "name": "TOKEN_NAME",
+    "title": "Token Name",
+    "type": "String"
+    },
+    {
+      "name": "TOKEN_SYMBOL",
+      "title": "Token Symbol",
+      "type": "String"
+    },
+    {
+      "name": "TOKEN_GRANULARITY",
+      "title": "Token Granularity",
+      "type": "int"
+    },
+    {
+      "name": "TOKEN_SUPPLY",
+      "title": "Token Supply",
+      "type": "BigInteger"
+    }
+  ],
+  "templates": [
+    {
+      "name": "ATS.java",
+      "pkg": ""
+    } ,
+    {
+      "name":  "ATSContractEvent.java",
+      "pkg": "aion"
+    },
+    {
+      "name": "ATSTokenHolderInformation.java",
+      "pkg": "aion"
+    },
+    {
+      "name": "ATSTokenInterface.java",
+      "pkg": "aion"
+    }
+  ]
+}

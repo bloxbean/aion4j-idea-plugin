@@ -1,0 +1,17 @@
+{
+  "id": "ownable",
+  "name": "Ownable",
+  "params": [
+
+  ],
+  "templates": [
+    {
+      "name": "OwnableContract.java",
+      "pkg": ""
+    },
+    {
+      "name":  "Ownable.java",
+      "pkg": ""
+    }
+  ]
+}

@@ -244,6 +244,24 @@ public class AvmServiceImpl implements AvmService {
         return false;
     }
 
+    @Override
+    public boolean isUnderSourceFolder(VirtualFile file) {
+
+        String filePath =file.getCanonicalPath();
+
+        if(sourceFolders != null) {
+            for (String sourceFolder : sourceFolders) {
+                if (filePath.contains(sourceFolder)) {
+                    return true;
+                }
+            }
+        } else {
+            return false;
+        }
+
+        return false;
+    }
+
     public void resetJCLClassInitialization() {
         this.isJCLClassInitializationDone = false;
     }
