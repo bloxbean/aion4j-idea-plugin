@@ -27,14 +27,20 @@ public class CallMethodInputDialog extends DialogWrapper {
     private JCheckBox useLastDeployedContractCB;
 
     private List<InvokeParam> params = new ArrayList<>();
+    private JLabel valueLabel;
 
-    public CallMethodInputDialog(String method, java.util.List<InvokeParam> params) {
+    public CallMethodInputDialog(String method, java.util.List<InvokeParam> params, boolean isCallMethod) {
         super(false);
 
         this.method = method;
         this.params = params;
         init();
         setTitle(method + " - "+ "Method parameters");
+
+        if(isCallMethod) { //If call method hide value
+            valueTf.setVisible(false);
+            valueLabel.setVisible(false);
+        }
     }
 
     private void initComponents() {
@@ -47,6 +53,7 @@ public class CallMethodInputDialog extends DialogWrapper {
             }
         }
 
+        valueLabel = new JLabel("Value (nAmp)");
         valueTf = new JTextField();
         contractTf = new JTextField();
         useLastDeployedContractCB = new JCheckBox();
@@ -114,7 +121,7 @@ public class CallMethodInputDialog extends DialogWrapper {
         panel.add(createSeparator("Contract Details"),  cc.xyw(1,  row, 7));
 
         row += 2;
-        panel.add(new JLabel("Value (nAmp)"), cc.xy (1,  row  ));
+        panel.add(valueLabel, cc.xy (1,  row  ));
         panel.add(valueTf, cc.xyw(3,  row , 5));
 
         row += 2;

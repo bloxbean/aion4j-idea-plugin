@@ -21,4 +21,9 @@ public class CallMethodAction extends InvokeMethodAction {
     protected void configureAVMProperties(Project project, Map<String, String> settingMap) {
         populateKernelInfo(project, settingMap);
     }
+
+    @Override
+    protected boolean isCall() {
+        return true;
+    }
 }

@@ -88,7 +88,7 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
             }
         }
 
-        CallMethodInputDialog dialog = new CallMethodInputDialog(method.getName(), parameters);
+        CallMethodInputDialog dialog = new CallMethodInputDialog(method.getName(), parameters, isCall());
         boolean result = dialog.showAndGet();
 
         if (!result)
@@ -154,5 +154,10 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         return parameters;
     }
 
+    protected boolean isCall() {
+        return false;
+    }
+
     protected abstract List<String> getGoals();
+
 }
