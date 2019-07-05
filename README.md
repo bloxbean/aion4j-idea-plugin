@@ -36,3 +36,15 @@ Intellij IDEA plugin which supports smart contract development on Aion Virtual M
 * Clone the repository
 * $> ./gradlew clean build
 * $> Get the plugin zip file from build/distributions/aion4j-idea-pugin-{version}.zip 
+
+## Videos
+
+### Deploy and test Java Smart Contract under ~1 min
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/MEaNFQdB1T4/0.jpg)](https://www.youtube.com/watch?v=MEaNFQdB1T4)
+
+### Contract to Contract call - All in IntelliJ without a real blockchain setup
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/8qNka4cI3Z0/0.jpg)](https://www.youtube.com/watch?v=8qNka4cI3Z0)
+
+
