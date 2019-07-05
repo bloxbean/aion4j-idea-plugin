@@ -1,4 +1,4 @@
-# Aion4j-Idea-Plugin
+# Aion4j-IDEA-Plugin
 
 Intellij IDEA plugin which supports smart contract development on Aion Virtual Machine (AVM).
 
@@ -35,4 +35,4 @@ Intellij IDEA plugin which supports smart contract development on Aion Virtual M
 ## Build From Source
 * Clone the repository
 * $> ./gradlew clean build
-* $> Get the plugin zip file from build/distributions/aion4j-idea-pugin-<version>.zip 
+* $> Get the plugin zip file from build/distributions/aion4j-idea-pugin-{version}.zip 
