@@ -47,4 +47,9 @@ Intellij IDEA plugin which supports smart contract development on Aion Virtual M
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/8qNka4cI3Z0/0.jpg)](https://www.youtube.com/watch?v=8qNka4cI3Z0)
 
+## Blog Posts
 
+* [Aion4j Tips — Testing Contract to Contract call with Embedded AVM](https://medium.com/swlh/aion4j-tips-testing-contract-to-contract-call-with-embedded-avm-3f7acbbca8e5)
+* [Aion4j Tips — Debug Java Smart Contract with Embedded AVM and Aion4j Plugins](https://medium.com/@satran004/aion4j-tips-debug-java-smart-contract-with-embedded-avm-and-aion4j-plugins-32cddbab660f)
+* [Aion4j Tips —Unit Test your Avm Java Smart Contract with Spock Framework](https://medium.com/@satran004/aion4j-tips-unit-test-your-avm-java-smart-contract-with-spock-framework-a878a0d6fb7a)
+* [Aion4j Tips —Exception Stack Trace during method call in Embedded AVM](https://medium.com/@satran004/aion4j-tips-exception-stack-trace-during-method-call-in-embedded-avm-ae2c58a0f6ec)
