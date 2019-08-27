@@ -1,3 +1,4 @@
+[![Gitter](https://badges.gitter.im/aion4j/community.svg)](https://gitter.im/aion4j/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 # Aion4j-IDEA-Plugin
 
 Intellij IDEA plugin which supports smart contract development on Aion Virtual Machine (AVM).
