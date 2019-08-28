@@ -19,6 +19,7 @@ import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +96,7 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
             return; //User selected cancel;
 
         List<InvokeParam> params = dialog.getParamsWithValues();
-        long value = dialog.getValue();
+        BigInteger value = dialog.getValue();
         String contractAddress = dialog.getContractAddress();
 
         //Store to cache.
@@ -110,8 +111,8 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         if(argsStr != null)
             settingMap.put("args", argsStr);
 
-        if(value > 0)
-            settingMap.put("value", String.valueOf(value));
+        if(value != null && value.compareTo(BigInteger.ZERO) == 1)
+            settingMap.put("value", value.toString());
 
         if(!StringUtil.isEmptyOrSpaces(contractAddress))
             settingMap.put("contract", contractAddress);

@@ -6,6 +6,7 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import org.aion4j.avm.idea.action.InvokeParam;
+import org.aion4j.avm.idea.misc.AionConversionUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class CallMethodInputDialog extends DialogWrapper {
             }
         }
 
-        valueLabel = new JLabel("Value (nAmp)");
+        valueLabel = new JLabel("Value (Aion)");
         valueTf = new JTextField();
         contractTf = new JTextField();
         useLastDeployedContractCB = new JCheckBox();
@@ -147,11 +149,12 @@ public class CallMethodInputDialog extends DialogWrapper {
         return params;
     }
 
-    public long getValue() {
+    public BigInteger getValue() {
         try {
-            return Long.parseLong(valueTf.getText().trim());
+            double aionValue = Double.parseDouble(valueTf.getText().trim());
+            return AionConversionUtil.aionTonAmp(aionValue);
         } catch(Exception e) {
-            return 0;
+            return BigInteger.ZERO;
         }
     }
 
