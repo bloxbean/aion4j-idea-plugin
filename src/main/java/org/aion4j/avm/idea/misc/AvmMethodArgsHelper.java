@@ -58,6 +58,10 @@ public class AvmMethodArgsHelper {
                 avmType = "-T";
                 break;
 
+            case "java.math.BigInteger":
+                avmType = "-K";
+                break;
+
             default:
                 avmType = null;
                 break;

@@ -26,6 +26,7 @@ public class AvmTypes {
         allowedTypes.put("double", "");
         allowedTypes.put("java.lang.String", "");
         allowedTypes.put("avm.Address", "");
+        allowedTypes.put("java.math.BigInteger", "");
 
         allowedTypes.put("byte[]", "");
         allowedTypes.put("boolean[]", "");
@@ -37,6 +38,7 @@ public class AvmTypes {
         allowedTypes.put("double[]", "");
         allowedTypes.put("java.lang.String[]", "");
         allowedTypes.put("avm.Address[]", "");
+        allowedTypes.put("java.math.BigInteger[]", "");
 
         allowedTypes.put("byte[][]", "");
         allowedTypes.put("boolean[][]", "");
