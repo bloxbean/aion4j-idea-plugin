@@ -1,3 +1,7 @@
+### Since 0.3.6
+  - AVM 1.4+ (d7f5110 - Latest Tooling Jars)
+  - Abi version 1
+    - BigInteger, BigInteger[]
 ### Since 0.3.5
   - AVM 1.3.1
   - Abi Type check added for @Initializable
