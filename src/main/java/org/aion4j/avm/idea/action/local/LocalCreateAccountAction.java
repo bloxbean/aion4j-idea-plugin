@@ -36,6 +36,7 @@ import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class LocalCreateAccountAction extends AvmLocalBaseAction {
         }
 
         String account = dialog.getAccount();
-        long balance = dialog.getBalance();
+        BigInteger balance = dialog.getBalance();
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
@@ -76,7 +77,11 @@ public class LocalCreateAccountAction extends AvmLocalBaseAction {
         if(!StringUtil.isEmpty(account))
             mavenRunnerSettings.getMavenProperties().put("address", account);
 
-        mavenRunnerSettings.getMavenProperties().put("balance", String.valueOf(balance));
+        if(balance != null && balance.compareTo(BigInteger.ZERO) == 1) {
+            mavenRunnerSettings.getMavenProperties().put("balance", String.valueOf(balance));
+        } else {
+            mavenRunnerSettings.getMavenProperties().put("balance", BigInteger.ZERO.toString());
+        }
 
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
             IdeaUtil.showNotification(project, "Account creation", "Account created successfully",

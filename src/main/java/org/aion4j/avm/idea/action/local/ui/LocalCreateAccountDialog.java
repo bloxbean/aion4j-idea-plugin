@@ -2,11 +2,13 @@ package org.aion4j.avm.idea.action.local.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import org.aion4j.avm.idea.misc.AionConversionUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.math.BigInteger;
 
 public class LocalCreateAccountDialog extends DialogWrapper {
     private JTextField accountTf;
@@ -44,11 +46,12 @@ public class LocalCreateAccountDialog extends DialogWrapper {
         return accountTf.getText().trim();
     }
 
-    public long getBalance() {
+    public BigInteger getBalance() {
         try {
-            return Long.parseLong(balanceTf.getText().trim());
-        } catch (Exception e) {
-            return 0;
+            double aionValue = Double.parseDouble(balanceTf.getText().trim());
+            return AionConversionUtil.aionTonAmp(aionValue);
+        } catch(Exception e) {
+            return BigInteger.ZERO;
         }
     }
 }
