@@ -1,4 +1,4 @@
-### Since 0.3.6
+### Since 0.3.6.1
   - AVM 1.4+ (d7f5110 - Latest Tooling Jars)
   - Abi version 1
     - BigInteger, BigInteger[]

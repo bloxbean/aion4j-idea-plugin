@@ -11,6 +11,7 @@
     <idea-version since-build="183"/>
 
     <depends config-file="maven.xml" optional="true">org.jetbrains.idea.maven</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
