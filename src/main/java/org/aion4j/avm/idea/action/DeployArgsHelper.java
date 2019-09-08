@@ -6,19 +6,22 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.ui.DeployArgsUI;
+import org.aion4j.avm.idea.common.Tuple;
 import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.aion4j.avm.idea.service.AvmCacheService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProject;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DeployArgsHelper {
 
-    public static Map<String, String> getAndSaveDeploymentArgs(@NotNull AnActionEvent e, Project project, boolean checkDontShow) {
+    public static Tuple<Map<String, String>, BigInteger> getAndSaveDeploymentArgs(@NotNull AnActionEvent e, Project project, boolean checkDontShow, boolean callFromConfig) {
 
         Map<String, String> resultArgs = new HashMap<>();
+        BigInteger value = null;
 
         AvmCacheService avmCacheService = ServiceManager.getService(project, AvmCacheService.class);
 
@@ -45,7 +48,7 @@ public class DeployArgsHelper {
                         resultArgs.put("args", deployArgs);
                 }
             } else {
-                DeployArgsUI dialog = new DeployArgsUI(project, moduleName);
+                DeployArgsUI dialog = new DeployArgsUI(project, moduleName, callFromConfig);
 
                 String cacheArgs = avmCacheService.getDeployArgs(moduleName);
                 boolean cacheDontAsk = avmCacheService.shouldNotAskDeployArgs(moduleName);
@@ -66,11 +69,13 @@ public class DeployArgsHelper {
                     if(!StringUtil.isEmptyOrSpaces(deployArgs))
                         resultArgs.put("args", deployArgs);
 
+                    value = dialog.getValue();
+
                 }
             }
         }
 
-        return resultArgs;
+        return new Tuple(resultArgs, value);
     }
 
 }

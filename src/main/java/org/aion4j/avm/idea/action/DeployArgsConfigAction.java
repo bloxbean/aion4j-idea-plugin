@@ -31,7 +31,7 @@ public class DeployArgsConfigAction extends AvmBaseAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        DeployArgsHelper.getAndSaveDeploymentArgs(e, e.getProject(), false);
+        DeployArgsHelper.getAndSaveDeploymentArgs(e, e.getProject(), false, true);
     }
 
     @Override

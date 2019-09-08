@@ -9,6 +9,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import org.aion4j.avm.idea.action.DeployArgsHelper;
 import org.aion4j.avm.idea.action.local.ui.LocalGetAccountDialog;
+import org.aion4j.avm.idea.common.Tuple;
+import org.aion4j.avm.idea.misc.AionConversionUtil;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.aion4j.avm.idea.misc.PsiCustomUtil;
@@ -20,12 +22,12 @@ import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 import org.jetbrains.idea.maven.project.MavenProject;
 
 import javax.swing.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class LocalDeployAction extends AvmLocalBaseAction {
-
     @Override
     public void update(@NotNull AnActionEvent e) {
         super.update(e);
@@ -60,15 +62,20 @@ public class LocalDeployAction extends AvmLocalBaseAction {
             if(state != null && StringUtil.isEmptyOrSpaces(state.avmStoragePath)) {
                 if(state.shouldAskCallerAccountEverytime || !StringUtil.isEmptyOrSpaces(state.localDefaultAccount)) { //Custom account .. so lets create and give some balance.
                     goals.add("aion4j:create-account");
-                    mavenRunnerSettings.getMavenProperties().put("balance", "100000000000000");
+                    mavenRunnerSettings.getMavenProperties().put("balance", AionConversionUtil.aionTonAmp(100000).toString()); //100,00 Aion default balance
                 }
             }
         }
 
         //set deploy args
-        Map<String, String> deployArgs = DeployArgsHelper.getAndSaveDeploymentArgs(e, project, true);
-        if(deployArgs != null)
-            mavenRunnerSettings.getMavenProperties().putAll(deployArgs);
+        Tuple<Map<String, String>, BigInteger> deployArgs = DeployArgsHelper.getAndSaveDeploymentArgs(e, project, true, false);
+        if(deployArgs != null) {
+            if(deployArgs._1() != null)
+                mavenRunnerSettings.getMavenProperties().putAll(deployArgs._1());
+
+            if(deployArgs._2() != null)
+                mavenRunnerSettings.getMavenProperties().put("value", String.valueOf(deployArgs._2()));
+        }
 
         goals.add("aion4j:deploy");
 

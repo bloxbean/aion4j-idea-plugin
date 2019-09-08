@@ -38,6 +38,13 @@ public class AionConversionUtilTest {
     }
 
     @Test
+    public void testAionTonAmp2() {
+        BigInteger bi = AionConversionUtil.aionTonAmp(100000);
+
+        Assert.assertEquals(new BigInteger("100000000000000000000000"), bi);
+    }
+
+    @Test
     public void testAionTonAmp1() {
         BigInteger bi = AionConversionUtil.aionTonAmp(.0005);
 

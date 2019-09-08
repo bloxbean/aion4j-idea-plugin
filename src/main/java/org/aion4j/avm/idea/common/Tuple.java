@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Aion4J Project
+ * Copyright (c) 2019 Aion4j Project
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,18 +20,22 @@
  * SOFTWARE.
  */
 
-package org.aion4j.avm.idea.misc;
+package org.aion4j.avm.idea.common;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+public class Tuple<K, V> {
+    private K _1;
+    private V _2;
 
-public class AionConversionUtil {
-    private static final BigInteger ONE_AION = new BigInteger("1000000000000000000"); //1 Aion
+    public Tuple(K _1, V _2) {
+        this._1 = _1;
+        this._2 = _2;
+    }
 
-    public static BigInteger aionTonAmp(double aion) {
-        BigDecimal bigDecimalAmt = new BigDecimal(aion);
-        BigDecimal nAmp = new BigDecimal(ONE_AION).multiply(bigDecimalAmt);
+    public K _1() {
+        return _1;
+    }
 
-        return nAmp.toBigInteger();
+    public V _2() {
+        return _2;
     }
 }

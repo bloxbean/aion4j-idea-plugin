@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import org.aion4j.avm.idea.action.DeployArgsHelper;
+import org.aion4j.avm.idea.common.Tuple;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,7 @@ import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +54,14 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
         }
 
         //set deploy args
-        Map<String, String> deployArgs = DeployArgsHelper.getAndSaveDeploymentArgs(e, project, true);
-        if(deployArgs != null)
-            mavenRunnerSettings.getMavenProperties().putAll(deployArgs);
+        Tuple<Map<String, String>, BigInteger> deployArgs = DeployArgsHelper.getAndSaveDeploymentArgs(e, project, true, false);
+        if(deployArgs != null) {
+            if(deployArgs._1() != null)
+                mavenRunnerSettings.getMavenProperties().putAll(deployArgs._1());
+
+            if(deployArgs._2() != null)
+                mavenRunnerSettings.getMavenProperties().put("value", String.valueOf(deployArgs._2()));
+        }
 
         goals.add("aion4j:deploy");
 
