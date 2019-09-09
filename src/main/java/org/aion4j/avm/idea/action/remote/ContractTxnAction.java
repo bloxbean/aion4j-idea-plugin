@@ -2,8 +2,10 @@ package org.aion4j.avm.idea.action.remote;
 
 import com.intellij.openapi.project.Project;
 import org.aion4j.avm.idea.action.InvokeMethodAction;
+import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,4 +32,8 @@ public class ContractTxnAction extends InvokeMethodAction {
         }
     }
 
+    @Override
+    public Icon getIcon() {
+        return AvmIcons.REMOTE_TXN;
+    }
 }

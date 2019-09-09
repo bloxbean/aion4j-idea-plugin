@@ -35,7 +35,7 @@ public class InitializationAction extends AnAction { //This is called initially 
         List<String> goals = new ArrayList<>();
 
         if(!mvnwFile.exists())
-            goals.add("io.takari:maven:0.7.4:wrapper");
+            goals.add("io.takari:maven:0.7.6:wrapper");
 
         goals.add("initialize");
 

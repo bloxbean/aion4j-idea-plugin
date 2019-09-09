@@ -22,6 +22,9 @@
                 serviceImplementation="org.aion4j.avm.idea.service.AvmServiceImpl"/>
 
         <applicationService serviceImplementation="org.aion4j.avm.idea.service.AvmApplicationCacheService"/>
+
+
+        <runLineMarkerContributor language="JAVA" implementationClass="org.aion4j.avm.idea.inspection.ContractMethodLineMarkerProvider"/>
     </extensions>
 
     <!--<extensions defaultExtensionNs="com.intellij">-->
@@ -139,7 +142,7 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="D"/>
             <add-to-group group-id="Avm.local" anchor="first"/>
         </action>
-        <action id="Avm..local.LocalCallAction"
+        <action id="Avm.local.LocalCallAction"
                 class="org.aion4j.avm.idea.action.local.LocalCallAction" text="Call" description="Call Method">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="I"/>
             <add-to-group group-id="Avm.local"/>
@@ -159,6 +162,15 @@
                 text="Create Account" description="Create Account With Balance">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="A"/>
             <add-to-group group-id="Avm.local"/>
+        </action>
+
+        <action id="Avm.local.Debug.Call" class="org.aion4j.avm.idea.action.local.LocalGetBalanceAction"
+                text="Debug - Call" description="call txn">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="B"/>
+            <add-to-group group-id="Avm.local"/>
+        </action>
+        <action id="Avm.local.Debug" class="org.aion4j.avm.idea.action.local.DebugAction"
+                text="Debug" description="Debug Contract">
         </action>
     </actions>
 

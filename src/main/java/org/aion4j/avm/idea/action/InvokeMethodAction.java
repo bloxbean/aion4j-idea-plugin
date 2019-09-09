@@ -1,8 +1,10 @@
 package org.aion4j.avm.idea.action;
 
+import com.intellij.execution.PsiLocation;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -60,11 +62,21 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
         final Project project = e.getProject();
 
+        if(element == null || !(element instanceof PsiMethod)) {
+            //Let's check through location
+            PsiLocation psiLocation = e.getData(DataKey.create("Location"));
+            if(psiLocation != null) {
+                element = psiLocation.getPsiElement();
+            }
+        }
+
         if (element == null || !(element instanceof PsiMethod)) {
             IdeaUtil.showNotification(project, "Avm - Call Method", "Please right click on the method name",
                     NotificationType.WARNING, null);
             return;
         }
+
+        if(!preExecute(e, project)) return;
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, getGoals());
@@ -116,10 +128,27 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
         if(!StringUtil.isEmptyOrSpaces(contractAddress))
             settingMap.put("contract", contractAddress);
+        
+        execute(project, mavenRunner, mavenRunnerParameters, mavenRunnerSettings);
+    }
 
+    /**
+     *      * Override in subclass if any pre-work needed before actual run
+     * @param e
+     * @param project
+     * @return
+     */
+    protected boolean preExecute(AnActionEvent e, Project project) {
+        return true;
+    }
 
-
-       // mavenRunnerSettings.setMavenProperties(settingMap);
+    /**
+     * Run mavenrunner here. This method is implemented differently for DebugAction
+     * @param mavenRunner
+     * @param mavenRunnerParameters
+     * @param mavenRunnerSettings
+     */
+    protected void execute(Project project, MavenRunner mavenRunner, MavenRunnerParameters mavenRunnerParameters, MavenRunnerSettings mavenRunnerSettings) {
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
 
         });
