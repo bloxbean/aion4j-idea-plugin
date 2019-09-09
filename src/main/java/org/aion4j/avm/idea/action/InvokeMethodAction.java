@@ -75,6 +75,8 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
             return;
         }
 
+        if(!preExecute(e, project)) return;
+
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, getGoals());
         MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
@@ -125,10 +127,27 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
         if(!StringUtil.isEmptyOrSpaces(contractAddress))
             settingMap.put("contract", contractAddress);
+        
+        execute(project, mavenRunner, mavenRunnerParameters, mavenRunnerSettings);
+    }
 
+    /**
+     *      * Override in subclass if any pre-work needed before actual run
+     * @param e
+     * @param project
+     * @return
+     */
+    protected boolean preExecute(AnActionEvent e, Project project) {
+        return true;
+    }
 
-
-       // mavenRunnerSettings.setMavenProperties(settingMap);
+    /**
+     * Run mavenrunner here. This method is implemented differently for DebugAction
+     * @param mavenRunner
+     * @param mavenRunnerParameters
+     * @param mavenRunnerSettings
+     */
+    protected void execute(Project project, MavenRunner mavenRunner, MavenRunnerParameters mavenRunnerParameters, MavenRunnerSettings mavenRunnerSettings) {
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
 
         });

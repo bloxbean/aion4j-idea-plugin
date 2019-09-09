@@ -22,105 +22,92 @@
 
 package org.aion4j.avm.idea.action.local;
 
+import com.intellij.execution.ProgramRunnerUtil;
+import com.intellij.execution.RunnerAndConfigurationSettings;
+import com.intellij.execution.configurations.ConfigurationTypeUtil;
+import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.aion4j.avm.idea.misc.AvmIcons;
-import org.aion4j.avm.idea.misc.IdeaUtil;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.PsiMethod;
+import com.twelvemonkeys.lang.StringUtil;
+import org.aion4j.avm.idea.misc.*;
+import org.aion4j.avm.idea.service.AvmConfigStateService;
+import org.jetbrains.idea.maven.execution.MavenRunConfigurationType;
+import org.jetbrains.idea.maven.execution.MavenRunner;
+import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
+import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
+import org.jetbrains.idea.maven.project.MavenGeneralSettings;
+import org.jetbrains.idea.maven.project.MavenProject;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
-public class DebugAction extends AvmLocalBaseAction {
+public class DebugAction extends LocalCallAction {
+    private final static String STORAGE_DIR = "storage";
+
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
-
-        Project project = e.getProject();
-        if(project == null) {
-            IdeaUtil.showNotification(project, "Debug failure", "Debugger could not be started",
-                    NotificationType.WARNING, null);
-            return;
+    protected boolean preExecute(AnActionEvent evt, Project project) {
+        MavenProject mavenProject = PsiCustomUtil.getMavenProject(project, evt);
+        if(mavenProject == null) {
+           // IdeaUtil.showNotification(project, "Contract Debug", "Debug failed. Please check if it's a valid Maven project", NotificationType.ERROR, null);
+            //Don't proceed. Just try to run debug.
+            return true;
         }
 
-//        RemoteConnection remoteConnection = new RemoteConnection(true, "localhost", "8001", false);
-//        final RemoteState remoteState = new RemoteStateState(project, remoteConnection);
-//
-//        MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
-//
-//        List<String> goals = new ArrayList<>();
-//        goals.add("aion4j:call");
-//
-//        MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
-//        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
-//        mavenRunnerSettings.getMavenProperties().put("method", "getString");
-//        mavenRunnerSettings.getMavenProperties().put("args", "-T ssa");
-//        mavenRunnerSettings.getMavenProperties().put("preserveDebuggability", "true");
-//
-//        //mavenRunnerSettings.set
-//        mavenRunnerSettings.setVmOptions("-Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y");
-//
-//            try {
-//                MavenRunConfiguration configuration;
-//                XDebuggerManager.getInstance(project).startSessionAndShowTab("Avm", null, new XDebugProcessStarter() {
-//                    @NotNull
-//                    @Override
-//                    public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException {
-//
-//                        RunnerAndConfigurationSettings settings = new RunnerAndConfigurationSettingsImpl(RunManagerImpl.getInstanceImpl(project));
-//
-//
-//                        ExecutionEnvironment  ex = new ExecutionEnvironment(new DefaultDebugExecutor(), DefaultJavaProgramRunner.getInstance(), settings, project );
-//
-//                        final DebuggerSession debuggerSession =
-//                                DebuggerManagerEx.getInstanceEx(project).attachVirtualMachine(new DefaultDebugEnvironment(ex, EmptyRunProfileState.INSTANCE, remoteConnection, true));
-//
-//                        JavaDebugConnectionData javaDebugConnectionData = new JavaDebugConnectionData("localhost", 8001);
-//                        JavaDebuggerLauncher.getInstance().startDebugSession(javaDebugConnectionData, ex, null);
-//
-//                        return JavaDebugProcess.create(debuggerSession.getXDebugSession(), debuggerSession);
-//                    }
-//                });
-//
-////                RunnerAndConfigurationSettings settings = new RunnerAndConfigurationSettingsImpl(RunManagerImpl.getInstanceImpl(project));
-////
-////                        ExecutionEnvironment  ex = new ExecutionEnvironment(new DefaultDebugExecutor(), DefaultJavaProgramRunner.getInstance(), settings, project );
-////
-////
-////                JavaDebugConnectionData javaDebugConnectionData = new JavaDebugConnectionData("localhost", 8001);
-////                JavaDebuggerLauncher.getInstance().startDebugSession(javaDebugConnectionData, ex, new RemoteServerImpl("avm", ServerType.EP_NAME, null));
-//
-//
-//            } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//
-//        mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
-//            IdeaUtil.showNotification(project, "Account creation", "Account created successfully",
-//                    NotificationType.INFORMATION, null);
-//
-//
-//        });
+        String targetFolder = mavenProject.getBuildDirectory();
+        String storagePath = targetFolder + File.separator + STORAGE_DIR;
 
+        String prjName = mavenProject.getDisplayName();
+        if(prjName == null) {
+            //IdeaUtil.showNotification(project, "Contract Debug", "Something is wrong. Please reload the project and try again.", NotificationType.ERROR, null);
+            //Don't proceed. Just try to run debug.
+            return true;
+        }
+
+        //Check if storage path is set
+        AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
+
+        AvmConfigStateService.State state = null;
+        if(configService != null)
+            state = configService.getState();
+
+        if(!StringUtil.isEmpty(state.avmStoragePath)) {
+            storagePath = state.avmStoragePath;
+        }
+
+        ResultCache resultCache = new ResultCache(prjName, storagePath);
+
+        if(resultCache != null && (!resultCache.getDebugEnabledInLastDeploy() || StringUtil.isEmpty(resultCache.getLastDeployedAddress()))) {
+            IdeaUtil.showNotification(project, "Debug", "Please deploy the contract in debug mode first. \n" +
+                    "Aion Virtual Machine -> Embedded -> Deploy (Debug Mode)", NotificationType.ERROR, null);
+            return false;
+        }
+
+        return true;
     }
 
-//    protected DebuggerSession attachVirtualMachine(Project project, RunProfileState state,
-//                                                   ExecutionEnvironment environment,
-//                                                   RemoteConnection remoteConnection,
-//                                                   boolean pollConnection) throws ExecutionException {
-//        final DebuggerSession debuggerSession =
-//                DebuggerManagerEx.getInstanceEx(project).attachVirtualMachine(new DefaultDebugEnvironment(environment, state, remoteConnection, pollConnection));
-//        XDebuggerManager.getInstance(project).startSession(environment, new XDebugProcessStarter() {
-//            @Override
-//            @NotNull
-//            public XDebugProcess start(@NotNull XDebugSession session) {
-//                return JavaDebugProcess.create(session, debuggerSession);
-//            }
-//        });
-//        return debuggerSession;
-//    }
+    @Override
+    protected void execute(Project project, MavenRunner mavenRunner, MavenRunnerParameters mavenRunnerParameters, MavenRunnerSettings mavenRunnerSettings) {
+
+        mavenRunnerSettings.getMavenProperties().put("preserveDebuggability", "true");
+
+        MavenRunConfigurationType mavenRunConfigurationType = ConfigurationTypeUtil.findConfigurationType(MavenRunConfigurationType.class);
+        RunnerAndConfigurationSettings runnerConfigurationSettings = MavenRunConfigurationType.createRunnerAndConfigurationSettings(new MavenGeneralSettings(), mavenRunnerSettings, mavenRunnerParameters, project);
+        ProgramRunnerUtil.executeConfiguration(runnerConfigurationSettings, DefaultDebugExecutor.getDebugExecutorInstance());
+    }
+
 
     @Override
     public Icon getIcon() {
         return AvmIcons.CONTRACT_DEBUG;
     }
+
 }

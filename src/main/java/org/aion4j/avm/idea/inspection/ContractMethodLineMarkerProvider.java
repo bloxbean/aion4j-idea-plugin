@@ -22,7 +22,6 @@
 
 package org.aion4j.avm.idea.inspection;
 
-import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -45,10 +44,10 @@ public class ContractMethodLineMarkerProvider extends RunLineMarkerContributor {
             if (callableAnnotation != null) {
                // LineMarkerInfo lineMarkerInfo = new LineMarkerInfo();
                 ActionManager am = ActionManager.getInstance();
-                AnAction localCall = am.getAction("Avm.local.LocalCallAction");
-                AnAction remoteCall = am.getAction("Avm.remote.CallMethodAction");
-                AnAction remoteTxn = am.getAction("Avm.remote.ContractTxnAction");
-                AnAction debugAction = am.getAction("Avm.local.Debug");
+                AnAction localCall = am.getAction("Avm.local.gutter.LocalCallAction");
+                AnAction remoteCall = am.getAction("Avm.remote.gutter.CallMethodAction");
+                AnAction remoteTxn = am.getAction("Avm.remote.gutter.ContractTxnAction");
+                AnAction debugAction = am.getAction("Avm.local.gutter.Debug");
 
                 return new RunLineMarkerContributor.Info(AvmIcons.CALLABLE_GUTTER_ICON,
                         (psiElement -> ((PsiMethod)psiElement).getName()), localCall, remoteCall, remoteTxn, debugAction);
