@@ -44,13 +44,13 @@ public class ContractMethodLineMarkerProvider extends RunLineMarkerContributor {
             if (callableAnnotation != null) {
                // LineMarkerInfo lineMarkerInfo = new LineMarkerInfo();
                 ActionManager am = ActionManager.getInstance();
-                AnAction debugAction = am.getAction("Avm.local.gutter.Debug");
                 AnAction localCall = am.getAction("Avm.local.gutter.LocalCallAction");
+                AnAction debugAction = am.getAction("Avm.local.gutter.Debug");
                 AnAction remoteCall = am.getAction("Avm.remote.gutter.CallMethodAction");
                 AnAction remoteTxn = am.getAction("Avm.remote.gutter.ContractTxnAction");
 
                 return new RunLineMarkerContributor.Info(AvmIcons.CALLABLE_GUTTER_ICON,
-                        (psiElement -> ((PsiMethod)psiElement).getName()), debugAction, localCall, remoteCall, remoteTxn);
+                        (psiElement -> ((PsiMethod)psiElement).getName()), localCall, debugAction, remoteCall, remoteTxn);
             }
         }
 
