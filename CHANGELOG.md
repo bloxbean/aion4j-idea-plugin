@@ -1,3 +1,7 @@
+### Since 0.4.0-beta1
+  - Debugging support from editor
+  - Added support for value argument during contract deployment
+  - Update balance value to Aion instead of nAmp in Create Account 
 ### Since 0.3.6.1
   - AVM 1.4+ (d7f5110 - Latest Tooling Jars)
   - Abi version 1
