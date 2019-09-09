@@ -55,7 +55,7 @@ public class ResultCacheUtil {
             storagePath = targetFolder + File.separator + STORAGE_DIR;
         }
 
-        String prjName = mavenProject.getDisplayName();
+        String prjName = mavenProject.getMavenId().getArtifactId(); //rely on artifact id as maven plugin uses that
         if (prjName == null) {
             return null;
         }
