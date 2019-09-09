@@ -1,13 +1,17 @@
 package org.aion4j.avm.idea.misc;
 
+import com.intellij.execution.PsiLocation;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.module.Module;
@@ -54,6 +58,13 @@ public class PsiCustomUtil {
                 if(element instanceof PsiDirectory) {
                     module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(((PsiDirectory) element).getVirtualFile());
                 } else {
+                    if(element instanceof PsiClass) { //For editor context menu
+                        //If it's class, it's better to get the PSI_FILE for safer side. Otherwise it may return stdlib class like String etc based on cursor location
+
+                        element = e.getData(CommonDataKeys.PSI_FILE);
+                        if(element == null) return null;
+                    }
+
                     module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(element.getContainingFile().getVirtualFile());
                 }
             }
