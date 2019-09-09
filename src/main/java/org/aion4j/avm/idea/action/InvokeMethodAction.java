@@ -129,11 +129,11 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         if(!StringUtil.isEmptyOrSpaces(contractAddress))
             settingMap.put("contract", contractAddress);
         
-        execute(project, mavenRunner, mavenRunnerParameters, mavenRunnerSettings);
+        execute(project, e, mavenRunner, mavenRunnerParameters, mavenRunnerSettings);
     }
 
     /**
-     *      * Override in subclass if any pre-work needed before actual run
+     * Override in subclass if any pre-work needed before actual run
      * @param e
      * @param project
      * @return
@@ -148,7 +148,7 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
      * @param mavenRunnerParameters
      * @param mavenRunnerSettings
      */
-    protected void execute(Project project, MavenRunner mavenRunner, MavenRunnerParameters mavenRunnerParameters, MavenRunnerSettings mavenRunnerSettings) {
+    protected void execute(Project project, AnActionEvent evt, MavenRunner mavenRunner, MavenRunnerParameters mavenRunnerParameters, MavenRunnerSettings mavenRunnerSettings) {
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
 
         });

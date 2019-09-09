@@ -27,75 +27,40 @@ import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiMethod;
 import com.twelvemonkeys.lang.StringUtil;
-import org.aion4j.avm.idea.misc.*;
-import org.aion4j.avm.idea.service.AvmConfigStateService;
+import org.aion4j.avm.idea.misc.AvmIcons;
+import org.aion4j.avm.idea.misc.IdeaUtil;
+import org.aion4j.avm.idea.misc.ResultCache;
+import org.aion4j.avm.idea.misc.ResultCacheUtil;
 import org.jetbrains.idea.maven.execution.MavenRunConfigurationType;
 import org.jetbrains.idea.maven.execution.MavenRunner;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 import org.jetbrains.idea.maven.project.MavenGeneralSettings;
-import org.jetbrains.idea.maven.project.MavenProject;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
-public class DebugAction extends LocalCallAction {
-    private final static String STORAGE_DIR = "storage";
+public class LocalDebugAction extends LocalCallAction {
 
     @Override
     protected boolean preExecute(AnActionEvent evt, Project project) {
-        MavenProject mavenProject = PsiCustomUtil.getMavenProject(project, evt);
-        if(mavenProject == null) {
-           // IdeaUtil.showNotification(project, "Contract Debug", "Debug failed. Please check if it's a valid Maven project", NotificationType.ERROR, null);
-            //Don't proceed. Just try to run debug.
-            return true;
-        }
+        ResultCache resultCache = ResultCacheUtil.getResultCache(project, evt);
 
-        String targetFolder = mavenProject.getBuildDirectory();
-        String storagePath = targetFolder + File.separator + STORAGE_DIR;
-
-        String prjName = mavenProject.getDisplayName();
-        if(prjName == null) {
-            //IdeaUtil.showNotification(project, "Contract Debug", "Something is wrong. Please reload the project and try again.", NotificationType.ERROR, null);
-            //Don't proceed. Just try to run debug.
-            return true;
-        }
-
-        //Check if storage path is set
-        AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
-
-        AvmConfigStateService.State state = null;
-        if(configService != null)
-            state = configService.getState();
-
-        if(!StringUtil.isEmpty(state.avmStoragePath)) {
-            storagePath = state.avmStoragePath;
-        }
-
-        ResultCache resultCache = new ResultCache(prjName, storagePath);
-
-        if(resultCache != null && (!resultCache.getDebugEnabledInLastDeploy() || StringUtil.isEmpty(resultCache.getLastDeployedAddress()))) {
+        if(resultCache == null) {
+            return true; //Just ignore any error and continue
+        } else if(resultCache != null && (!resultCache.getDebugEnabledInLastDeploy() || StringUtil.isEmpty(resultCache.getLastDeployedAddress()))) {
             IdeaUtil.showNotification(project, "Debug", "Please deploy the contract in debug mode first. \n" +
                     "Aion Virtual Machine -> Embedded -> Deploy (Debug Mode)", NotificationType.ERROR, null);
             return false;
+        } else {
+            return true;
         }
-
-        return true;
     }
 
     @Override
-    protected void execute(Project project, MavenRunner mavenRunner, MavenRunnerParameters mavenRunnerParameters, MavenRunnerSettings mavenRunnerSettings) {
+    protected void execute(Project project, AnActionEvent evt, MavenRunner mavenRunner, MavenRunnerParameters mavenRunnerParameters, MavenRunnerSettings mavenRunnerSettings) {
 
         mavenRunnerSettings.getMavenProperties().put("preserveDebuggability", "true");
 

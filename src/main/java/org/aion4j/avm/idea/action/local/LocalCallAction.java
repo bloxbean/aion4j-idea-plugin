@@ -1,12 +1,20 @@
 package org.aion4j.avm.idea.action.local;
 
+import com.intellij.notification.NotificationType;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.InvokeMethodAction;
 import org.aion4j.avm.idea.action.local.ui.LocalGetAccountDialog;
 import org.aion4j.avm.idea.misc.AvmIcons;
+import org.aion4j.avm.idea.misc.IdeaUtil;
+import org.aion4j.avm.idea.misc.ResultCache;
+import org.aion4j.avm.idea.misc.ResultCacheUtil;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
+import org.jetbrains.idea.maven.execution.MavenRunner;
+import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
+import org.jetbrains.idea.maven.execution.MavenRunnerSettings;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -21,6 +29,29 @@ public class LocalCallAction extends InvokeMethodAction {
         goals.add("aion4j:call");
 
         return goals;
+    }
+
+    @Override
+    protected void execute(Project project, AnActionEvent evt, MavenRunner mavenRunner, MavenRunnerParameters mavenRunnerParameters, MavenRunnerSettings mavenRunnerSettings) {
+        //Check if last deployment was with debug mode and set preserve debuggability accordingly
+        ResultCache resultCache = ResultCacheUtil.getResultCache(project, evt);
+        if(resultCache != null) {
+            String lastDeployAddress = resultCache.getLastDeployedAddress();
+            boolean debugEnabledInLastDeploy = resultCache.getDebugEnabledInLastDeploy();
+
+            if(StringUtil.isEmpty(lastDeployAddress)) {
+                IdeaUtil.showNotification(project, "Contract call", "Please deploy the contract first.\n" +
+                        "Aion Virtual Machine -> Embedded -> Deploy", NotificationType.ERROR, null);
+                return;
+            } else {
+                if(debugEnabledInLastDeploy) {
+                    //last deployment was debug enabled. So set debuggability to true
+                    mavenRunnerSettings.getMavenProperties().put("preserveDebuggability", "true");
+                }
+            }
+        }
+
+        super.execute(project, evt, mavenRunner, mavenRunnerParameters, mavenRunnerSettings);
     }
 
     @Override
