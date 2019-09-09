@@ -13,4 +13,10 @@ public class AvmIcons {
     public final static Icon GETRECEIPT_ICON = IconLoader.getIcon("/icons/get_receipt.png");
     public final static Icon BALANCE_ICON = IconLoader.getIcon("/icons/balance.png");
     public final static Icon UNLOCK_ICON = IconLoader.getIcon("/icons/unlock.png");
+    public final static Icon CALLABLE_GUTTER_ICON = IconLoader.getIcon("/icons/callable_alt_gutter.png");
+
+    public final static Icon LOCAL_CALL = IconLoader.getIcon("/icons/local_call.png");
+    public final static Icon REMOTE_CALL = IconLoader.getIcon("/icons/remote_call.png");
+    public final static Icon REMOTE_TXN = IconLoader.getIcon("/icons/remote_txn.png");
+    public final static Icon CONTRACT_DEBUG = IconLoader.getIcon("/icons/contract_debug.png");
 }

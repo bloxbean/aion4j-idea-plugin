@@ -71,6 +71,6 @@ public class LocalCallAction extends InvokeMethodAction {
 
     @Override
     public Icon getIcon() {
-        return AvmIcons.EXECUTE_ICON;
+        return AvmIcons.LOCAL_CALL;
     }
 }

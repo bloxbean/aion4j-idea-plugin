@@ -168,10 +168,8 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="B"/>
             <add-to-group group-id="Avm.local"/>
         </action>
-        <action id="Avm.local.Debug.ContractTxn" class="org.aion4j.avm.idea.action.local.LocalGetBalanceAction"
-                text="Debug - ContractTxn" description="cotract txn">
-            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="B"/>
-            <add-to-group group-id="Avm.local"/>
+        <action id="Avm.local.Debug" class="org.aion4j.avm.idea.action.local.DebugAction"
+                text="Debug" description="Debug Contract">
         </action>
     </actions>
 

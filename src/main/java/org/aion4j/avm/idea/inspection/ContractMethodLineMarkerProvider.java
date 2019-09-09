@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 BloxBean Project
+ * Copyright (c) 2019 Aion4j Project
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@
 
 package org.aion4j.avm.idea.inspection;
 
+import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -42,12 +43,15 @@ public class ContractMethodLineMarkerProvider extends RunLineMarkerContributor {
             PsiAnnotation callableAnnotation = method.getAnnotation("org.aion.avm.tooling.abi.Callable");
 
             if (callableAnnotation != null) {
-                //LineMarkerInfo lineMarkerInfo = new LineMarkerInfo();
+               // LineMarkerInfo lineMarkerInfo = new LineMarkerInfo();
                 ActionManager am = ActionManager.getInstance();
-                AnAction action = am.getAction("Avm.local.LocalCallAction");
+                AnAction localCall = am.getAction("Avm.local.LocalCallAction");
+                AnAction remoteCall = am.getAction("Avm.remote.CallMethodAction");
+                AnAction remoteTxn = am.getAction("Avm.remote.ContractTxnAction");
+                AnAction debugAction = am.getAction("Avm.local.Debug");
 
-                return new RunLineMarkerContributor.Info(AvmIcons.EXECUTE_ICON,
-                        (psiElement -> ((PsiMethod)psiElement).getName()), action);
+                return new RunLineMarkerContributor.Info(AvmIcons.CALLABLE_GUTTER_ICON,
+                        (psiElement -> ((PsiMethod)psiElement).getName()), localCall, remoteCall, remoteTxn, debugAction);
             }
         }
 
