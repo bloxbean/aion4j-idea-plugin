@@ -141,6 +141,11 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="D"/>
             <add-to-group group-id="Avm.local" anchor="first"/>
         </action>
+        <action id="Avm.local.debug.deploy" class="org.aion4j.avm.idea.action.local.LocalDebugDeployAction"
+                text="Deploy (Debug Mode)" description="Deploy to embedded AVM">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="X"/>
+            <add-to-group group-id="Avm.local" anchor="first"/>
+        </action>
         <action id="Avm.local.LocalCallAction"
                 class="org.aion4j.avm.idea.action.local.LocalCallAction" text="Call" description="Call Method">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="I"/>
@@ -163,13 +168,20 @@
             <add-to-group group-id="Avm.local"/>
         </action>
 
-        <action id="Avm.local.Debug.Call" class="org.aion4j.avm.idea.action.local.LocalGetBalanceAction"
-                text="Debug - Call" description="call txn">
-            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="B"/>
-            <add-to-group group-id="Avm.local"/>
+        <!-- For Gutter actions -->
+        <action id="Avm.local.gutter.LocalCallAction"
+                class="org.aion4j.avm.idea.action.local.LocalCallAction" text="Call (Embedded Avm)" description="Call contract method on embbedded Avm">
         </action>
-        <action id="Avm.local.Debug" class="org.aion4j.avm.idea.action.local.DebugAction"
-                text="Debug" description="Debug Contract">
+        <action id="Avm.local.gutter.Debug" class="org.aion4j.avm.idea.action.local.DebugAction"
+                text="Debug (Embedded Avm)" description="Debug Contract">
+        </action>
+        <action id="Avm.remote.gutter.CallMethodAction"
+                class="org.aion4j.avm.idea.action.remote.CallMethodAction" text="Call (Aion Kernel)"
+                description="Contract method call on Aion Kernel">
+        </action>
+        <action id="Avm.remote.gutter.ContractTxnAction"
+                class="org.aion4j.avm.idea.action.remote.ContractTxnAction" text="Contract Txn (Aion Kernel)"
+                description="Send Contract Transaction to Aion Kernel">
         </action>
     </actions>
 
