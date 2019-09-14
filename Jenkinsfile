@@ -9,7 +9,7 @@ pipeline {
     }
 
     tools {
-        gradle 'Gradle 5.6.2'
+        //gradle 'Gradle 5.6.2'
         jdk 'jdk-8'
     }
 
@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                 sh  'gradle clean build'
+                 sh  'gradlew clean build'
             }
         }
 
