@@ -26,7 +26,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.aion4j.avm.idea.action.AvmBaseAction;
+import com.intellij.openapi.ui.Messages;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ import java.util.Map;
  * @author Satya
  */
 
-public class CreateAccountAction extends AvmBaseAction {
+public class CreateAccountAction extends AvmRemoteBaseAction {
 
     @Override
     protected boolean isRemote() {
@@ -53,7 +53,7 @@ public class CreateAccountAction extends AvmBaseAction {
 
     @Override
     protected void configureAVMProperties(Project project, Map<String, String> properties) {
-
+        populateKernelInfo(project, properties);
     }
 
     @Override
@@ -63,11 +63,33 @@ public class CreateAccountAction extends AvmBaseAction {
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
+        boolean topup = false;
+        int ret = Messages.showOkCancelDialog(project, "Do you also want to top-up the account with Aion tokens from Mastery Testnet?",
+                "Aion4j Faucet - Topup", Messages.getQuestionIcon());
+
+        if(ret == Messages.OK) {
+           topup = true;
+        }
+
         List<String> goals = new ArrayList<>();
-        goals.add("aion4j:create-account");
+        goals.add("aion4j:account");
 
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
-        MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
+        MavenRunnerSettings mavenRunnerSettings = null;
+
+        if(topup) { //Only when topup, remote kernel config is required
+            mavenRunnerSettings = getMavenRunnerSettings(project);
+
+            mavenRunnerSettings.getMavenProperties().put("create", "true");
+            mavenRunnerSettings.getMavenProperties().put("topup", "true");
+        } else {
+            //For account creation remote kernel config is not required
+            mavenRunnerSettings = new MavenRunnerSettings();
+            mavenRunnerSettings.setDelegateBuildToMaven(true);
+
+            mavenRunnerSettings.getMavenProperties().put("create", "true");
+        }
+
 
         //TODO
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {

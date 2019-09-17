@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 BloxBean Project
+ * Copyright (c) 2019 Aion4j Project
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,15 @@
  * SOFTWARE.
  */
 
-package org.aion4j.avm.idea.action.local;
+package org.aion4j.avm.idea.action.account;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import org.aion4j.avm.idea.action.local.ui.LocalCreateAccountDialog;
+import com.intellij.openapi.util.text.StringUtil;
+import org.aion4j.avm.idea.action.account.ui.TopupAccountDialog;
+import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.IdeaUtil;
 import org.jetbrains.annotations.NotNull;
@@ -38,31 +40,42 @@ import javax.swing.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-/**
- *
- * @author Satya
- */
-public class LocalCreateAccountAction extends AvmLocalBaseAction {
-
-    @Override
-    protected boolean isRemote() {
-        return false;
-    }
+public abstract class TopUpAction extends AvmRemoteBaseAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-
         Project project = e.getProject();
 
-        LocalCreateAccountDialog dialog = new LocalCreateAccountDialog(project);
+        TopupAccountDialog dialog = new TopupAccountDialog(project, isRemote());
         boolean result = dialog.showAndGet();
 
         if(!result) {
             return;
         }
 
+        String account = dialog.getAccount();
+        String pk = dialog.getPrivateKey();
         BigInteger balance = dialog.getBalance();
+
+        if(StringUtil.isEmpty(account)) {
+            IdeaUtil.showNotification(project, "Account Topup Failed", "Empty account", NotificationType.ERROR, null);
+            return;
+        }
+
+        if(isRemote()) { //only for remote mode
+            if(StringUtil.isEmpty(pk)) {
+                IdeaUtil.showNotification(project, "Account Topup Failed", "Empty private key", NotificationType.ERROR, null);
+                return;
+            }
+
+        } else { //only for local mode
+            if (balance == null || balance.equals(BigInteger.ZERO)) {
+                IdeaUtil.showNotification(project, "Account Topup Failed", "Invalid Balance", NotificationType.ERROR, null);
+                return;
+            }
+        }
 
         MavenRunner mavenRunner = ServiceManager.getService(project, MavenRunner.class);
 
@@ -72,22 +85,36 @@ public class LocalCreateAccountAction extends AvmLocalBaseAction {
         MavenRunnerParameters mavenRunnerParameters = getMavenRunnerParameters(e, project, goals);
         MavenRunnerSettings mavenRunnerSettings = getMavenRunnerSettings(project);
 
-        mavenRunnerSettings.getMavenProperties().put("create", "true");
+        mavenRunnerSettings.getMavenProperties().put("topup", "true");
 
-        if(balance != null && balance.compareTo(BigInteger.ZERO) == 1) {
-            mavenRunnerSettings.getMavenProperties().put("balance", String.valueOf(balance));
+        if(!StringUtil.isEmpty(account))
+            mavenRunnerSettings.getMavenProperties().put("address", account);
+
+        if(isRemote()) {
+            mavenRunnerSettings.getMavenProperties().put("pk", pk);
         } else {
-            mavenRunnerSettings.getMavenProperties().put("balance", BigInteger.ZERO.toString());
+            if (balance != null && balance.compareTo(BigInteger.ZERO) == 1) {
+                mavenRunnerSettings.getMavenProperties().put("balance", String.valueOf(balance));
+            } else {
+                mavenRunnerSettings.getMavenProperties().put("balance", BigInteger.ZERO.toString());
+            }
         }
 
+        //TODOl
         mavenRunner.run(mavenRunnerParameters, mavenRunnerSettings, () -> {
-            IdeaUtil.showNotification(project, "Account creation", "Account created successfully",
+            IdeaUtil.showNotification(project, "Account Topup", "Account topup was successful",
                     NotificationType.INFORMATION, null);
         });
     }
 
     @Override
-    public Icon getIcon() {
-        return AvmIcons.CONFIG_ICON;
+    protected void configureAVMProperties(Project project, Map<String, String> properties) {
+
     }
+
+    @Override
+    public Icon getIcon() {
+        return AvmIcons.TRANSFER_ICON;
+    }
+
 }

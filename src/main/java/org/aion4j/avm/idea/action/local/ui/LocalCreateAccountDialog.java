@@ -11,39 +11,19 @@ import javax.swing.event.ChangeListener;
 import java.math.BigInteger;
 
 public class LocalCreateAccountDialog extends DialogWrapper {
-    private JTextField accountTf;
     private JPanel mainPanel;
     private JTextField balanceTf;
-    private JCheckBox generateAccCB;
 
     public LocalCreateAccountDialog(Project project) {
         super(project, false);
         init();
-        setTitle("Enter Account");
-
-        this.generateAccCB.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if(generateAccCB.isSelected()) {
-                    accountTf.setText("");
-                    accountTf.setEditable(false);
-                    accountTf.setEnabled(false);
-                } else {
-                    accountTf.setEditable(true);
-                    accountTf.setEnabled(true);
-                }
-            }
-        });
+        setTitle("Create Account");
     }
 
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
         return mainPanel;
-    }
-
-    public String getAccount() {
-        return accountTf.getText().trim();
     }
 
     public BigInteger getBalance() {

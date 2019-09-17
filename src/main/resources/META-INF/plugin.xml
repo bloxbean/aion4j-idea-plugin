@@ -137,6 +137,11 @@
             <add-to-group group-id="Avm.remote"/>
         </action>
 
+        <action id="Avm.remote.RemoteAccountTopup" class="org.aion4j.avm.idea.action.remote.RemoteAccountTopupAction"
+                text="Fund an Account" description="Fund an Account">
+            <add-to-group group-id="Avm.remote"/>
+        </action>
+
         <action id="Avm.local.deploy" class="org.aion4j.avm.idea.action.local.LocalDeployAction"
                 text="Deploy" description="Deploy to embedded AVM">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="D"/>
@@ -166,6 +171,10 @@
         <action id="Avm.local.LocalAccountCreate" class="org.aion4j.avm.idea.action.local.LocalCreateAccountAction"
                 text="Create Account" description="Create Account With Balance">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="A"/>
+            <add-to-group group-id="Avm.local"/>
+        </action>
+        <action id="Avm.local.LocalAccountTopup" class="org.aion4j.avm.idea.action.local.LocalAccountTopupAction"
+                text="Fund an Account" description="Fund an Account">
             <add-to-group group-id="Avm.local"/>
         </action>
 
