@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import org.aion4j.avm.idea.exception.DeploymentCommandCancelledException;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,11 @@ public class DeployArgsConfigAction extends AvmBaseAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        DeployArgsHelper.getAndSaveDeploymentArgs(e, e.getProject(), false, true);
+        try {
+            DeployArgsHelper.getAndSaveDeploymentArgs(e, e.getProject(), false, true);
+        } catch (DeploymentCommandCancelledException ex) {
+            //Called x pressed. No need to do anything
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.ui.DeployArgsUI;
 import org.aion4j.avm.idea.common.Tuple;
+import org.aion4j.avm.idea.exception.DeploymentCommandCancelledException;
 import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.aion4j.avm.idea.service.AvmCacheService;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +49,9 @@ public class DeployArgsHelper {
                         resultArgs.put("args", deployArgs);
                 }
             } else {
-                DeployArgsUI dialog = new DeployArgsUI(project, moduleName, callFromConfig);
+                String contractMainClass = PsiCustomUtil.getContractMainClass(mavenProject);
+
+                DeployArgsUI dialog = new DeployArgsUI(project, moduleName, contractMainClass, callFromConfig);
 
                 String cacheArgs = avmCacheService.getDeployArgs(moduleName);
                 boolean cacheDontAsk = avmCacheService.shouldNotAskDeployArgs(moduleName);
@@ -71,6 +74,8 @@ public class DeployArgsHelper {
 
                     value = dialog.getValue();
 
+                } else {
+                    throw new DeploymentCommandCancelledException("Deployment command cancelled");
                 }
             }
         }

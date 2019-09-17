@@ -16,8 +16,10 @@ public class DeployArgsUI extends DialogWrapper {
     private JPanel panel;
     private JTextField valueTf;
     private JLabel valueLabel;
+    private JLabel contractMainClass;
+    private JLabel contractMainClassLabel;
 
-    public DeployArgsUI(Project project, String module, boolean callFromDeployConfig) {
+    public DeployArgsUI(Project project, String module, String mainClass, boolean callFromDeployConfig) {
         super(project, false);
 
         init();
@@ -31,6 +33,13 @@ public class DeployArgsUI extends DialogWrapper {
         if(callFromDeployConfig) { //If called from deploy configuration, don't show
             valueLabel.setVisible(false);
             valueTf.setVisible(false);
+        }
+
+        if(mainClass != null) {
+            contractMainClass.setText(mainClass);
+        } else {
+            contractMainClassLabel.setVisible(false);
+            contractMainClass.setVisible(false);
         }
 
         getButton(getCancelAction()).setVisible(false);

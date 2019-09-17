@@ -1,20 +1,20 @@
 package org.aion4j.avm.idea.misc;
 
-import com.intellij.execution.PsiLocation;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.PsiFile;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.module.Module;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
@@ -63,6 +63,10 @@ public class PsiCustomUtil {
 
                         element = e.getData(CommonDataKeys.PSI_FILE);
                         if(element == null) return null;
+                    } else if(!(element instanceof PsiFile)) { //For other scenarios like xml file etc.
+                        PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
+
+                        if(psiFile != null) element = psiFile;
                     }
 
                     module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(element.getContainingFile().getVirtualFile());
@@ -111,4 +115,41 @@ public class PsiCustomUtil {
         else
             return mavenProject.getMavenId().getArtifactId();
     }
+
+    public static String getContractMainClass(MavenProject mavenProject) {
+        if(mavenProject == null) return null;
+
+        try {
+            Element element = mavenProject.getPluginConfiguration("org.apache.maven.plugins", "maven-jar-plugin");
+
+            if (element == null) return null;
+            Element archiveElm = element.getChild("archive");
+            if (archiveElm == null) return null;
+
+            Element manifestElm = archiveElm.getChild("manifest");
+            if (manifestElm == null) return null;
+
+            Element mainClassElm = manifestElm.getChild("mainClass");
+            if (mainClassElm == null) return null;
+
+            String mainClass = mainClassElm.getText();
+
+            if (StringUtil.isEmpty(mainClass)) return null;
+            //check if it's a property
+            if (mainClass.length() <= 4) return null;
+
+            if (mainClass.trim().startsWith("${")) {
+                mainClass = mainClass.trim().substring(2, -1);
+
+                System.out.println("Main Class property >>>>> " + mainClass);
+                //Now get the mainClass property value
+                return mavenProject.getProperties().getProperty(mainClass);
+            } else {
+                return mainClass;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

@@ -8,6 +8,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import org.aion4j.avm.idea.action.DeployArgsHelper;
 import org.aion4j.avm.idea.common.Tuple;
+import org.aion4j.avm.idea.exception.DeploymentCommandCancelledException;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
 import org.jetbrains.annotations.NotNull;
@@ -27,10 +28,10 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
     public void update(@NotNull AnActionEvent e) {
         super.update(e);
 
-        PsiFile file =  e.getDataContext().getData(CommonDataKeys.PSI_FILE);
-        if(file != null && !"pom.xml".equals(file.getName())) {
-            e.getPresentation().setEnabled(false);
-        }
+//        PsiFile file =  e.getDataContext().getData(CommonDataKeys.PSI_FILE);
+//        if(file != null && !"pom.xml".equals(file.getName())) {
+//            e.getPresentation().setEnabled(false);
+//        }
     }
 
     @Override
@@ -54,7 +55,14 @@ public class RemoteDeploy extends AvmRemoteBaseAction {
         }
 
         //set deploy args
-        Tuple<Map<String, String>, BigInteger> deployArgs = DeployArgsHelper.getAndSaveDeploymentArgs(e, project, true, false);
+        Tuple<Map<String, String>, BigInteger> deployArgs = null;
+        try {
+            deployArgs = DeployArgsHelper.getAndSaveDeploymentArgs(e, project, true, false);
+        } catch (DeploymentCommandCancelledException ex) {
+            //deployment cancelled
+            return;
+        }
+
         if(deployArgs != null) {
             if(deployArgs._1() != null)
                 mavenRunnerSettings.getMavenProperties().putAll(deployArgs._1());
