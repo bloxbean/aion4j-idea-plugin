@@ -1,8 +1,9 @@
-### 0.4.0-beta1
+### 0.4.0-beta2
   - Debugging support from editor (Works with Aion4j Maven Plugin 0.8.0-beta3 and above)
   - Added support for value argument during contract deployment
   - Update balance value to Aion instead of nAmp in Create Account
   - Enable deploy in editor context menu (for java source and pom.xml)
+  - Fund an Account (Aion4j Faucet support)
 ### 0.3.6.1
   - AVM 1.4+ (d7f5110 - Latest Tooling Jars)
   - Abi version 1
