@@ -141,6 +141,10 @@
                 text="Fund an Account" description="Fund an Account">
             <add-to-group group-id="Avm.remote"/>
         </action>
+        <action id="Avm.remote.RemoteAccountList" class="org.aion4j.avm.idea.action.remote.RemoteAccountListAction"
+                text="Accounts" description="List Accounts">
+            <add-to-group group-id="Avm.remote"/>
+        </action>
 
         <action id="Avm.local.deploy" class="org.aion4j.avm.idea.action.local.LocalDeployAction"
                 text="Deploy" description="Deploy to embedded AVM">
@@ -175,6 +179,10 @@
         </action>
         <action id="Avm.local.LocalAccountTopup" class="org.aion4j.avm.idea.action.local.LocalAccountTopupAction"
                 text="Fund an Account" description="Fund an Account">
+            <add-to-group group-id="Avm.local"/>
+        </action>
+        <action id="Avm.local.LocalAccountList" class="org.aion4j.avm.idea.action.local.LocalAccountListAction"
+                text="Accounts" description="List Accounts">
             <add-to-group group-id="Avm.local"/>
         </action>
 
