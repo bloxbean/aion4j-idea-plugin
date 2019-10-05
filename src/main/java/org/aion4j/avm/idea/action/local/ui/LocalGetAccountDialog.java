@@ -1,9 +1,11 @@
 package org.aion4j.avm.idea.action.local.ui;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.aion4j.avm.idea.action.account.AccountChooser;
 import org.aion4j.avm.idea.action.account.model.Account;
+import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -23,7 +25,8 @@ public class LocalGetAccountDialog extends DialogWrapper {
         selectAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Account selectedAccount = AccountChooser.getSelectedAccount(project, false);
+                //moduleDir can be set to null when showBalance is false.
+                Account selectedAccount = AccountChooser.getLocalAvmSelectedAccount(project);
 
                 if(selectedAccount != null)
                     accountTf.setText(selectedAccount.getAddress());

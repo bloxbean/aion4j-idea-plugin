@@ -22,19 +22,43 @@
 
 package org.aion4j.avm.idea.action.account;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.action.account.ui.ListAccountDialog;
+import org.aion4j.avm.idea.kernel.adapter.LocalAvmAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountChooser {
 
-    public static Account getSelectedAccount(Project project, boolean isRemote) {
+    public static Account getSelectedAccount(Project project, boolean showBalance) {
         AccountListFetcher accountListFetcher = new AccountListFetcher(project);
         List<Account> accounts = accountListFetcher.getAccounts();
 
-        ListAccountDialog listAccountDialog = new ListAccountDialog(project, accounts, isRemote);
+        ListAccountDialog listAccountDialog = new ListAccountDialog(project, accounts, true, showBalance);
+
+        boolean result = listAccountDialog.showAndGet();
+
+        if(!result) {
+            return null;
+        }
+
+        Account selectedAccount = listAccountDialog.getSelectAccount();
+        return selectedAccount;
+    }
+
+    public static Account getLocalAvmSelectedAccount(Project project) {
+        return getLocalAvmSelectedAccount(project, null, false);
+    }
+
+    public static Account getLocalAvmSelectedAccount(Project project, String moduleDir, boolean showBalance) {
+        AccountListFetcher accountListFetcher = new AccountListFetcher(project);
+        List<Account> accounts = accountListFetcher.getAccounts();
+
+        ListAccountDialog listAccountDialog = new ListAccountDialog(project, accounts, false, showBalance);
+        listAccountDialog.setModuleWorkingDir(moduleDir);
 
         boolean result = listAccountDialog.showAndGet();
 

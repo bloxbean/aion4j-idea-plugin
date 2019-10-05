@@ -48,7 +48,7 @@ public abstract class TopUpAction extends AvmRemoteBaseAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
 
-        TopupAccountDialog dialog = new TopupAccountDialog(project, isRemote());
+        TopupAccountDialog dialog = new TopupAccountDialog(e, project, isRemote());
         boolean result = dialog.showAndGet();
 
         if(!result) {

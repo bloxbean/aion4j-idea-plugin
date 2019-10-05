@@ -30,6 +30,7 @@ import org.aion4j.avm.idea.action.account.AccountChooser;
 import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.action.remote.NrgConstants;
 import org.aion4j.avm.idea.maven.AVMArcheTypeUtil;
+import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,7 +112,7 @@ public class AvmConfigUI extends DialogWrapper {
         defaultAccountChooser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Account selectedAccount = AccountChooser.getSelectedAccount(project, true);
+                Account selectedAccount = AccountChooser.getSelectedAccount(project, false);
 
                 if(selectedAccount != null) {
                     accountTf.setText(selectedAccount.getAddress());
@@ -123,7 +124,7 @@ public class AvmConfigUI extends DialogWrapper {
         localDefaultAccountChooser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Account selectedAccount = AccountChooser.getSelectedAccount(project, true);
+                Account selectedAccount = AccountChooser.getLocalAvmSelectedAccount(project, null, false);
 
                 if(selectedAccount != null) {
                     localDefaultAccountTf.setText(selectedAccount.getAddress());

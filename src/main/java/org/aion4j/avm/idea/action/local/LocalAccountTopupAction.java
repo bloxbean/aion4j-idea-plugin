@@ -22,12 +22,36 @@
 
 package org.aion4j.avm.idea.action.local;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.account.TopUpAction;
+import org.aion4j.avm.idea.service.AvmConfigStateService;
+
+import java.util.Map;
 
 public class LocalAccountTopupAction extends TopUpAction {
 
     @Override
     protected boolean isRemote() {
         return false;
+    }
+
+    @Override
+    protected void configureAVMProperties(Project project, Map<String, String> settingMap) {
+        AvmConfigStateService configService = ServiceManager.getService(project, AvmConfigStateService.class);
+
+        AvmConfigStateService.State state = null;
+        if(configService != null)
+            state = configService.getState();
+
+        if(state != null) { //set avm properties
+            settingMap.put("preserveDebuggability", String.valueOf(state.preserveDebugMode));
+            settingMap.put("enableVerboseConcurrentExecutor", String.valueOf(state.verboseConcurrentExecutor));
+            settingMap.put("enableVerboseContractErrors", String.valueOf(state.verboseContractError));
+
+            if(!StringUtil.isEmptyOrSpaces(state.avmStoragePath))
+                settingMap.put("storage-path", state.avmStoragePath);
+        }
     }
 }

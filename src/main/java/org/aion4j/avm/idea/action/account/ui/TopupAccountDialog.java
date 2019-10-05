@@ -22,11 +22,13 @@
 
 package org.aion4j.avm.idea.action.account.ui;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.aion4j.avm.idea.action.account.AccountChooser;
 import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.misc.AionConversionUtil;
+import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -45,7 +47,7 @@ public class TopupAccountDialog extends DialogWrapper {
     private JButton chooseAccountButton;
     private JPasswordField privateKeyTf;
 
-    public TopupAccountDialog(Project project, boolean isRemote) {
+    public TopupAccountDialog(AnActionEvent event, Project project, boolean isRemote) {
         super(project, false);
         init();
 
@@ -58,10 +60,22 @@ public class TopupAccountDialog extends DialogWrapper {
         }
         setTitle("Fund an Account");
 
+        final String moduleWokingDir;
+        if(isRemote) { //No need to find working dir
+            moduleWokingDir = null;
+        } else //If local. Needed for maven run
+            moduleWokingDir = PsiCustomUtil.getWorkingDirFromActionEvent(event, project);
+
         chooseAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Account selectedAccount = AccountChooser.getSelectedAccount(project, isRemote);
+                Account selectedAccount = null;
+
+                if(isRemote) {
+                    selectedAccount = AccountChooser.getSelectedAccount(project, true);
+                } else {
+                    selectedAccount = AccountChooser.getLocalAvmSelectedAccount(project, moduleWokingDir, true);
+                }
 
                 if(selectedAccount != null) {
                     accountTf.setText(selectedAccount.getAddress());

@@ -152,4 +152,36 @@ public class PsiCustomUtil {
         }
     }
 
+    public static String getWorkingDirFromActionEvent(AnActionEvent e, Project project) {
+        //Get module if possible incase of multi module maven projects
+        Module module = null;
+        try {
+            PsiElement element = null;
+
+            if(element == null)
+                element = e.getData(CommonDataKeys.PSI_ELEMENT);
+
+            if(element == null)
+                element = e.getData(CommonDataKeys.PSI_FILE);
+
+            if(element != null) {
+                if(element instanceof PsiDirectory) {
+                    module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(((PsiDirectory) element).getVirtualFile());
+                } else {
+                    module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(element.getContainingFile().getVirtualFile());
+                }
+            }
+        } catch (Error ex) {
+
+        }
+
+        MavenProjectsManager mvnProjectManager = MavenProjectsManager.getInstance(project);
+        if(module != null && mvnProjectManager.getProjects().size() > 1) { //more than root project
+            MavenProject moduleProject = mvnProjectManager.findProject(module);
+            return moduleProject.getDirectory();
+        } else {
+            return project.getBasePath();
+        }
+    }
+
 }

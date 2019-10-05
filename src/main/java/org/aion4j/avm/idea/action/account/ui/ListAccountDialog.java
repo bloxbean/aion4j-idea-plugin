@@ -22,12 +22,14 @@
 
 package org.aion4j.avm.idea.action.account.ui;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.action.account.AccountListFetcher;
+import org.aion4j.avm.idea.kernel.adapter.LocalAvmAdapter;
 import org.aion4j.avm.idea.kernel.adapter.RemoteAVMNodeAdapter;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +37,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListAccountDialog extends DialogWrapper {
@@ -45,60 +48,78 @@ public class ListAccountDialog extends DialogWrapper {
     private List<Account> accounts;
     private AccountListTableModel tableModel;
     private boolean isRemote;
+    private boolean showBalance;
+
+    //Kernel Adapters
+    LocalAvmAdapter localAvmAdapter;
 
     public ListAccountDialog(Project project, List<Account> accounts, boolean isRemote) {
+        this(project, accounts, isRemote, true);
+    }
+
+    public ListAccountDialog(Project project, List<Account> accounts, boolean isRemote, boolean showBalance) {
         super(project, false);
         init();
-        setTitle("Account List");
+        setTitle("Account List (" + (isRemote ? "Remote Mode": "Embedded Mode") + ")");
         this.project = project;
         this.accounts = accounts;
         this.isRemote = isRemote;
+        this.showBalance = showBalance;
 
-        if(!isRemote) //don't show for local Avm
+        if(!showBalance)
             fetchBalanceButton.setVisible(false);
 
         populateAccount(accounts);
 
-        if(isRemote) {
-            fetchBalanceButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    fetchBalance(isRemote);
-                }
-            });
+        if(!isRemote) {
+            localAvmAdapter = new LocalAvmAdapter(project);
         }
+
+        fetchBalanceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fetchBalance(isRemote);
+            }
+        });
+    }
+
+    public void setModuleWorkingDir(String moduleWorkingDir) {
+        localAvmAdapter.setWorkingDir(moduleWorkingDir);
     }
 
     public void fetchBalance(boolean isRemote) {
         if (accounts == null) return;
-        if (!isRemote) return;
 
-        AccountListFetcher accountListFetcher = new AccountListFetcher(project);
+        if(isRemote) {
+            AccountListFetcher accountListFetcher = new AccountListFetcher(project);
 
-        RemoteAVMNodeAdapter remoteAVMNodeAdapter = accountListFetcher.getRemoteAvmAdapter(project);
-        if(remoteAVMNodeAdapter == null) //Return null. May be web3rpc_url is not set yet.
-            return;
+            RemoteAVMNodeAdapter remoteAVMNodeAdapter = accountListFetcher.getRemoteAvmAdapter(project);
+            if (remoteAVMNodeAdapter == null) //Return null. May be web3rpc_url is not set yet.
+                return;
 
-        try {
-            ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-                @Override
-                public void run() {
-                    ProgressIndicator progressIndicator =  ProgressManager.getInstance().getProgressIndicator();
-                    float counter = 0;
-                    for (Account account : accounts) {
-                        BigInteger balance = accountListFetcher.getBalance(account, isRemote);
-                        progressIndicator.setFraction(counter++ / accounts.size());
-                        if (balance != null) {
-                            account.setBalance(balance);
+            try {
+                ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
+                    @Override
+                    public void run() {
+                        ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
+                        float counter = 0;
+                        for (Account account : accounts) {
+                            BigInteger balance = accountListFetcher.getBalance(account, isRemote);
+                            progressIndicator.setFraction(counter++ / accounts.size());
+                            if (balance != null) {
+                                account.setBalance(balance);
+                            }
                         }
+                        progressIndicator.setFraction(1.0);
+                        tableModel.fireTableDataChanged();
                     }
-                    progressIndicator.setFraction(1.0);
-                    tableModel.fireTableDataChanged();
-                }
-            }, "Fetching balance from remote kernel ...", true, project);
+                }, "Fetching balance from remote kernel ...", true, project);
 
-        } finally {
+            } finally {
 
+            }
+        } else { //For local Avm
+            localAvmAdapter.getLocalAvmAccounts(this);
         }
     }
 
@@ -116,8 +137,22 @@ public class ListAccountDialog extends DialogWrapper {
         }
     }
 
+    public void updateAccount(List<Account> accs) {
+        if(accs == null) return;
+
+        if(this.accounts == null)
+            this.accounts = new ArrayList<>();
+
+        this.accounts.clear();
+        for(Account account: accs) {
+            this.accounts.add(account);
+        }
+
+        tableModel.fireTableDataChanged();
+    }
+
     private void populateAccount(List<Account> accounts) {
-        tableModel = new AccountListTableModel(accounts, isRemote);
+        tableModel = new AccountListTableModel(accounts, showBalance);
         accListTable.setModel(tableModel);
     }
 

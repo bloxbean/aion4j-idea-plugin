@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Aion4j Project
+ * Copyright (c) 2019 Ain4j Project
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,33 @@
 
 package org.aion4j.avm.idea.action.account;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
-import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
-import org.aion4j.avm.idea.misc.PsiCustomUtil;
-import org.jetbrains.annotations.NotNull;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.intellij.notification.NotificationType;
+import org.aion4j.avm.idea.action.account.model.Account;
+import org.aion4j.avm.idea.action.account.model.AccountCache;
+import org.aion4j.avm.idea.misc.IdeaUtil;
 
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
-public class AccountListAction extends AvmRemoteBaseAction {
+/**
+ * This class is used to get account list and balance. But it's only used for local Avm.
+ */
+public class AccountResultReader {
 
-    @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
-        Project project = e.getProject();
-
-        if(isRemote()) {
-            AccountChooser.getSelectedAccount(project, true);
-        } else {
-            String moduleDir = PsiCustomUtil.getWorkingDirFromActionEvent(e, project);
-            AccountChooser.getLocalAvmSelectedAccount(project, moduleDir, true);
+    public static List<Account> getAccounts(File file) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        AccountCache accountCache = null;
+        try {
+            accountCache = objectMapper.readValue(file, AccountCache.class);
+        } catch (IOException e) {
+            IdeaUtil.showNotification(null, "Account List", "Error reading account list", NotificationType.ERROR, null);
+            return Collections.EMPTY_LIST;
         }
+
+        List<Account> accounts = accountCache.getAccounts();
+        return accounts;
     }
-
-    @Override
-    protected void configureAVMProperties(Project project, Map<String, String> properties) {
-
-    }
-
 }
