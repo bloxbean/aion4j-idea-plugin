@@ -41,9 +41,9 @@ public class TopupAccountDialog extends DialogWrapper {
     private JPanel mainPanel;
     private JTextField balanceTf;
     private JLabel balanceLabel;
-    private JTextField privateKeyTf;
     private JLabel privateKeyLabel;
     private JButton chooseAccountButton;
+    private JPasswordField privateKeyTf;
 
     public TopupAccountDialog(Project project, boolean isRemote) {
         super(project, false);
