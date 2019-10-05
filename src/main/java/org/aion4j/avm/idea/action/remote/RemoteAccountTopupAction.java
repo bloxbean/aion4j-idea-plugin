@@ -36,6 +36,6 @@ public class RemoteAccountTopupAction extends TopUpAction {
 
     @Override
     protected void configureAVMProperties(Project project, Map<String, String> settingMap) {
-        populateCredentialInfo(project, settingMap);
+        populateKernelInfo(project, settingMap);
     }
 }

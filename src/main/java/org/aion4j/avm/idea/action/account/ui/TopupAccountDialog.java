@@ -24,12 +24,16 @@ package org.aion4j.avm.idea.action.account.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import org.aion4j.avm.idea.action.account.AccountChooser;
+import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.misc.AionConversionUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigInteger;
 
 public class TopupAccountDialog extends DialogWrapper {
@@ -39,6 +43,7 @@ public class TopupAccountDialog extends DialogWrapper {
     private JLabel balanceLabel;
     private JTextField privateKeyTf;
     private JLabel privateKeyLabel;
+    private JButton chooseAccountButton;
 
     public TopupAccountDialog(Project project, boolean isRemote) {
         super(project, false);
@@ -52,6 +57,18 @@ public class TopupAccountDialog extends DialogWrapper {
             privateKeyTf.setVisible(false);
         }
         setTitle("Fund an Account");
+
+        chooseAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Account selectedAccount = AccountChooser.getSelectedAccount(project, isRemote);
+
+                if(selectedAccount != null) {
+                    accountTf.setText(selectedAccount.getAddress());
+                    privateKeyTf.setText(selectedAccount.getPrivateKey());
+                }
+            }
+        });
     }
 
     @Nullable
