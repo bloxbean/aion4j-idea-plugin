@@ -26,6 +26,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
+import org.aion4j.avm.idea.action.account.AccountChooser;
+import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.action.remote.NrgConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +51,8 @@ public class TransferDialog extends DialogWrapper {
     private JTextField nrgPriceTf;
     private JTextField valueTf;
     private JTextField valueAionTf;
+    private JButton fromAccountChooser;
+    private JButton toAccountChooser;
 
     public TransferDialog(Project project) {
         super(project, false);
@@ -81,6 +85,26 @@ public class TransferDialog extends DialogWrapper {
                 } catch(NumberFormatException ex) {
 
                 }
+            }
+        });
+
+        fromAccountChooser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Account selectedAccount = AccountChooser.getSelectedAccount(project, true);
+
+                if(selectedAccount != null)
+                    privateKeyTf.setText(selectedAccount.getPrivateKey());
+            }
+        });
+
+        toAccountChooser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Account selectedAccount = AccountChooser.getSelectedAccount(project, true);
+
+                if(selectedAccount != null)
+                    toAccountTf.setText(selectedAccount.getAddress());
             }
         });
     }
