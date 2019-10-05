@@ -22,18 +22,18 @@
 
 package org.aion4j.avm.idea.action.account.ui;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.action.account.AccountListFetcher;
+import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.kernel.adapter.LocalAvmAdapter;
 import org.aion4j.avm.idea.kernel.adapter.RemoteAVMNodeAdapter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
@@ -81,6 +81,13 @@ public class ListAccountDialog extends DialogWrapper {
                 fetchBalance(isRemote);
             }
         });
+
+        //Right align balance column
+        if(showBalance) {
+            DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+            rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+            accListTable.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+        }
     }
 
     public void setModuleWorkingDir(String moduleWorkingDir) {

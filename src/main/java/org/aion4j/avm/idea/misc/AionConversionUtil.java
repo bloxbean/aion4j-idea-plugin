@@ -34,4 +34,18 @@ public class AionConversionUtil {
 
         return nAmp.toBigInteger();
     }
+
+    public static float nAmpToAion(double nAmp) {
+        BigDecimal bigDecimalAmt = new BigDecimal(nAmp);
+        float aion = bigDecimalAmt.divide(new BigDecimal(ONE_AION)).floatValue();
+
+        return aion;
+    }
+
+    public static float nAmpToAion(BigInteger nAmp) {
+        BigDecimal bigDecimalAmt = new BigDecimal(nAmp);
+        float aion = bigDecimalAmt.divide(new BigDecimal(ONE_AION)).floatValue();
+
+        return aion;
+    }
 }

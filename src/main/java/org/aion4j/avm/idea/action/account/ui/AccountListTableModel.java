@@ -23,8 +23,10 @@
 package org.aion4j.avm.idea.action.account.ui;
 
 import org.aion4j.avm.idea.action.account.model.Account;
+import org.aion4j.avm.idea.misc.AionConversionUtil;
 
 import javax.swing.table.AbstractTableModel;
+import java.math.BigInteger;
 import java.util.List;
 
 public class AccountListTableModel extends AbstractTableModel {
@@ -72,9 +74,19 @@ public class AccountListTableModel extends AbstractTableModel {
         Account account = accounts.get(rowIndex);
         if(columnIndex == 0)
             return account.getAddress();
-        else if(columnIndex == 1)
-            return account.getBalance();
-        else
+        else if(columnIndex == 1) {
+            BigInteger balance = account.getBalance();
+            if(balance == null)
+                return "..";
+            else {
+                if(balance == BigInteger.ZERO)
+                    return balance;
+                else {
+                    float aionValue = AionConversionUtil.nAmpToAion(balance);
+                    return aionValue + " Aion (" + balance + " nAmp)";
+                }
+            }
+        } else
             return null;
     }
 }
