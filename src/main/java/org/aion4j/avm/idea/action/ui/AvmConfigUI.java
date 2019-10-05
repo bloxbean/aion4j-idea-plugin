@@ -26,6 +26,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.DocumentAdapter;
+import org.aion4j.avm.idea.action.account.AccountChooser;
+import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.action.remote.NrgConstants;
 import org.aion4j.avm.idea.maven.AVMArcheTypeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +73,8 @@ public class AvmConfigUI extends DialogWrapper {
     private JCheckBox disableJarOptimizationCB;
     private JButton fetchButton;
     private JLabel fetchStatusLabel;
+    private JButton defaultAccountChooser;
+    private JButton localDefaultAccountChooser;
 
     public AvmConfigUI(Project project, String customMessage) {
 
@@ -102,6 +106,30 @@ public class AvmConfigUI extends DialogWrapper {
         doValidateInput();
 
         commonTab();
+
+        //Account chooser
+        defaultAccountChooser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Account selectedAccount = AccountChooser.getSelectedAccount(project, true);
+
+                if(selectedAccount != null) {
+                    accountTf.setText(selectedAccount.getAddress());
+                    pkTf.setText(selectedAccount.getPrivateKey());
+                }
+            }
+        });
+
+        localDefaultAccountChooser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Account selectedAccount = AccountChooser.getSelectedAccount(project, true);
+
+                if(selectedAccount != null) {
+                    localDefaultAccountTf.setText(selectedAccount.getAddress());
+                }
+            }
+        });
 
     }
 

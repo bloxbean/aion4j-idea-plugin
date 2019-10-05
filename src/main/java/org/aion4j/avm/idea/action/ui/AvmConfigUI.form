@@ -138,6 +138,14 @@
                       <text value="Web3 Rpc Url"/>
                     </properties>
                   </component>
+                  <component id="1f2b7" class="javax.swing.JButton" binding="defaultAccountChooser">
+                    <constraints>
+                      <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Choose an Account (Default)"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
@@ -460,6 +468,15 @@
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
+              </component>
+              <component id="69e" class="javax.swing.JButton" binding="localDefaultAccountChooser">
+                <constraints>
+                  <grid row="24" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <text value="..."/>
+                </properties>
               </component>
             </children>
           </grid>
