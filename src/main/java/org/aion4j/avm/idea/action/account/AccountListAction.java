@@ -25,9 +25,11 @@ package org.aion4j.avm.idea.action.account;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
+import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.Map;
 
 public class AccountListAction extends AvmRemoteBaseAction {
@@ -49,4 +51,8 @@ public class AccountListAction extends AvmRemoteBaseAction {
 
     }
 
+    @Override
+    public Icon getIcon() {
+        return AvmIcons.ACCOUNTS_ICON;
+    }
 }

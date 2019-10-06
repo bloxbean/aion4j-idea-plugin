@@ -89,4 +89,12 @@ public class AccountListTableModel extends AbstractTableModel {
         } else
             return null;
     }
+
+    public boolean isCellEditable(int row, int col) {
+        if (col== 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

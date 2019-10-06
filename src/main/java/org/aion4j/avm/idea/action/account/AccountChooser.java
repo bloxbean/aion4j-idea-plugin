@@ -22,13 +22,10 @@
 
 package org.aion4j.avm.idea.action.account;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.action.account.ui.ListAccountDialog;
-import org.aion4j.avm.idea.kernel.adapter.LocalAvmAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AccountChooser {

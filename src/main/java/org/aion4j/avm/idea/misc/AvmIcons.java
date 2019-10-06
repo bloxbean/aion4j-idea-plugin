@@ -19,4 +19,6 @@ public class AvmIcons {
     public final static Icon REMOTE_CALL = IconLoader.getIcon("/icons/remote_call.png");
     public final static Icon REMOTE_TXN = IconLoader.getIcon("/icons/remote_txn.png");
     public final static Icon CONTRACT_DEBUG = IconLoader.getIcon("/icons/contract_debug.png");
+
+    public final static Icon ACCOUNTS_ICON = IconLoader.getIcon("/icons/accounts.png");
 }

@@ -60,16 +60,22 @@ public class ListAccountDialog extends DialogWrapper {
     public ListAccountDialog(Project project, List<Account> accounts, boolean isRemote, boolean showBalance) {
         super(project, false);
         init();
-        setTitle("Account List (" + (isRemote ? "Remote Mode": "Embedded Mode") + ")");
+        setTitle("Accounts (" + (isRemote ? "Remote Mode": "Embedded Mode") + ")");
         this.project = project;
         this.accounts = accounts;
         this.isRemote = isRemote;
         this.showBalance = showBalance;
 
-        if(!showBalance)
-            fetchBalanceButton.setVisible(false);
-
         populateAccount(accounts);
+
+        if(showBalance) {
+            //Right align balance column
+            DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+            rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+            accListTable.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+        } else {
+            fetchBalanceButton.setVisible(false);
+        }
 
         if(!isRemote) {
             localAvmAdapter = new LocalAvmAdapter(project);
@@ -81,13 +87,6 @@ public class ListAccountDialog extends DialogWrapper {
                 fetchBalance(isRemote);
             }
         });
-
-        //Right align balance column
-        if(showBalance) {
-            DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-            rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
-            accListTable.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
-        }
     }
 
     public void setModuleWorkingDir(String moduleWorkingDir) {
