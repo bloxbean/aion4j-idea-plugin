@@ -58,7 +58,7 @@ public class ListAccountDialog extends DialogWrapper {
     }
 
     public ListAccountDialog(Project project, List<Account> accounts, boolean isRemote, boolean showBalance) {
-        super(project, false);
+        super(project, true);
         init();
         setTitle("Accounts (" + (isRemote ? "Remote Mode": "Embedded Mode") + ")");
         this.project = project;

@@ -11,7 +11,7 @@ public class GetReceiptTxHashDialog extends DialogWrapper {
     private JPanel mainPanel;
 
     public GetReceiptTxHashDialog(Project project) {
-        super(project, false);
+        super(project, true);
         init();
         setTitle("Enter Tx Hash");
     }

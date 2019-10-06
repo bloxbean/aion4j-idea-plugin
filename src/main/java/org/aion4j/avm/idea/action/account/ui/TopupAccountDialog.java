@@ -48,7 +48,7 @@ public class TopupAccountDialog extends DialogWrapper {
     private JPasswordField privateKeyTf;
 
     public TopupAccountDialog(AnActionEvent event, Project project, boolean isRemote) {
-        super(project, false);
+        super(project, true);
         init();
 
         if(isRemote) { //No need to show balance for remote mode

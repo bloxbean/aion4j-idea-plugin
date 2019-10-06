@@ -15,7 +15,7 @@ public class LocalCreateAccountDialog extends DialogWrapper {
     private JTextField balanceTf;
 
     public LocalCreateAccountDialog(Project project) {
-        super(project, false);
+        super(project, true);
         init();
         setTitle("Create Account");
     }

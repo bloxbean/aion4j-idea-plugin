@@ -79,7 +79,7 @@ public class AvmConfigUI extends DialogWrapper {
 
     public AvmConfigUI(Project project, String customMessage) {
 
-        super(project, false);
+        super(project, true);
         init();
         setTitle("Aion Virtual Machine - Configuration");
 

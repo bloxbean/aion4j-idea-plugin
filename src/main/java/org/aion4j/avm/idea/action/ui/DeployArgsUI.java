@@ -20,7 +20,7 @@ public class DeployArgsUI extends DialogWrapper {
     private JLabel contractMainClassLabel;
 
     public DeployArgsUI(Project project, String module, String mainClass, boolean callFromDeployConfig) {
-        super(project, false);
+        super(project, true);
 
         init();
         if(module != null)

@@ -18,7 +18,7 @@ public class LocalGetAccountDialog extends DialogWrapper {
     private JButton selectAccountButton;
 
     public LocalGetAccountDialog(Project project) {
-        super(project, false);
+        super(project, true);
         init();
         setTitle("Enter Account");
 

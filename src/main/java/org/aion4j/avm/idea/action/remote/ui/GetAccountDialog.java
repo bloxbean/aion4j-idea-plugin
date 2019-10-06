@@ -16,7 +16,7 @@ public class GetAccountDialog extends DialogWrapper {
     private JButton selectAccountButton;
 
     public GetAccountDialog(Project project) {
-        super(project, false);
+        super(project, true);
         init();
         setTitle("Enter Account");
 

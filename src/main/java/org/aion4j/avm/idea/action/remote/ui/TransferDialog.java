@@ -55,7 +55,7 @@ public class TransferDialog extends DialogWrapper {
     private JButton toAccountChooser;
 
     public TransferDialog(Project project) {
-        super(project, false);
+        super(project, true);
         init();
         setTitle("Enter transfer information");
 
