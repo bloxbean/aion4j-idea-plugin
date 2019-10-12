@@ -32,13 +32,12 @@ public class AESEncryptionHelperTest {
     public void testEncryption() {
         String key = "AFyhdsf#$#1HUbXJhkwei@786&&423";
 
-        AESEncryptionHelper encryptionHelper = new AESEncryptionHelper(key);
         String message = "c284dfd2de46acd652b2d72adf0467d0674c9bc9a7c756596dcb5ce39bdbc20f34458d527f3981728cff45e75b53dafa23a5fb8a85ddef65e051332e4980acfc";
-        String encryptedMessage = encryptionHelper.encrypt(message);
+        String encryptedMessage = AESEncryptionHelper.encrypt(message, key);
 
         System.out.println(encryptedMessage);
 
-        String decryptedMessage = encryptionHelper.decrypt(encryptedMessage);
+        String decryptedMessage = AESEncryptionHelper.decrypt(encryptedMessage, key);
         System.out.println(decryptedMessage);
 
         Assert.assertEquals(message, decryptedMessage);
