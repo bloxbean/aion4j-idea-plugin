@@ -1,4 +1,4 @@
-### 0.4.0-beta3
+### 0.4.0-beta4
   - Debugging support from editor (Works with Aion4j Maven Plugin 0.8.0-beta3 and above)
   - Added support for value argument during contract deployment
   - Update balance value to Aion instead of nAmp in Create Account
