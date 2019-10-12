@@ -25,9 +25,12 @@ package org.aion4j.avm.idea.action;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import org.aion4j.avm.idea.action.ui.AvmConfigUI;
+import org.aion4j.avm.idea.misc.AESEncryptionHelper;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.service.AvmConfigStateService;
+import org.aion4j.avm.idea.service.CredentialService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -73,6 +76,7 @@ public class AvmConfiguration extends AvmBaseAction {
         configModel.setShouldAskCallerAccountEverytime(configService.getState().shouldAskCallerAccountEverytime);
 
         configModel.setDisableJarOptimization(configService.getState().disableJarOptimization);
+        configModel.setUseCredentialStore(configService.getState().useCredentialStore);
 
         configDialog.setState(configModel);
 
@@ -104,11 +108,20 @@ public class AvmConfiguration extends AvmBaseAction {
             state.shouldAskCallerAccountEverytime = remoteConfigModel.shouldAskCallerAccountEverytime();
 
             state.disableJarOptimization = remoteConfigModel.isDisableJarOptimization();
+            state.useCredentialStore = remoteConfigModel.isUseCredentialStore();
 
             if(remoteConfigModel.isDisableCredentialStore()) { //don't store credentials
                 state.pk = "";
+                state.encryptedPk = "";
             } else {
                 state.pk = remoteConfigModel.getPk();
+            }
+
+            if(!StringUtil.isEmpty(state.pk)) { //If pk is not empty, encrypt and store the encrypted value
+                String encryptionKey = CredentialService.getEncryptionKey(state.useCredentialStore);
+
+                if(!StringUtil.isEmpty(encryptionKey))
+                    state.encryptedPk = AESEncryptionHelper.encrypt(state.pk, encryptionKey);
             }
 
             state.account = remoteConfigModel.getAccount();

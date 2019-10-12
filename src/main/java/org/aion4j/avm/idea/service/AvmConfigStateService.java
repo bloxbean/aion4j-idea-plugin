@@ -24,15 +24,24 @@ package org.aion4j.avm.idea.service;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.xmlb.annotations.Transient;
+import org.aion4j.avm.idea.misc.AESEncryptionHelper;
+import org.aion4j.avm.idea.misc.IdeaUtil;
 
 @State(name="aion4j", reloadable = true, storages = @com.intellij.openapi.components.Storage("aion4j.xml"))
 public class AvmConfigStateService implements PersistentStateComponent<AvmConfigStateService.State> {
+    private static final Logger log = Logger.getInstance(AvmConfigStateService.class);
 
     public static class State {
 
         public String web3RpcUrl;
         public String account;
+        public boolean useCredentialStore;
+        @Transient
         public String pk;
+        public String encryptedPk;
         public String password; //removed
         public boolean disableCredentialStore;
         public boolean cleanAndBuildBeforeDeploy = true;
@@ -66,6 +75,12 @@ public class AvmConfigStateService implements PersistentStateComponent<AvmConfig
     }
 
     public void loadState(State state) {
+        if(!StringUtil.isEmpty(state.encryptedPk)) {
+            String encryptionKey = CredentialService.getEncryptionKey(state.useCredentialStore);
+            if(!StringUtil.isEmpty(encryptionKey)) {
+                state.pk = AESEncryptionHelper.decrypt(state.encryptedPk, encryptionKey);
+            }
+        }
         this.state = state;
     }
 }

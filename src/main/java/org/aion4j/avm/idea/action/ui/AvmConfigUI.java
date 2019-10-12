@@ -30,7 +30,6 @@ import org.aion4j.avm.idea.action.account.AccountChooser;
 import org.aion4j.avm.idea.action.account.model.Account;
 import org.aion4j.avm.idea.action.remote.NrgConstants;
 import org.aion4j.avm.idea.maven.AVMArcheTypeUtil;
-import org.aion4j.avm.idea.misc.PsiCustomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,6 +75,7 @@ public class AvmConfigUI extends DialogWrapper {
     private JLabel fetchStatusLabel;
     private JButton defaultAccountChooser;
     private JButton localDefaultAccountChooser;
+    private JCheckBox useCredentialStoreCB;
 
     public AvmConfigUI(Project project, String customMessage) {
 
@@ -262,6 +262,8 @@ public class AvmConfigUI extends DialogWrapper {
 
         setDisableJarOptimization(model.isDisableJarOptimization());
 
+        setUseCredentialStore(model.isUseCredentialStore());
+
     }
 
     public void setWeb3RpcUrl(String web3RpcUrl) {
@@ -336,6 +338,10 @@ public class AvmConfigUI extends DialogWrapper {
         this.disableJarOptimizationCB.setSelected(flag);
     }
 
+    public void setUseCredentialStore(boolean flag) {
+        this.useCredentialStoreCB.setSelected(flag);
+    }
+
     private void doValidateInput() {
 
         List<String> errors = new ArrayList();
@@ -394,7 +400,8 @@ public class AvmConfigUI extends DialogWrapper {
                 notStoreCredentialsCheckBox.isSelected(), cleanAndBuildCheckBox.isSelected(), deployNrgTf.getText(), deployNrgPriceTf.getText(),
                 contractTxnNrgTf.getText(), contractTxnNrgPriceTf.getText(), mvnProfileTf.getText(), getReceiptWaitCB.isSelected(),
                 preserveDebugModeCheckBox.isSelected(), verboseContractErrorCheckBox.isSelected(), verboseConcurrentExecutorCheckBox.isSelected(),
-                storagePathTf.getText(), localDefaultAccountTf.getText(), askCallerAccountCB.isSelected(), disableJarOptimizationCB.isSelected());
+                storagePathTf.getText(), localDefaultAccountTf.getText(), askCallerAccountCB.isSelected(), disableJarOptimizationCB.isSelected(),
+                useCredentialStoreCB.isSelected());
     }
 
 
@@ -420,6 +427,7 @@ public class AvmConfigUI extends DialogWrapper {
         private boolean shouldAskCallerAccountEverytime;
 
         private boolean disableJarOptimization;
+        private boolean useCredentialStore;
 
         public RemoteConfigModel() {
 
@@ -429,7 +437,7 @@ public class AvmConfigUI extends DialogWrapper {
                                  boolean disableCredentialStore, boolean cleanAndBuildBeforeDeploy, String deployNrg, String deployNrgPrice,
                                  String contractTxnNrg, String contractTxnNrgPrice, String mvnProfile, boolean getReceiptWait,
                                  boolean preserveDebugMode, boolean verboseContractError, boolean verboseConcurrentExecutor, String avmStoragePath,
-                                 String localDefaultAccount, boolean shouldAskCallerAccountEverytime, boolean disableJarOptimization) {
+                                 String localDefaultAccount, boolean shouldAskCallerAccountEverytime, boolean disableJarOptimization, boolean useCredentialStore) {
             this.web3RpcUrl = web3RpcUrl;
             this.pk = pk;
             this.account = account;
@@ -450,6 +458,7 @@ public class AvmConfigUI extends DialogWrapper {
             this.shouldAskCallerAccountEverytime = shouldAskCallerAccountEverytime;
 
             this.disableJarOptimization = disableJarOptimization;
+            this.useCredentialStore = useCredentialStore;
         }
 
         public String getWeb3RpcUrl() {
@@ -594,6 +603,14 @@ public class AvmConfigUI extends DialogWrapper {
 
         public void setDisableJarOptimization(boolean disableJarOptimization) {
             this.disableJarOptimization = disableJarOptimization;
+        }
+
+        public boolean isUseCredentialStore() {
+            return useCredentialStore;
+        }
+
+        public void setUseCredentialStore(boolean useCredentialStore) {
+            this.useCredentialStore = useCredentialStore;
         }
     }
 

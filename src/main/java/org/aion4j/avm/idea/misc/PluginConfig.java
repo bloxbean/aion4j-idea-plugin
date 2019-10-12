@@ -3,6 +3,7 @@ package org.aion4j.avm.idea.misc;
 import com.intellij.openapi.diagnostic.Logger;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 public class PluginConfig {
@@ -12,6 +13,7 @@ public class PluginConfig {
     public static String CONFIG_FILE = ".aion4j-idea.conf";
 
     public static String AVM_ARCHETYPE_VERSION = "avm.archetype.version";
+    public static String ENCRYPTION_KEY = "encryption.key";
     public static String targetFolder = System.getProperty("user.home");
 
     public static String getOrUpdateVersionIfRequired(String pluginBundledVersion) {
@@ -39,6 +41,26 @@ public class PluginConfig {
                 throw e;
             }
         }
+    }
+
+    /**
+     * Get encryption key. If there is no encryption key, create one and store.
+     * @return
+     */
+    public static String getEncryptionKey() {
+        String encryptionKey = getPropertyValue(ENCRYPTION_KEY);
+        if(encryptionKey == null || encryptionKey.isEmpty()) {
+            //Generate a new encryption key
+            try {
+                encryptionKey = AESEncryptionHelper.generateKey();
+            } catch (NoSuchAlgorithmException e) {
+                //Set a default key
+                encryptionKey = "RAekhoC#$#1HUbXJhkwei@786&&423";
+            }
+            updateProperty(ENCRYPTION_KEY, encryptionKey);
+        }
+
+        return encryptionKey;
     }
 
     private static void updateProperty(String propertyName, String value) {
