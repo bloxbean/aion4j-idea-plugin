@@ -161,6 +161,11 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="I"/>
             <add-to-group group-id="Avm.local"/>
         </action>
+        <action id="Avm.local.LocalDebugCall" class="org.aion4j.avm.idea.action.local.LocalDebugAction"
+                text="Call (Debug Mode)" description="Debug Contract">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="O"/>
+            <add-to-group group-id="Avm.local"/>
+        </action>
         <action id="Avm.local.GetBalance" class="org.aion4j.avm.idea.action.local.LocalGetBalanceAction"
                 text="Get Balance (Default)" description="Get Balance of default account">
             <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl A" second-keystroke="B"/>
