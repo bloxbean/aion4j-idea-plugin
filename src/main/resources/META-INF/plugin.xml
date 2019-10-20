@@ -193,17 +193,17 @@
 
         <!-- For Gutter actions -->
         <action id="Avm.local.gutter.LocalCallAction"
-                class="org.aion4j.avm.idea.action.local.LocalCallAction" text="Call - Embedded" description="Call contract method on embbedded Avm">
+                class="org.aion4j.avm.idea.action.local.gutter.GutterLocalCallAction" text="Call - Embedded" description="Call contract method on embbedded Avm">
         </action>
-        <action id="Avm.local.gutter.Debug" class="org.aion4j.avm.idea.action.local.LocalDebugAction"
+        <action id="Avm.local.gutter.Debug" class="org.aion4j.avm.idea.action.local.gutter.GutterLocalDebugAction"
                 text="Debug - Embedded" description="Debug Contract">
         </action>
         <action id="Avm.remote.gutter.CallMethodAction"
-                class="org.aion4j.avm.idea.action.remote.CallMethodAction" text="Call - Remote"
+                class="org.aion4j.avm.idea.action.remote.gutter.GutterCallMethodAction" text="Call - Remote"
                 description="Contract method call on Aion Kernel">
         </action>
         <action id="Avm.remote.gutter.ContractTxnAction"
-                class="org.aion4j.avm.idea.action.remote.ContractTxnAction" text="Contract Transaction - Remote"
+                class="org.aion4j.avm.idea.action.remote.gutter.GutterContractTxnAction" text="Contract Transaction - Remote"
                 description="Send Contract Transaction to Aion Kernel">
         </action>
     </actions>

@@ -18,18 +18,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import static org.aion4j.avm.idea.misc.AvmApiConstant.*;
 
 public class JCLWhitelistInspection extends AbstractBaseJavaLocalInspectionTool implements CustomSuppressableInspectionTool {
 
     private final static Logger log = Logger.getInstance(JCLWhitelistInspection.class);
-
-    private final static String AION4j_MAVEN_PLUGIN = "aion4j-maven-plugin";
-
-    private final static String USERLIB_PACKAGE_PREFIX = "org.aion.avm.userlib";
-    private final static String AVM_API_PACKAGE_PREFIX = "avm";
-    private final static String CALLABLE_ANNOTATION = "org.aion.avm.tooling.abi.Callable";
-    private final static String FALLBACK_ANNOTATION = "org.aion.avm.tooling.abi.Fallback";
-    private final static String INITIALIZABLE_ANNOTATION = "org.aion.avm.tooling.abi.Initializable";
 
     @NotNull
     @Override

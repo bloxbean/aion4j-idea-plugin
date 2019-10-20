@@ -11,6 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import org.aion4j.avm.idea.action.remote.AvmRemoteBaseAction;
 import org.aion4j.avm.idea.action.remote.ui.CallMethodInputDialog;
+import org.aion4j.avm.idea.misc.AvmApiConstant;
 import org.aion4j.avm.idea.misc.AvmIcons;
 import org.aion4j.avm.idea.misc.AvmMethodArgsHelper;
 import org.aion4j.avm.idea.misc.IdeaUtil;
@@ -54,10 +55,17 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
         PsiElement element = null;
 
-        try {
-            element = e.getRequiredData(CommonDataKeys.PSI_ELEMENT);
-        } catch (Error ex) {
+        if(!calledFromGutterAction()) { //Called from context menu
+            try {
+                element = e.getRequiredData(CommonDataKeys.PSI_ELEMENT);
+            } catch (Error ex) {
 
+            }
+
+            if(element != null && element instanceof PsiMethod) { //Check if callable method
+                if(!((PsiMethod) element).hasAnnotation(AvmApiConstant.CALLABLE_ANNOTATION))
+                    element = null; //Need to check through PsiLocation
+            }
         }
 
         final Project project = e.getProject();
@@ -71,7 +79,7 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
         }
 
         if (element == null || !(element instanceof PsiMethod)) {
-            IdeaUtil.showNotification(project, "Avm - Call Method", "Please right click on the method name",
+            IdeaUtil.showNotification(project, "Avm - Call Method", "Please right click on a @callable method name",
                     NotificationType.WARNING, null);
             return;
         }
@@ -189,5 +197,9 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
     }
 
     protected abstract List<String> getGoals();
+
+    protected boolean calledFromGutterAction() {
+        return false;
+    }
 
 }
