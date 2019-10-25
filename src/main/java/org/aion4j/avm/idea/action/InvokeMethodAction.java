@@ -109,7 +109,13 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
             }
         }
 
-        CallMethodInputDialog dialog = new CallMethodInputDialog(method.getName(), parameters, isCall());
+        List<String> contractAddresses = null;
+        if(isRemote())
+            contractAddresses = avmCacheService.getRemoteContractAddresses();
+        else
+            contractAddresses = avmCacheService.getLocalContractAddresses();
+
+        CallMethodInputDialog dialog = new CallMethodInputDialog(method.getName(), parameters, contractAddresses, isCall());
         boolean result = dialog.showAndGet();
 
         if (!result)
@@ -121,6 +127,14 @@ public abstract class InvokeMethodAction extends AvmRemoteBaseAction {
 
         //Store to cache.
         avmCacheService.updateArgsToCache(method, params.stream().map(p -> p.getValue()).collect(Collectors.toList()));
+
+        if(!StringUtil.isEmpty(contractAddress)) { //Add contract address to cache
+            if(isRemote())
+                avmCacheService.addRemoteContractAddress(contractAddress);
+            else
+                avmCacheService.addLocalContractAddress(contractAddress);
+        }
+
         avmCacheService.loadState(avmCacheService.getState());
 
         String argsStr = AvmMethodArgsHelper.buildMethodArgsString(params);

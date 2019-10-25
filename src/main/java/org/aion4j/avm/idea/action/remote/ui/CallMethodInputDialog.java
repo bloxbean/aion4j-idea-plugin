@@ -1,5 +1,6 @@
 package org.aion4j.avm.idea.action.remote.ui;
 
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jgoodies.forms.factories.Borders;
@@ -25,17 +26,24 @@ public class CallMethodInputDialog extends DialogWrapper {
     private String method;
     private List<JTextField> paramTfs = new ArrayList<>();
     private JTextField valueTf;
-    private JTextField contractTf;
+    private JComboBox<String> contractCB;
     private JCheckBox useLastDeployedContractCB;
 
     private List<InvokeParam> params = new ArrayList<>();
+    private List<String> contractAddresses = new ArrayList<>();
     private JLabel valueLabel;
 
-    public CallMethodInputDialog(String method, java.util.List<InvokeParam> params, boolean isCallMethod) {
+    public CallMethodInputDialog(String method, java.util.List<InvokeParam> params, List<String> contractAddresses, boolean isCallMethod) {
         super(false);
 
         this.method = method;
         this.params = params;
+        if(contractAddresses != null) {
+            this.contractAddresses = contractAddresses;
+            this.contractAddresses.add(0, "");
+        } else
+            this.contractAddresses = new ArrayList<>();
+
         init();
         setTitle(method + " - "+ "Method parameters");
 
@@ -57,21 +65,25 @@ public class CallMethodInputDialog extends DialogWrapper {
 
         valueLabel = new JLabel("Value (Aion)");
         valueTf = new JTextField();
-        contractTf = new JTextField();
+
+        contractCB = new ComboBox<String>(this.contractAddresses.toArray(new String[0]));
+        contractCB.setEditable(true);
+
         useLastDeployedContractCB = new JCheckBox();
 
         valueTf.setText(0 + "");
         useLastDeployedContractCB.setSelected(true);
-        contractTf.setEnabled(false);
+        contractCB.setEnabled(false);
 
         useLastDeployedContractCB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(useLastDeployedContractCB.isSelected()) {
-                   contractTf.setText("");
-                   contractTf.setEnabled(false);
+                   //contractTf.setText("");
+
+                   contractCB.setEnabled(false);
                 } else {
-                    contractTf.setEnabled(true);
+                    contractCB.setEnabled(true);
                 }
             }
         });
@@ -135,7 +147,7 @@ public class CallMethodInputDialog extends DialogWrapper {
         row += 2;
         JLabel contractLabel = new JLabel("Contract Address");
         panel.add(contractLabel, cc.xy (1,  row ));
-        panel.add(contractTf, cc.xyw(3,  row, 5));
+        panel.add(contractCB, cc.xyw(3,  row, 5));
 
         return panel;
 
@@ -161,8 +173,9 @@ public class CallMethodInputDialog extends DialogWrapper {
     public String getContractAddress() {
         if(useLastDeployedContractCB.isSelected())
             return null;
-        else
-            return contractTf.getText().trim();
+        else {
+            return contractCB.getSelectedItem() != null? contractCB.getSelectedItem().toString().trim(): null;
+        }
     }
 
 }

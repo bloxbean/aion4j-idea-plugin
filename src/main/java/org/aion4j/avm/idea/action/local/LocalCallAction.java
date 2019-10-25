@@ -47,6 +47,7 @@ public class LocalCallAction extends InvokeMethodAction {
                 if(debugEnabledInLastDeploy) {
                     //last deployment was debug enabled. So set debuggability to true
                     mavenRunnerSettings.getMavenProperties().put("preserveDebuggability", "true");
+                    IdeaUtil.showNotification(project, "Contract call", "Calling with debug mode. To reset debug mode, re-deploy the contract.", NotificationType.INFORMATION, null);
                 }
             }
         }
